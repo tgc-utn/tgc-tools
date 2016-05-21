@@ -1,4 +1,4 @@
-﻿namespace Examples.SceneEditor
+﻿namespace TGC.Tools.SceneEditor
 {
     partial class SceneEditorControl
     {

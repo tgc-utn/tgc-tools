@@ -1,4 +1,4 @@
-﻿namespace Examples.TerrainEditor.Panel
+﻿namespace TGC.Tools.TerrainEditor.Panel
 {
     partial class TerrainEditorControl
     {

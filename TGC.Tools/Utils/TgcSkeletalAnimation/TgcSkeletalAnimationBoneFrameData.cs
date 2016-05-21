@@ -1,7 +1,7 @@
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Tools.Utils.TgcSkeletalAnimation
 {
     /// <summary>
-    /// KeyFrame de animación de un hueso, para una animación particular
+    ///     KeyFrame de animación de un hueso, para una animación particular
     /// </summary>
     public class TgcSkeletalAnimationBoneFrameData
     {

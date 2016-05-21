@@ -1,4 +1,4 @@
-﻿namespace Examples.RoomsEditor
+﻿namespace TGC.Tools.RoomsEditor
 {
     partial class RoomsEditorTexturesEdit
     {

@@ -1,21 +1,18 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Tools.Utils.Shaders;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools
+namespace TGC.Tools.MeshCreator.EditablePoly
 {
     /// <summary>
-    /// Herramienta para acumular varios triangulos y dibujarlos luego todos juntos
+    ///     Herramienta para acumular varios triangulos y dibujarlos luego todos juntos
     /// </summary>
     public class TrianglesBatchRenderer
     {
-        private readonly Vector3 BOX_LINE_ORIGINAL_DIR = new Vector3(0, 1, 0);
-
         private const int BATCH_SIZE = 1200;
+        private readonly Vector3 BOX_LINE_ORIGINAL_DIR = new Vector3(0, 1, 0);
         private readonly CustomVertex.PositionColored[] vertices;
         private int idx;
 
@@ -26,7 +23,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Reiniciar batch
+        ///     Reiniciar batch
         /// </summary>
         public void reset()
         {
@@ -34,9 +31,10 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Agregar triangulo al batch
+        ///     Agregar triangulo al batch
         /// </summary>
-        public void addTriangle(CustomVertex.PositionColored a, CustomVertex.PositionColored b, CustomVertex.PositionColored c)
+        public void addTriangle(CustomVertex.PositionColored a, CustomVertex.PositionColored b,
+            CustomVertex.PositionColored c)
         {
             vertices[idx] = a;
             vertices[idx + 1] = b;
@@ -45,11 +43,11 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Agregar triangulo al batch
+        ///     Agregar triangulo al batch
         /// </summary>
         public void addTriangle(Vector3 a, Vector3 b, Vector3 c, Color color)
         {
-            int cInt = color.ToArgb();
+            var cInt = color.ToArgb();
             addTriangle(
                 new CustomVertex.PositionColored(a, cInt),
                 new CustomVertex.PositionColored(b, cInt),
@@ -57,7 +55,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Indica si hay espacio suficiente para agregar la cantidad de vertices deseada
+        ///     Indica si hay espacio suficiente para agregar la cantidad de vertices deseada
         /// </summary>
         public bool hasSpace(int vertexCount)
         {
@@ -65,17 +63,17 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Dibujar batch de triangulos hasta donde se haya cargado
+        ///     Dibujar batch de triangulos hasta donde se haya cargado
         /// </summary>
         public void render()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
+            var d3dDevice = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            Effect effect = GuiController.Instance.Shaders.VariosShader;
+            var effect = GuiController.Instance.Shaders.VariosShader;
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
@@ -97,7 +95,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Si no queda lugar para agregar los vertices que se quiere entonces se dibuja y vacia el buffer
+        ///     Si no queda lugar para agregar los vertices que se quiere entonces se dibuja y vacia el buffer
         /// </summary>
         public void checkAndFlush(int vertexCount)
         {
@@ -109,21 +107,21 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Add new BoxLine mesh
+        ///     Add new BoxLine mesh
         /// </summary>
         public void addBoxLine(Vector3 pStart, Vector3 pEnd, float thickness, Color color)
         {
             const int vertexCount = 36;
             checkAndFlush(vertexCount);
-            int initIdx = this.idx;
+            var initIdx = idx;
 
-            int c = color.ToArgb();
+            var c = color.ToArgb();
 
             //Crear caja en vertical en Y con longitud igual al módulo de la recta.
-            Vector3 lineVec = Vector3.Subtract(pEnd, pStart);
-            float lineLength = lineVec.Length();
-            Vector3 min = new Vector3(-thickness, 0, -thickness);
-            Vector3 max = new Vector3(thickness, lineLength, thickness);
+            var lineVec = Vector3.Subtract(pEnd, pStart);
+            var lineLength = lineVec.Length();
+            var min = new Vector3(-thickness, 0, -thickness);
+            var max = new Vector3(thickness, lineLength, thickness);
 
             //Vértices de la caja con forma de linea
             // Front face
@@ -155,7 +153,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 new CustomVertex.PositionColored(min.X, max.Y, max.Z, c),
                 new CustomVertex.PositionColored(max.X, max.Y, min.Z, c),
                 new CustomVertex.PositionColored(min.X, max.Y, min.Z, c)
-            );
+                );
             addTriangle(
                 new CustomVertex.PositionColored(min.X, max.Y, max.Z, c),
                 new CustomVertex.PositionColored(max.X, max.Y, max.Z, c),
@@ -200,13 +198,13 @@ namespace Examples.MeshCreator.EditablePolyTools
 
             //Obtener matriz de rotacion respecto del vector de la linea
             lineVec.Normalize();
-            float angle = FastMath.Acos(Vector3.Dot(BOX_LINE_ORIGINAL_DIR, lineVec));
-            Vector3 axisRotation = Vector3.Cross(BOX_LINE_ORIGINAL_DIR, lineVec);
+            var angle = FastMath.Acos(Vector3.Dot(BOX_LINE_ORIGINAL_DIR, lineVec));
+            var axisRotation = Vector3.Cross(BOX_LINE_ORIGINAL_DIR, lineVec);
             axisRotation.Normalize();
-            Matrix t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(pStart);
+            var t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(pStart);
 
             //Transformar todos los puntos
-            for (int i = initIdx; i < initIdx + vertexCount; i++)
+            for (var i = initIdx; i < initIdx + vertexCount; i++)
             {
                 vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
             }

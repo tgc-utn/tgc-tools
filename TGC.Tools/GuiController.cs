@@ -1,43 +1,46 @@
-using Examples.MeshCreator;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer.Utils;
-using TgcViewer.Utils._2D;
-using TgcViewer.Utils.Fog;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.Sound;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Tools.Example;
+using TGC.Tools.MeshCreator;
+using TGC.Tools.Utils;
+using TGC.Tools.Utils._2D;
+using TGC.Tools.Utils.Fog;
+using TGC.Tools.Utils.Input;
+using TGC.Tools.Utils.Modifiers;
+using TGC.Tools.Utils.Shaders;
+using TGC.Tools.Utils.Sound;
+using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcSceneLoader;
 
-namespace TgcViewer
+namespace TGC.Tools
 {
     /// <summary>
-    /// Controlador principal de la aplicación
+    ///     Controlador principal de la aplicación
     /// </summary>
     public class GuiController
     {
+        private TgcExample currentExample;
+
+        private TgcD3dDevice tgcD3dDevice;
+
         #region Singleton
 
         private static volatile GuiController instance;
 
         /// <summary>
-        /// Permite acceder a una instancia de la clase GuiController desde cualquier parte del codigo.
+        ///     Permite acceder a una instancia de la clase GuiController desde cualquier parte del codigo.
         /// </summary>
         public static GuiController Instance
         {
-            get
-            { return instance; }
+            get { return instance; }
         }
 
         /// <summary>
-        /// Crear nueva instancia. Solo el MainForm lo hace
+        ///     Crear nueva instancia. Solo el MainForm lo hace
         /// </summary>
         internal static void newInstance()
         {
@@ -46,31 +49,6 @@ namespace TgcViewer
 
         #endregion Singleton
 
-        private MainForm mainForm;
-        private Control panel3d;
-        private TgcD3dDevice tgcD3dDevice;
-        private string examplesMediaDir;
-        private TgcExample currentExample;
-        private TgcFpsCamera fpsCamera;
-        private TgcRotationalCamera rotCamera;
-        private TgcThirdPersonCamera thirdPersonCamera;
-        private TgcAxisLines axisLines;
-        private TgcDrawText text3d;
-        private TgcModifiers modifiers;
-        private bool fpsCounterEnable;
-        private TgcD3dInput tgcD3dInput;
-        private float elapsedTime;
-        private TgcFrustum frustum;
-        private TgcTexture.Pool texturesPool;
-        private TgcTexture.Manager texturesManager;
-        private TgcMp3Player mp3Player;
-        private TgcDirectSound directSound;
-        private TgcFog fog;
-        private TgcCamera currentCamera;
-        private bool customRenderEnabled;
-        private TgcDrawer2D drawer2D;
-        private TgcShaders shaders;
-
         #region Internal Methods
 
         private GuiController()
@@ -78,91 +56,91 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Crea todos los modulos necesarios de la aplicacion
+        ///     Crea todos los modulos necesarios de la aplicacion
         /// </summary>
         internal void initGraphics(MainForm mainForm, Control panel3d)
         {
-            this.mainForm = mainForm;
-            this.panel3d = panel3d;
+            MainForm = mainForm;
+            Panel3d = panel3d;
             panel3d.Focus();
 
             //Iniciar graficos
-            this.tgcD3dDevice = new TgcD3dDevice(panel3d);
-            this.texturesManager = new TgcTexture.Manager();
-            this.tgcD3dDevice.OnResetDevice(tgcD3dDevice.D3dDevice, null);
+            tgcD3dDevice = new TgcD3dDevice(panel3d);
+            TexturesManager = new TgcTexture.Manager();
+            tgcD3dDevice.OnResetDevice(tgcD3dDevice.D3dDevice, null);
 
             //Iniciar otras herramientas
-            this.texturesPool = new TgcTexture.Pool();
-            this.text3d = new TgcDrawText(tgcD3dDevice.D3dDevice);
-            this.tgcD3dInput = new TgcD3dInput(mainForm, panel3d);
-            this.fpsCamera = new TgcFpsCamera();
-            this.rotCamera = new TgcRotationalCamera();
-            this.thirdPersonCamera = new TgcThirdPersonCamera();
-            this.axisLines = new TgcAxisLines(tgcD3dDevice.D3dDevice);
-            this.modifiers = new TgcModifiers(mainForm.getModifiersPanel());
-            this.elapsedTime = -1;
-            this.frustum = new TgcFrustum();
-            this.mp3Player = new TgcMp3Player();
-            this.directSound = new TgcDirectSound();
-            this.fog = new TgcFog();
-            this.currentCamera = this.rotCamera;
-            this.customRenderEnabled = false;
-            this.drawer2D = new TgcDrawer2D();
-            this.shaders = new TgcShaders();
+            TexturesPool = new TgcTexture.Pool();
+            Text3d = new TgcDrawText(tgcD3dDevice.D3dDevice);
+            D3dInput = new TgcD3dInput(mainForm, panel3d);
+            FpsCamera = new TgcFpsCamera();
+            RotCamera = new TgcRotationalCamera();
+            ThirdPersonCamera = new TgcThirdPersonCamera();
+            AxisLines = new TgcAxisLines(tgcD3dDevice.D3dDevice);
+            Modifiers = new TgcModifiers(mainForm.getModifiersPanel());
+            ElapsedTime = -1;
+            Frustum = new TgcFrustum();
+            Mp3Player = new TgcMp3Player();
+            DirectSound = new TgcDirectSound();
+            Fog = new TgcFog();
+            CurrentCamera = RotCamera;
+            CustomRenderEnabled = false;
+            Drawer2D = new TgcDrawer2D();
+            Shaders = new TgcShaders();
 
             //toogles
-            this.rotCamera.Enable = true;
-            this.fpsCamera.Enable = false;
-            this.thirdPersonCamera.Enable = false;
-            this.fpsCounterEnable = true;
-            this.axisLines.Enable = true;
+            RotCamera.Enable = true;
+            FpsCamera.Enable = false;
+            ThirdPersonCamera.Enable = false;
+            FpsCounterEnable = true;
+            AxisLines.Enable = true;
 
             //Cargar shaders del framework
-            this.shaders.loadCommonShaders();
+            Shaders.loadCommonShaders();
 
             //Cargar ejemplo default
             executeExample(new TgcMeshCreator());
         }
 
         /// <summary>
-        /// Hacer render del ejemplo
+        ///     Hacer render del ejemplo
         /// </summary>
         internal void render()
         {
-            Device d3dDevice = tgcD3dDevice.D3dDevice;
-            elapsedTime = HighResolutionTimer.Instance.FrameTime;
+            var d3dDevice = tgcD3dDevice.D3dDevice;
+            ElapsedTime = HighResolutionTimer.Instance.FrameTime;
 
             tgcD3dDevice.doClear();
 
             //Acutalizar input
-            tgcD3dInput.update();
+            D3dInput.update();
 
             //Actualizar camaras (solo una va a estar activada a la vez)
-            if (currentCamera.Enable)
+            if (CurrentCamera.Enable)
             {
-                this.currentCamera.updateCamera();
-                this.currentCamera.updateViewMatrix(d3dDevice);
+                CurrentCamera.updateCamera();
+                CurrentCamera.updateViewMatrix(d3dDevice);
             }
 
             //actualizar posicion de pantalla en barra de estado de UI
             setStatusPosition();
 
             //actualizar el Frustum
-            frustum.updateVolume(d3dDevice.Transform.View, d3dDevice.Transform.Projection);
+            Frustum.updateVolume(d3dDevice.Transform.View, d3dDevice.Transform.Projection);
 
             //limpiar texturas
-            texturesManager.clearAll();
+            TexturesManager.clearAll();
 
             //actualizar Listener3D
-            directSound.updateListener3d();
+            DirectSound.updateListener3d();
 
             //Hacer render delegando control total al ejemplo
-            if (customRenderEnabled)
+            if (CustomRenderEnabled)
             {
                 //Ejecutar render del ejemplo
                 if (currentExample != null)
                 {
-                    currentExample.render(elapsedTime);
+                    currentExample.render(ElapsedTime);
                 }
             }
 
@@ -173,21 +151,21 @@ namespace TgcViewer
                 d3dDevice.BeginScene();
 
                 //Actualizar contador de FPS si esta activo
-                if (fpsCounterEnable)
+                if (FpsCounterEnable)
                 {
-                    text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+                    Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
                 }
 
                 //Ejecutar render del ejemplo
                 if (currentExample != null)
                 {
-                    currentExample.render(elapsedTime);
+                    currentExample.render(ElapsedTime);
                 }
 
                 //Ejes cartesianos
-                if (axisLines.Enable)
+                if (AxisLines.Enable)
                 {
-                    axisLines.render();
+                    AxisLines.render();
                 }
 
                 //Finalizar escena 3D
@@ -199,7 +177,7 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Cuando se selecciona un ejemplo para ejecutar del TreeNode
+        ///     Cuando se selecciona un ejemplo para ejecutar del TreeNode
         /// </summary>
         internal void executeSelectedExample(TgcExample example)
         {
@@ -207,28 +185,28 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Arranca a ejecutar un ejemplo.
-        /// Para el ejemplo anterior, si hay alguno.
+        ///     Arranca a ejecutar un ejemplo.
+        ///     Para el ejemplo anterior, si hay alguno.
         /// </summary>
         /// <param name="example"></param>
         internal void executeExample(TgcExample example)
         {
             stopCurrentExample();
-            modifiers.clear();
+            Modifiers.clear();
             resetDefaultConfig();
-            fpsCamera.resetValues();
-            rotCamera.resetValues();
-            thirdPersonCamera.resetValues();
+            FpsCamera.resetValues();
+            RotCamera.resetValues();
+            ThirdPersonCamera.resetValues();
 
             //Ejecutar init
             try
             {
                 example.init();
 
-                this.currentExample = example;
-                panel3d.Focus();
-                mainForm.setCurrentExampleStatus("Ejemplo actual: " + example.getName());
-                mainForm.Text = example.getName();
+                currentExample = example;
+                Panel3d.Focus();
+                MainForm.setCurrentExampleStatus("Ejemplo actual: " + example.getName());
+                MainForm.Text = example.getName();
                 Debug.Write("Ejecutando ejemplo: " + example.getName());
             }
             catch (Exception e)
@@ -238,7 +216,7 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Deja de ejecutar el ejemplo actual
+        ///     Deja de ejecutar el ejemplo actual
         /// </summary>
         internal void stopCurrentExample()
         {
@@ -248,12 +226,12 @@ namespace TgcViewer
                 tgcD3dDevice.resetWorldTransofrm();
                 Debug.Write("Ejemplo " + currentExample.getName() + " terminado");
                 currentExample = null;
-                elapsedTime = -1;
+                ElapsedTime = -1;
             }
         }
 
         /// <summary>
-        /// Finaliza la ejecución de la aplicacion
+        ///     Finaliza la ejecución de la aplicacion
         /// </summary>
         internal void shutDown()
         {
@@ -262,47 +240,47 @@ namespace TgcViewer
                 currentExample.close();
             }
             tgcD3dDevice.shutDown();
-            texturesPool.clearAll();
+            TexturesPool.clearAll();
         }
 
         /// <summary>
-        /// Termina y vuelve a empezar el ejemplo actual, si hay alguno ejecutando.
+        ///     Termina y vuelve a empezar el ejemplo actual, si hay alguno ejecutando.
         /// </summary>
         internal void resetCurrentExample()
         {
             if (currentExample != null)
             {
-                TgcExample exampleBackup = currentExample;
+                var exampleBackup = currentExample;
                 stopCurrentExample();
                 executeExample(exampleBackup);
             }
         }
 
         /// <summary>
-        /// Vuelve la configuracion de render y otras cosas a la configuracion inicial
+        ///     Vuelve la configuracion de render y otras cosas a la configuracion inicial
         /// </summary>
         internal void resetDefaultConfig()
         {
-            mainForm.resetMenuOptions();
-            this.axisLines.Enable = true;
-            this.fpsCamera.Enable = false;
-            this.rotCamera.Enable = true;
-            this.currentCamera = this.rotCamera;
-            this.thirdPersonCamera.Enable = false;
-            this.fpsCounterEnable = true;
+            MainForm.resetMenuOptions();
+            AxisLines.Enable = true;
+            FpsCamera.Enable = false;
+            RotCamera.Enable = true;
+            CurrentCamera = RotCamera;
+            ThirdPersonCamera.Enable = false;
+            FpsCounterEnable = true;
             tgcD3dDevice.setDefaultValues();
-            this.mp3Player.closeFile();
-            this.fog.resetValues();
-            customRenderEnabled = false;
+            Mp3Player.closeFile();
+            Fog.resetValues();
+            CustomRenderEnabled = false;
         }
 
         /// <summary>
-        /// Cuando el Direct3D Device se resetea.
-        /// Se reinica el ejemplo actual, si hay alguno.
+        ///     Cuando el Direct3D Device se resetea.
+        ///     Se reinica el ejemplo actual, si hay alguno.
         /// </summary>
         internal void onResetDevice()
         {
-            TgcExample exampleBackup = currentExample;
+            var exampleBackup = currentExample;
             if (exampleBackup != null)
             {
                 stopCurrentExample();
@@ -315,37 +293,40 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Imprime por consola la posicion actual de la pantalla.
-        /// Ideal para copiar y pegar esos valores
+        ///     Imprime por consola la posicion actual de la pantalla.
+        ///     Ideal para copiar y pegar esos valores
         /// </summary>
         internal void printCurrentPosition()
         {
-            mainForm.setStatusPosition(fpsCamera.getPositionCode());
+            MainForm.setStatusPosition(FpsCamera.getPositionCode());
         }
 
         /// <summary>
-        /// Hace foco en el panel 3D de la aplicacion.
-        /// Es util para evitar que el foco quede en otro contro, por ej. un boton,
-        /// y que los controles de navegacion respondan mal
+        ///     Hace foco en el panel 3D de la aplicacion.
+        ///     Es util para evitar que el foco quede en otro contro, por ej. un boton,
+        ///     y que los controles de navegacion respondan mal
         /// </summary>
         internal void focus3dPanel()
         {
-            panel3d.Focus();
+            Panel3d.Focus();
         }
 
         /// <summary>
-        /// Actualiza en la pantalla principal la posicion actual de la camara
+        ///     Actualiza en la pantalla principal la posicion actual de la camara
         /// </summary>
         private void setStatusPosition()
         {
             //Actualizar el textbox en todos los cuadros reduce los FPS en algunas PC
-            if (mainForm.MostrarPosicionDeCamaraEnable)
+            if (MainForm.MostrarPosicionDeCamaraEnable)
             {
-                Vector3 pos = currentCamera.getPosition();
-                Vector3 lookAt = currentCamera.getLookAt();
-                string statusPosition = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " + TgcParserUtils.printFloat(pos.Y) + ", " + TgcParserUtils.printFloat(pos.Z) + "] " +
-                    "- LookAt: [" + TgcParserUtils.printFloat(lookAt.X) + ", " + TgcParserUtils.printFloat(lookAt.Y) + ", " + TgcParserUtils.printFloat(lookAt.Z) + "]";
-                mainForm.setStatusPosition(statusPosition);
+                var pos = CurrentCamera.getPosition();
+                var lookAt = CurrentCamera.getLookAt();
+                var statusPosition = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " +
+                                     TgcParserUtils.printFloat(pos.Y) + ", " + TgcParserUtils.printFloat(pos.Z) + "] " +
+                                     "- LookAt: [" + TgcParserUtils.printFloat(lookAt.X) + ", " +
+                                     TgcParserUtils.printFloat(lookAt.Y) + ", " + TgcParserUtils.printFloat(lookAt.Z) +
+                                     "]";
+                MainForm.setStatusPosition(statusPosition);
             }
         }
 
@@ -354,7 +335,7 @@ namespace TgcViewer
         #region Getters and Setters and Public Methods
 
         /// <summary>
-        /// Direct3D Device
+        ///     Direct3D Device
         /// </summary>
         public Device D3dDevice
         {
@@ -362,132 +343,86 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Utilidad de camara en Primera Persona
+        ///     Utilidad de camara en Primera Persona
         /// </summary>
-        public TgcFpsCamera FpsCamera
-        {
-            get { return fpsCamera; }
-        }
+        public TgcFpsCamera FpsCamera { get; private set; }
 
         /// <summary>
-        /// Utilidad de camara que rota alrededor de un objetivo
+        ///     Utilidad de camara que rota alrededor de un objetivo
         /// </summary>
-        public TgcRotationalCamera RotCamera
-        {
-            get { return rotCamera; }
-        }
+        public TgcRotationalCamera RotCamera { get; private set; }
 
         /// <summary>
-        /// Utilidad de camara en tercera persona que sigue a un objeto que se mueve desde atrás
+        ///     Utilidad de camara en tercera persona que sigue a un objeto que se mueve desde atrás
         /// </summary>
-        public TgcThirdPersonCamera ThirdPersonCamera
-        {
-            get { return thirdPersonCamera; }
-        }
+        public TgcThirdPersonCamera ThirdPersonCamera { get; private set; }
 
         /// <summary>
-        /// Path absoluto de la carpeta Media que contiene todo el contenido visual de los
-        /// ejemplos, como texturas, modelos 3D, etc.
+        ///     Path absoluto de la carpeta Media que contiene todo el contenido visual de los
+        ///     ejemplos, como texturas, modelos 3D, etc.
         /// </summary>
-        public string ExamplesMediaDir
-        {
-            get { return examplesMediaDir; }
-        }
+        public string ExamplesMediaDir { get; }
 
         /// <summary>
-        /// Utilidad para escribir texto dentro de la pantalla 3D
+        ///     Utilidad para escribir texto dentro de la pantalla 3D
         /// </summary>
-        public TgcDrawText Text3d
-        {
-            get { return text3d; }
-        }
+        public TgcDrawText Text3d { get; private set; }
 
         /// <summary>
-        /// Habilita o desactiva el contador de FPS
+        ///     Habilita o desactiva el contador de FPS
         /// </summary>
-        public bool FpsCounterEnable
-        {
-            get { return fpsCounterEnable; }
-            set { fpsCounterEnable = value; }
-        }
+        public bool FpsCounterEnable { get; set; }
 
         /// <summary>
-        /// Utilidad para crear modificadores de variables de usuario, que son mostradas en el panel derecho de la aplicación.
+        ///     Utilidad para crear modificadores de variables de usuario, que son mostradas en el panel derecho de la aplicación.
         /// </summary>
-        public TgcModifiers Modifiers
-        {
-            get { return modifiers; }
-        }
+        public TgcModifiers Modifiers { get; private set; }
 
         /// <summary>
-        /// Utilidad para visualizar los ejes cartesianos
+        ///     Utilidad para visualizar los ejes cartesianos
         /// </summary>
-        public TgcAxisLines AxisLines
-        {
-            get { return axisLines; }
-        }
+        public TgcAxisLines AxisLines { get; private set; }
 
         /// <summary>
-        /// Utilidad para acceder al Input de Teclado y Mouse
+        ///     Utilidad para acceder al Input de Teclado y Mouse
         /// </summary>
-        public TgcD3dInput D3dInput
-        {
-            get { return tgcD3dInput; }
-        }
+        public TgcD3dInput D3dInput { get; private set; }
 
         /// <summary>
-        /// Tiempo en segundos transcurridos desde el último frame.
-        /// Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
+        ///     Tiempo en segundos transcurridos desde el último frame.
+        ///     Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
         /// </summary>
-        public float ElapsedTime
-        {
-            get { return elapsedTime; }
-        }
+        public float ElapsedTime { get; private set; }
 
         /// <summary>
-        /// Ventana principal de la aplicacion
+        ///     Ventana principal de la aplicacion
         /// </summary>
-        public MainForm MainForm
-        {
-            get { return mainForm; }
-        }
+        public MainForm MainForm { get; private set; }
 
         /// <summary>
-        /// Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el
-        /// Device de Direct3D
+        ///     Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el
+        ///     Device de Direct3D
         /// </summary>
-        public Control Panel3d
-        {
-            get { return panel3d; }
-        }
+        public Control Panel3d { get; private set; }
 
         /// <summary>
-        /// Frustum que representa el volumen de vision actual
-        /// Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
+        ///     Frustum que representa el volumen de vision actual
+        ///     Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
         /// </summary>
-        public TgcFrustum Frustum
-        {
-            get { return frustum; }
-        }
+        public TgcFrustum Frustum { get; private set; }
 
         /// <summary>
-        /// Pool de texturas
+        ///     Pool de texturas
         /// </summary>
-        public TgcTexture.Pool TexturesPool
-        {
-            get { return texturesPool; }
-        }
+        public TgcTexture.Pool TexturesPool { get; private set; }
 
         /// <summary>
-        /// Herramienta para configurar texturas en el Device
+        ///     Herramienta para configurar texturas en el Device
         /// </summary>
-        public TgcTexture.Manager TexturesManager
-        {
-            get { return texturesManager; }
-        }
+        public TgcTexture.Manager TexturesManager { get; private set; }
 
         /// <summary>
-        /// Configura la posicion de la cámara
+        ///     Configura la posicion de la cámara
         /// </summary>
         /// <param name="pos">Posición de la cámara</param>
         /// <param name="lookAt">Punto hacia el cuál se quiere ver</param>
@@ -496,37 +431,30 @@ namespace TgcViewer
             tgcD3dDevice.D3dDevice.Transform.View = Matrix.LookAtLH(pos, lookAt, new Vector3(0, 1, 0));
 
             //Imprimir posicion
-            string statusPos = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " + TgcParserUtils.printFloat(pos.Y) + ", " + TgcParserUtils.printFloat(pos.Z) + "] " +
-                "- LookAt: [" + TgcParserUtils.printFloat(lookAt.X) + ", " + TgcParserUtils.printFloat(lookAt.Y) + ", " + TgcParserUtils.printFloat(lookAt.Z) + "]";
-            mainForm.setStatusPosition(statusPos);
+            var statusPos = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " + TgcParserUtils.printFloat(pos.Y) +
+                            ", " + TgcParserUtils.printFloat(pos.Z) + "] " +
+                            "- LookAt: [" + TgcParserUtils.printFloat(lookAt.X) + ", " +
+                            TgcParserUtils.printFloat(lookAt.Y) + ", " + TgcParserUtils.printFloat(lookAt.Z) + "]";
+            MainForm.setStatusPosition(statusPos);
         }
 
         /// <summary>
-        /// Herramienta para reproducir archivos MP3s
+        ///     Herramienta para reproducir archivos MP3s
         /// </summary>
-        public TgcMp3Player Mp3Player
-        {
-            get { return this.mp3Player; }
-        }
+        public TgcMp3Player Mp3Player { get; private set; }
 
         /// <summary>
-        /// Herramienta para manipular DirectSound
+        ///     Herramienta para manipular DirectSound
         /// </summary>
-        public TgcDirectSound DirectSound
-        {
-            get { return this.directSound; }
-        }
+        public TgcDirectSound DirectSound { get; private set; }
 
         /// <summary>
-        /// Herramienta para manipular el efecto de niebla
+        ///     Herramienta para manipular el efecto de niebla
         /// </summary>
-        public TgcFog Fog
-        {
-            get { return fog; }
-        }
+        public TgcFog Fog { get; private set; }
 
         /// <summary>
-        /// Color con el que se limpia la pantalla
+        ///     Color con el que se limpia la pantalla
         /// </summary>
         public Color BackgroundColor
         {
@@ -535,40 +463,26 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Cámara actual que utiliza el framework
+        ///     Cámara actual que utiliza el framework
         /// </summary>
-        public TgcCamera CurrentCamera
-        {
-            get { return currentCamera; }
-            set { currentCamera = value; }
-        }
+        public TgcCamera CurrentCamera { get; set; }
 
         /// <summary>
-        /// Activa o desactiva el renderizado personalizado.
-        /// Si esta activo, el ejemplo tiene la responsabilidad de hacer
-        /// el BeginScene y EndScene, y tampoco se dibuja el contador de FPS y Axis.
+        ///     Activa o desactiva el renderizado personalizado.
+        ///     Si esta activo, el ejemplo tiene la responsabilidad de hacer
+        ///     el BeginScene y EndScene, y tampoco se dibuja el contador de FPS y Axis.
         /// </summary>
-        public bool CustomRenderEnabled
-        {
-            get { return customRenderEnabled; }
-            set { customRenderEnabled = value; }
-        }
+        public bool CustomRenderEnabled { get; set; }
 
         /// <summary>
-        /// Utilidad para renderizar Sprites 2D
+        ///     Utilidad para renderizar Sprites 2D
         /// </summary>
-        public TgcDrawer2D Drawer2D
-        {
-            get { return drawer2D; }
-        }
+        public TgcDrawer2D Drawer2D { get; private set; }
 
         /// <summary>
-        /// Utilidad para manejo de shaders
+        ///     Utilidad para manejo de shaders
         /// </summary>
-        public TgcShaders Shaders
-        {
-            get { return shaders; }
-        }
+        public TgcShaders Shaders { get; private set; }
 
         #endregion Getters and Setters and Public Methods
     }

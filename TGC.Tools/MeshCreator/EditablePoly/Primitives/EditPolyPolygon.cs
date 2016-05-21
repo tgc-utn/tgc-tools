@@ -2,25 +2,30 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools.Primitives
+namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
 {
     /// <summary>
-    /// Poligono de EditablePoly
+    ///     Poligono de EditablePoly
     /// </summary>
     public class EditPolyPolygon : EditPolyPrimitive
     {
-        public List<EditPolyVertex> vertices;
         public List<EditPolyEdge> edges;
-        public List<int> vbTriangles;
-        public Plane plane;
         public int matId;
+        public Plane plane;
+        public List<int> vbTriangles;
+        public List<EditPolyVertex> vertices;
+
+        public override EditablePoly.PrimitiveType Type
+        {
+            get { return EditablePoly.PrimitiveType.Polygon; }
+        }
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < vertices.Count; i++)
+            var sb = new StringBuilder();
+            for (var i = 0; i < vertices.Count; i++)
             {
                 sb.Append(vertices[i].vbIndex + ", ");
             }
@@ -28,15 +33,10 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
             return sb.ToString();
         }
 
-        public override EditablePoly.PrimitiveType Type
-        {
-            get { return EditablePoly.PrimitiveType.Polygon; }
-        }
-
         public override bool projectToScreen(Matrix transform, out Rectangle box2D)
         {
-            Vector3[] v = new Vector3[vertices.Count];
-            for (int i = 0; i < v.Length; i++)
+            var v = new Vector3[vertices.Count];
+            for (var i = 0; i < v.Length; i++)
             {
                 v[i] = Vector3.TransformCoordinate(vertices[i].position, transform);
             }
@@ -45,8 +45,8 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
 
         public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
         {
-            Vector3[] v = new Vector3[vertices.Count];
-            for (int i = 0; i < v.Length; i++)
+            var v = new Vector3[vertices.Count];
+            for (var i = 0; i < v.Length; i++)
             {
                 v[i] = Vector3.TransformCoordinate(vertices[i].position, transform);
             }
@@ -55,7 +55,7 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
         }
 
         /// <summary>
-        /// Normal del plano del poligono
+        ///     Normal del plano del poligono
         /// </summary>
         public Vector3 getNormal()
         {
@@ -64,8 +64,8 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
 
         public override Vector3 computeCenter()
         {
-            Vector3 sum = vertices[0].position;
-            for (int i = 1; i < vertices.Count; i++)
+            var sum = vertices[0].position;
+            for (var i = 1; i < vertices.Count; i++)
             {
                 sum += vertices[i].position;
             }
@@ -80,18 +80,18 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
                 vertices[i].position += movement;
             }
             */
-            for (int i = 0; i < vertices.Count; i++)
+            for (var i = 0; i < vertices.Count; i++)
             {
                 vertices[i].movement = movement;
             }
         }
 
         /// <summary>
-        /// Quitar arista de la lista
+        ///     Quitar arista de la lista
         /// </summary>
         public void removeEdge(EditPolyEdge e)
         {
-            for (int i = 0; i < edges.Count; i++)
+            for (var i = 0; i < edges.Count; i++)
             {
                 if (e == edges[i])
                 {

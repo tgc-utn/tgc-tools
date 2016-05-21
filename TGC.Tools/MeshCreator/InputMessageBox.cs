@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Examples.MeshCreator
+namespace TGC.Tools.MeshCreator
 {
     /// <summary>
-    /// Un MessageBox con un campo de texto para llenar
+    ///     Un MessageBox con un campo de texto para llenar
     /// </summary>
     public partial class InputMessageBox : Form
     {
+        public InputMessageBox()
+        {
+            InitializeComponent();
+        }
+
         /// <summary>
-        /// Label
+        ///     Label
         /// </summary>
         public string InputLabel
         {
@@ -18,7 +23,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Input text
+        ///     Input text
         /// </summary>
         public string InputText
         {
@@ -26,29 +31,24 @@ namespace Examples.MeshCreator
             set { textBoxText.Text = value; }
         }
 
-        public InputMessageBox()
-        {
-            InitializeComponent();
-        }
-
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            string t = textBoxText.Text;
+            var t = textBoxText.Text;
             t = t.Trim();
             if (t.Length > 0)
             {
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                DialogResult = DialogResult.OK;
             }
             else
             {
-                this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                DialogResult = DialogResult.Cancel;
             }
             Close();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 

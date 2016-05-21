@@ -1,109 +1,65 @@
 using Microsoft.DirectX;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Tools.Utils.TgcSkeletalAnimation
 {
     /// <summary>
-    /// Hueso del esqueleto
+    ///     Hueso del esqueleto
     /// </summary>
     public class TgcSkeletalBone
     {
         public TgcSkeletalBone(int index, string name, Vector3 startPosition, Quaternion startRotation)
         {
-            this.index = index;
-            this.name = name;
-            this.startPosition = startPosition;
-            this.startRotation = startRotation;
+            Index = index;
+            Name = name;
+            StartPosition = startPosition;
+            StartRotation = startRotation;
 
-            this.matLocal = Matrix.RotationQuaternion(this.startRotation) * Matrix.Translation(this.startPosition);
+            MatLocal = Matrix.RotationQuaternion(StartRotation) * Matrix.Translation(StartPosition);
         }
-
-        private Vector3 startPosition;
 
         /// <summary>
-        /// Posicion inicial del hueso
+        ///     Posicion inicial del hueso
         /// </summary>
-        public Vector3 StartPosition
-        {
-            get { return startPosition; }
-        }
-
-        private Quaternion startRotation;
+        public Vector3 StartPosition { get; }
 
         /// <summary>
-        /// Rotacion inicial del hueso
+        ///     Rotacion inicial del hueso
         /// </summary>
-        public Quaternion StartRotation
-        {
-            get { return startRotation; }
-        }
-
-        private Matrix matLocal;
+        public Quaternion StartRotation { get; }
 
         /// <summary>
-        /// Matriz local de transformacion
+        ///     Matriz local de transformacion
         /// </summary>
-        public Matrix MatLocal
-        {
-            get { return matLocal; }
-            set { matLocal = value; }
-        }
-
-        private Matrix matFinal;
+        public Matrix MatLocal { get; set; }
 
         /// <summary>
-        /// Matriz final de transformacion
+        ///     Matriz final de transformacion
         /// </summary>
-        public Matrix MatFinal
-        {
-            get { return matFinal; }
-            set { matFinal = value; }
-        }
-
-        private Matrix matInversePose;
+        public Matrix MatFinal { get; set; }
 
         /// <summary>
-        /// Matriz de transformacion inversa de la posicion inicial del hueso, para la animacion actual
+        ///     Matriz de transformacion inversa de la posicion inicial del hueso, para la animacion actual
         /// </summary>
-        public Matrix MatInversePose
-        {
-            get { return matInversePose; }
-            set { matInversePose = value; }
-        }
-
-        private int index;
+        public Matrix MatInversePose { get; set; }
 
         /// <summary>
-        /// Posición del hueso dentro del array de huesos de todo el esqueleto
+        ///     Posición del hueso dentro del array de huesos de todo el esqueleto
         /// </summary>
-        public int Index
-        {
-            get { return index; }
-        }
-
-        private string name;
+        public int Index { get; }
 
         /// <summary>
-        /// Nombre del hueso
+        ///     Nombre del hueso
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-        }
-
-        private TgcSkeletalBone parentBone;
+        public string Name { get; }
 
         /// <summary>
-        /// Hueso padre. Es null si no tiene
+        ///     Hueso padre. Es null si no tiene
         /// </summary>
-        public TgcSkeletalBone ParentBone
-        {
-            get { return parentBone; }
-            set { parentBone = value; }
-        }
+        public TgcSkeletalBone ParentBone { get; set; }
 
         public override string ToString()
         {
-            return "Bone: " + name;
+            return "Bone: " + Name;
         }
     }
 }

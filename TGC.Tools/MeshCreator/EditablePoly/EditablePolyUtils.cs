@@ -1,14 +1,14 @@
-﻿using Examples.MeshCreator.EditablePolyTools.Primitives;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using System.Collections.Generic;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Tools.MeshCreator.EditablePoly.Primitives;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools
+namespace TGC.Tools.MeshCreator.EditablePoly
 {
     public class EditablePolyUtils
     {
         /// <summary>
-        /// Epsilon para comparar si dos vertices son iguales
+        ///     Epsilon para comparar si dos vertices son iguales
         /// </summary>
         public static readonly float EPSILON = 0.0001f;
 
@@ -92,16 +92,17 @@ namespace Examples.MeshCreator.EditablePolyTools
         */
 
         /// <summary>
-        /// Agregar un vertice a un poligono existente, ubicandolo en el medio de los dos vertices de la arista que compartian entre si
+        ///     Agregar un vertice a un poligono existente, ubicandolo en el medio de los dos vertices de la arista que compartian
+        ///     entre si
         /// </summary>
         public static void addVertexToPolygon(EditPolyPolygon p, EditPolyEdge sharedEdge, EditPolyVertex newV)
         {
-            for (int i = 0; i < p.vertices.Count; i++)
+            for (var i = 0; i < p.vertices.Count; i++)
             {
                 if (p.vertices[i].vbIndex == sharedEdge.a.vbIndex)
                 {
                     p.vertices.Add(null);
-                    for (int j = p.vertices.Count - 2; j >= i + 1; j--)
+                    for (var j = p.vertices.Count - 2; j >= i + 1; j--)
                     {
                         p.vertices[j + 1] = p.vertices[j];
                     }
@@ -112,16 +113,16 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Indica si dos aristas son iguales
+        ///     Indica si dos aristas son iguales
         /// </summary>
         public static bool sameEdge(EditPolyEdge e1, EditPolyEdge e2)
         {
             return (sameVextex(e1.a, e2.a) && sameVextex(e1.b, e2.b))
-                || (sameVextex(e1.a, e2.b) && sameVextex(e1.b, e2.a));
+                   || (sameVextex(e1.a, e2.b) && sameVextex(e1.b, e2.a));
         }
 
         /// <summary>
-        /// Indica si dos vertices son iguales
+        ///     Indica si dos vertices son iguales
         /// </summary>
         /// <returns></returns>
         public static bool sameVextex(EditPolyVertex a, EditPolyVertex b)
@@ -130,17 +131,17 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Indica si dos Vector3 son iguales
+        ///     Indica si dos Vector3 son iguales
         /// </summary>
         public static bool equalsVector3(Vector3 a, Vector3 b)
         {
             return equalsFloat(a.X, b.X)
-                && equalsFloat(a.Y, b.Y)
-                && equalsFloat(a.Z, b.Z);
+                   && equalsFloat(a.Y, b.Y)
+                   && equalsFloat(a.Z, b.Z);
         }
 
         /// <summary>
-        /// Compara que dos floats sean iguales, o casi
+        ///     Compara que dos floats sean iguales, o casi
         /// </summary>
         public static bool equalsFloat(float f1, float f2)
         {
@@ -148,26 +149,27 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Compara si dos planos son iguales
+        ///     Compara si dos planos son iguales
         /// </summary>
         public static bool samePlane(Plane p1, Plane p2)
         {
             //TODO: comparar en ambos sentidos por las dudas
             return equalsVector3(new Vector3(p1.A, p1.B, p1.C), new Vector3(p2.A, p2.B, p2.C))
-                && equalsFloat(p1.D, p2.D);
+                   && equalsFloat(p1.D, p2.D);
         }
 
         /// <summary>
-        /// Busca si ambos poligonos tienen una arista igual.
-        /// Si encontro retorna el indice de la arista igual de cada poligono.
+        ///     Busca si ambos poligonos tienen una arista igual.
+        ///     Si encontro retorna el indice de la arista igual de cada poligono.
         /// </summary>
-        public static bool findShareEdgeBetweenPolygons(EditPolyPolygon p1, EditPolyPolygon p2, out int p1Edge, out int p2Edge)
+        public static bool findShareEdgeBetweenPolygons(EditPolyPolygon p1, EditPolyPolygon p2, out int p1Edge,
+            out int p2Edge)
         {
-            for (int i = 0; i < p1.edges.Count; i++)
+            for (var i = 0; i < p1.edges.Count; i++)
             {
-                for (int j = 0; j < p2.edges.Count; j++)
+                for (var j = 0; j < p2.edges.Count; j++)
                 {
-                    if (EditablePolyUtils.sameEdge(p1.edges[i], p2.edges[j]))
+                    if (sameEdge(p1.edges[i], p2.edges[j]))
                     {
                         p1Edge = i;
                         p2Edge = j;
@@ -181,14 +183,14 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Agrega una nueva arista a la lista si es que ya no hay otra igual.
-        /// Devuelve el indice de la nuevo arista o de la que ya estaba.
+        ///     Agrega una nueva arista a la lista si es que ya no hay otra igual.
+        ///     Devuelve el indice de la nuevo arista o de la que ya estaba.
         /// </summary>
         public static int addEdgeToListIfUnique(List<EditPolyEdge> edges, EditPolyEdge e, out bool newEdgeAdded)
         {
-            for (int i = 0; i < edges.Count; i++)
+            for (var i = 0; i < edges.Count; i++)
             {
-                if (EditablePolyUtils.sameEdge(edges[i], e))
+                if (sameEdge(edges[i], e))
                 {
                     newEdgeAdded = false;
                     return i;
@@ -201,14 +203,14 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Agrega un nuevo vertice a la lista si es que ya no hay otro igual.
-        /// Devuelve el indice del nuevo vertice o del que ya estaba.
+        ///     Agrega un nuevo vertice a la lista si es que ya no hay otro igual.
+        ///     Devuelve el indice del nuevo vertice o del que ya estaba.
         /// </summary>
         public static int addVertexToListIfUnique(List<EditPolyVertex> vertices, EditPolyVertex v)
         {
-            for (int i = 0; i < vertices.Count; i++)
+            for (var i = 0; i < vertices.Count; i++)
             {
-                if (EditablePolyUtils.sameVextex(vertices[i], v))
+                if (sameVextex(vertices[i], v))
                 {
                     return i;
                 }
@@ -220,7 +222,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Crear BoundingBox a partir de un conjunto de primitivas
+        ///     Crear BoundingBox a partir de un conjunto de primitivas
         /// </summary>
         /// <param name="list">primitivas</param>
         /// <returns>BoundingBox</returns>
@@ -229,8 +231,8 @@ namespace Examples.MeshCreator.EditablePolyTools
             if (primitives.Count == 0)
                 return null;
 
-            Vector3[] vertices = new Vector3[primitives.Count];
-            for (int i = 0; i < primitives.Count; i++)
+            var vertices = new Vector3[primitives.Count];
+            for (var i = 0; i < primitives.Count; i++)
             {
                 vertices[i] = primitives[i].computeCenter();
             }
@@ -239,18 +241,18 @@ namespace Examples.MeshCreator.EditablePolyTools
 
         public static void updateObbFromSegment(TgcObb obb, Vector3 a, Vector3 b, float thickness)
         {
-            Vector3 lineDiff = b - a;
-            float lineLength = lineDiff.Length();
-            Vector3 lineVec = Vector3.Normalize(lineDiff);
+            var lineDiff = b - a;
+            var lineLength = lineDiff.Length();
+            var lineVec = Vector3.Normalize(lineDiff);
 
             //Obtener angulo y vector de rotacion
-            Vector3 upVec = new Vector3(0, 1, 0);
-            float angle = FastMath.Acos(Vector3.Dot(upVec, lineVec));
-            Vector3 axisRotation = Vector3.Cross(upVec, lineVec);
+            var upVec = new Vector3(0, 1, 0);
+            var angle = FastMath.Acos(Vector3.Dot(upVec, lineVec));
+            var axisRotation = Vector3.Cross(upVec, lineVec);
             axisRotation.Normalize();
 
             //Obtener matriz de rotacion para este eje y angulo
-            Matrix rotM = Matrix.RotationAxis(axisRotation, angle);
+            var rotM = Matrix.RotationAxis(axisRotation, angle);
 
             //Actualizar orientacion de OBB en base a matriz de rotacion
             obb.Orientation[0] = new Vector3(rotM.M11, rotM.M12, rotM.M13);
@@ -268,11 +270,11 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Hacer zoom a un grupo de primitivas
+        ///     Hacer zoom a un grupo de primitivas
         /// </summary>
         public static void zoomPrimitives(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
         {
-            TgcBoundingBox aabb = getSelectionBoundingBox(primitives);
+            var aabb = getSelectionBoundingBox(primitives);
             if (aabb != null)
             {
                 camera.CameraCenter = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
@@ -280,11 +282,12 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Poner la camara en top view respecto de un conjunto de primitivas
+        ///     Poner la camara en top view respecto de un conjunto de primitivas
         /// </summary>
-        public static void setCameraTopView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
+        public static void setCameraTopView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives,
+            Matrix transform)
         {
-            TgcBoundingBox aabb = getSelectionBoundingBox(primitives);
+            var aabb = getSelectionBoundingBox(primitives);
             Vector3 lookAt;
             if (aabb != null)
             {
@@ -298,11 +301,12 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Poner la camara en left view respecto de un conjunto de primitivas
+        ///     Poner la camara en left view respecto de un conjunto de primitivas
         /// </summary>
-        public static void setCameraLeftView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
+        public static void setCameraLeftView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives,
+            Matrix transform)
         {
-            TgcBoundingBox aabb = getSelectionBoundingBox(primitives);
+            var aabb = getSelectionBoundingBox(primitives);
             Vector3 lookAt;
             if (aabb != null)
             {
@@ -316,11 +320,12 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Poner la camara en front view respecto de un conjunto de primitivas
+        ///     Poner la camara en front view respecto de un conjunto de primitivas
         /// </summary>
-        public static void setCameraFrontView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
+        public static void setCameraFrontView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives,
+            Matrix transform)
         {
-            TgcBoundingBox aabb = getSelectionBoundingBox(primitives);
+            var aabb = getSelectionBoundingBox(primitives);
             Vector3 lookAt;
             if (aabb != null)
             {

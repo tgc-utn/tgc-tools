@@ -1,13 +1,13 @@
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para valores Boolean
+    ///     Modificador para valores Boolean
     /// </summary>
     public class TgcBooleanModifier : TgcModifierPanel
     {
-        private CheckBox checkbox;
+        private readonly CheckBox checkbox;
 
         public TgcBooleanModifier(string varName, string text, bool defaultValue)
             : base(varName)
@@ -22,7 +22,7 @@ namespace TgcViewer.Utils.Modifiers
 
         public override object getValue()
         {
-            return (bool)checkbox.Checked;
+            return checkbox.Checked;
         }
     }
 }

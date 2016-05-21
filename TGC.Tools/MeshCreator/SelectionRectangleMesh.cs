@@ -1,14 +1,12 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TgcViewer;
-using TgcViewer.Utils;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Tools.Utils;
 
-namespace Examples.MeshCreator
+namespace TGC.Tools.MeshCreator
 {
     /// <summary>
-    /// Mesh para dibujar el rectangulo de seleccion 2D en pantalla
+    ///     Mesh para dibujar el rectangulo de seleccion 2D en pantalla
     /// </summary>
     public class SelectionRectangleMesh
     {
@@ -22,7 +20,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Actualizar mesh del recuadro de seleccion
+        ///     Actualizar mesh del recuadro de seleccion
         /// </summary>
         public void updateMesh(Vector2 min, Vector2 max)
         {
@@ -44,12 +42,12 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Dibujar recuadro
+        ///     Dibujar recuadro
         /// </summary>
         public void render()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
+            var d3dDevice = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);

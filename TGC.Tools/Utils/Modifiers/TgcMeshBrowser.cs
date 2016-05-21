@@ -4,27 +4,17 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Ventana visualizadora de TgcMesh de un directorio.
-    /// Muestra la imagen de preview.jpg del TgcMesh (si tiene)
+    ///     Ventana visualizadora de TgcMesh de un directorio.
+    ///     Muestra la imagen de preview.jpg del TgcMesh (si tiene)
     /// </summary>
     public partial class TgcMeshBrowser : Form
     {
-        private OpenFileDialog browseDialog;
+        private readonly OpenFileDialog browseDialog;
+
         private MeshItemControl selectedItem;
-
-        private string homeDirPath;
-
-        /// <summary>
-        /// Path del directorio Home
-        /// </summary>
-        public string HomeDirPath
-        {
-            get { return homeDirPath; }
-            set { homeDirPath = value; }
-        }
 
         public TgcMeshBrowser()
         {
@@ -35,11 +25,16 @@ namespace TgcViewer.Utils.Modifiers
             browseDialog.Title = "Select -TgcScene.xml mesh file";
             browseDialog.Filter = "-TgcScene.xml |*-TgcScene.xml";
             browseDialog.Multiselect = false;
-            homeDirPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator";
+            HomeDirPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator";
         }
 
         /// <summary>
-        /// Path del mesh seleccionado
+        ///     Path del directorio Home
+        /// </summary>
+        public string HomeDirPath { get; set; }
+
+        /// <summary>
+        ///     Path del mesh seleccionado
         /// </summary>
         public string SelectedMesh
         {
@@ -47,8 +42,8 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Directorio actual del cual se van a cargar meshes.
-        /// Al especificar un directorio se cargan todas los meshes que haya en el mismo.
+        ///     Directorio actual del cual se van a cargar meshes.
+        ///     Al especificar un directorio se cargan todas los meshes que haya en el mismo.
         /// </summary>
         public string CurrentDir
         {
@@ -61,8 +56,8 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Carga todas los meshes del directorio padre en donde se encuentra el mesh especificada,
-        /// y lo marca como mesh seleccionado de la ventana.
+        ///     Carga todas los meshes del directorio padre en donde se encuentra el mesh especificada,
+        ///     y lo marca como mesh seleccionado de la ventana.
         /// </summary>
         public void setSelectedMesh(string meshPath)
         {
@@ -73,10 +68,10 @@ namespace TgcViewer.Utils.Modifiers
             }
 
             //Cargar meshes del directorio padre
-            FileInfo fi = new FileInfo(meshPath);
+            var fi = new FileInfo(meshPath);
             if (fi.Directory.Parent != null)
             {
-                this.CurrentDir = fi.Directory.Parent.FullName;
+                CurrentDir = fi.Directory.Parent.FullName;
             }
 
             //Buscar el mesh pedido para seleccionarlo, si es que está
@@ -90,7 +85,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Cargar meshes del directorio especificado
+        ///     Cargar meshes del directorio especificado
         /// </summary>
         public void loadFolderContent(string folderPath)
         {
@@ -106,11 +101,11 @@ namespace TgcViewer.Utils.Modifiers
             if (Directory.Exists(folderPath))
             {
                 //Obtener todas las carpetas del directorio
-                string[] allDirs = Directory.GetDirectories(folderPath);
+                var allDirs = Directory.GetDirectories(folderPath);
 
                 //Excluir subdirectorios innecesarios
-                List<string> dirs = new List<string>();
-                for (int i = 0; i < allDirs.Length; i++)
+                var dirs = new List<string>();
+                for (var i = 0; i < allDirs.Length; i++)
                 {
                     if (!allDirs[i].Contains(".svn"))
                     {
@@ -119,27 +114,27 @@ namespace TgcViewer.Utils.Modifiers
                 }
 
                 //Ver cuales son directorios simples y cuales tienen un -TgcScene.xml adentro
-                List<MeshItemControl> meshes = new List<MeshItemControl>();
-                foreach (string dirPath in dirs)
+                var meshes = new List<MeshItemControl>();
+                foreach (var dirPath in dirs)
                 {
                     //Buscar si hay algun mesh adentro del directorio
-                    string[] files = Directory.GetFiles(dirPath, "*-TgcScene.xml", SearchOption.TopDirectoryOnly);
+                    var files = Directory.GetFiles(dirPath, "*-TgcScene.xml", SearchOption.TopDirectoryOnly);
 
                     //Si hay al menos uno en el directorio
                     if (files.Length > 0)
                     {
                         //Ver si tiene imagen de preview
-                        FileInfo fi = new FileInfo(files[0]);
-                        string previewImagePath = fi.Directory.FullName + "\\preview.jpg";
+                        var fi = new FileInfo(files[0]);
+                        var previewImagePath = fi.Directory.FullName + "\\preview.jpg";
                         if (!File.Exists(previewImagePath))
                         {
                             previewImagePath = null;
                         }
 
                         //Crear un item de mesh para cada uno
-                        foreach (string file in files)
+                        foreach (var file in files)
                         {
-                            MeshItemControl item = new MeshItemControl(file, previewImagePath, this, false);
+                            var item = new MeshItemControl(file, previewImagePath, this, false);
                             meshes.Add(item);
                         }
                     }
@@ -147,7 +142,7 @@ namespace TgcViewer.Utils.Modifiers
                     else
                     {
                         //Crear item de directorio
-                        MeshItemControl item = new MeshItemControl(dirPath, null, this, true);
+                        var item = new MeshItemControl(dirPath, null, this, true);
                         panelItems.Controls.Add(item);
                     }
                 }
@@ -164,54 +159,54 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Clic en "Browse"
+        ///     Clic en "Browse"
         /// </summary>
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
-            DialogResult r = browseDialog.ShowDialog(this);
+            var r = browseDialog.ShowDialog(this);
             if (r == DialogResult.OK)
             {
                 setSelectedMesh(browseDialog.FileName);
-                this.Close();
+                Close();
             }
         }
 
         private void TgcMeshBrowser_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.selectedItem != null && !this.selectedItem.isDirectory)
+            if (selectedItem != null && !selectedItem.isDirectory)
             {
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
             }
             else
             {
-                this.DialogResult = DialogResult.Cancel;
+                DialogResult = DialogResult.Cancel;
             }
         }
 
         private void pictureBoxUpDir_Click(object sender, EventArgs e)
         {
-            FileInfo info = new FileInfo(this.CurrentDir);
+            var info = new FileInfo(CurrentDir);
             if (info.Directory != null)
             {
-                this.CurrentDir = info.Directory.FullName;
+                CurrentDir = info.Directory.FullName;
             }
         }
 
         private void pictureBoxHomeDir_Click(object sender, EventArgs e)
         {
-            this.CurrentDir = homeDirPath;
+            CurrentDir = HomeDirPath;
         }
 
         /// <summary>
-        /// Control para una imagen o directorio
+        ///     Control para una imagen o directorio
         /// </summary>
         public class MeshItemControl : FlowLayoutPanel
         {
-            private TgcMeshBrowser browser;
-            public PictureBox pictureBox;
+            private readonly TgcMeshBrowser browser;
             public Label filenameLabel;
             public string filePath;
             public bool isDirectory;
+            public PictureBox pictureBox;
 
             public MeshItemControl(string filePath, string previewImagePath, TgcMeshBrowser browser, bool isDirectory)
             {
@@ -219,17 +214,17 @@ namespace TgcViewer.Utils.Modifiers
                 this.browser = browser;
                 this.isDirectory = isDirectory;
 
-                this.BorderStyle = BorderStyle.FixedSingle;
-                this.BackColor = Color.White;
-                this.AutoSize = true;
-                this.FlowDirection = FlowDirection.TopDown;
-                this.Click += new EventHandler(ImageControl_Click);
+                BorderStyle = BorderStyle.FixedSingle;
+                BackColor = Color.White;
+                AutoSize = true;
+                FlowDirection = FlowDirection.TopDown;
+                Click += ImageControl_Click;
 
                 pictureBox = new PictureBox();
 
                 pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                pictureBox.Click += new EventHandler(pictureBox_Click);
-                pictureBox.DoubleClick += new EventHandler(pictureBox_DoubleClick);
+                pictureBox.Click += pictureBox_Click;
+                pictureBox.DoubleClick += pictureBox_DoubleClick;
                 //cargar imagen default para directorios
                 if (this.isDirectory)
                 {
@@ -249,7 +244,7 @@ namespace TgcViewer.Utils.Modifiers
                         pictureBox.Image = browser.pictureBoxNoImageIcon.Image;
                     }
                 }
-                this.Controls.Add(pictureBox);
+                Controls.Add(pictureBox);
 
                 filenameLabel = new Label();
                 filenameLabel.AutoSize = false;
@@ -258,15 +253,15 @@ namespace TgcViewer.Utils.Modifiers
                 {
                     filenameLabel.Font = new Font(FontFamily.GenericSansSerif, 8, FontStyle.Bold);
                 }
-                string[] pathArray = filePath.Split('\\');
+                var pathArray = filePath.Split('\\');
                 filenameLabel.Text = pathArray[pathArray.Length - 1];
-                filenameLabel.Click += new EventHandler(filenameLabel_Click);
+                filenameLabel.Click += filenameLabel_Click;
                 filenameLabel.TextAlign = ContentAlignment.MiddleCenter;
-                this.Controls.Add(filenameLabel);
+                Controls.Add(filenameLabel);
             }
 
             /// <summary>
-            /// Seleccionar item
+            ///     Seleccionar item
             /// </summary>
             public void selectItem()
             {
@@ -276,7 +271,7 @@ namespace TgcViewer.Utils.Modifiers
                 }
 
                 browser.selectedItem = this;
-                this.BackColor = Color.Yellow;
+                BackColor = Color.Yellow;
             }
 
             public void pictureBox_DoubleClick(object sender, EventArgs e)
@@ -284,7 +279,7 @@ namespace TgcViewer.Utils.Modifiers
                 selectItem();
 
                 //Si es directorio, entrar a esa carpeta y cargar su contenido
-                if (this.isDirectory)
+                if (isDirectory)
                 {
                     browser.CurrentDir = filePath;
                 }

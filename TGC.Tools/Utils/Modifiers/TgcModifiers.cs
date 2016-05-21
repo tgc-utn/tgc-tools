@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     public class TgcModifiers
     {
-        private Panel modifiersPanel;
-        private Dictionary<string, TgcModifierPanel> modifiers;
-        private Panel spacePanel;
+        private readonly Dictionary<string, TgcModifierPanel> modifiers;
+        private readonly Panel modifiersPanel;
+        private readonly Panel spacePanel;
 
         public TgcModifiers(Panel modifiersPanel)
         {
@@ -18,7 +18,12 @@ namespace TgcViewer.Utils.Modifiers
             modifiers = new Dictionary<string, TgcModifierPanel>();
 
             spacePanel = new Panel();
-            spacePanel.Size = new System.Drawing.Size(10, 100);
+            spacePanel.Size = new Size(10, 100);
+        }
+
+        public object this[string varName]
+        {
+            get { return modifiers[varName].getValue(); }
         }
 
         public void add(TgcModifierPanel modifier)
@@ -39,25 +44,20 @@ namespace TgcViewer.Utils.Modifiers
             return modifiers[varName].getValue();
         }
 
-        public object this[string varName]
-        {
-            get { return modifiers[varName].getValue(); }
-        }
-
         internal void variableChanged()
         {
         }
 
         public void clear()
         {
-            this.modifiersPanel.Controls.Clear();
-            this.modifiers.Clear();
+            modifiersPanel.Controls.Clear();
+            modifiers.Clear();
         }
 
         #region Facilitadores de Modifiers
 
         /// <summary>
-        /// Modificador para valores Float
+        ///     Modificador para valores Float
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="minValue">Valor minimo</param>
@@ -69,7 +69,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para valores Int
+        ///     Modificador para valores Int
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="minValue">Valor minimo</param>
@@ -81,7 +81,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para valores Boolean
+        ///     Modificador para valores Boolean
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="text">Descripcion</param>
@@ -92,7 +92,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para elegir un color
+        ///     Modificador para elegir un color
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="defaultValue">Valor default</param>
@@ -102,7 +102,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para un intervalo discreto de valores
+        ///     Modificador para un intervalo discreto de valores
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="values">Array de valores discretos</param>
@@ -113,7 +113,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para un intervalo discreto de valores creados con una estructura Enum
+        ///     Modificador para un intervalo discreto de valores creados con una estructura Enum
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="enumType">tipo del Enum a utilizar. Se obtiene con typeof(MyEnum)</param>
@@ -124,7 +124,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para elegir un archivo del FileSystem
+        ///     Modificador para elegir un archivo del FileSystem
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="defaultPath">path del archivo default</param>
@@ -139,7 +139,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para elegir una textura
+        ///     Modificador para elegir una textura
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="values">path de la textura default</param>
@@ -149,7 +149,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para valores floats (X,Y,Z) de un vertice
+        ///     Modificador para valores floats (X,Y,Z) de un vertice
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="minValue">Valor minimo</param>
@@ -161,7 +161,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para valores floats (X,Y) o (U,V) de un vertice
+        ///     Modificador para valores floats (X,Y) o (U,V) de un vertice
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="minValue">Valor minimo</param>
@@ -173,7 +173,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador que agrega un Boton
+        ///     Modificador que agrega un Boton
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="text">Descripcion</param>

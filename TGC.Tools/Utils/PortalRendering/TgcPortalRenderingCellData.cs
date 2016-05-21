@@ -1,14 +1,14 @@
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Tools.Utils.PortalRendering
 {
     /// <summary>
-    /// Datos de una celda de PortalRendering
+    ///     Datos de una celda de PortalRendering
     /// </summary>
     public class TgcPortalRenderingCellData
     {
-        public int id;
-        public string name;
-        public float[] facePlanes;
         public float[] boundingVertices;
+        public float[] facePlanes;
+        public int id;
         public string[] meshes;
+        public string name;
     }
 }

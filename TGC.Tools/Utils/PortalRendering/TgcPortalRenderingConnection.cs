@@ -1,66 +1,46 @@
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Tools.Utils.PortalRendering
 {
     /// <summary>
-    /// Conexión unidireccional entre una celda y otra, a travez de un Portal
+    ///     Conexión unidireccional entre una celda y otra, a travez de un Portal
     /// </summary>
     public class TgcPortalRenderingConnection
     {
-        public TgcPortalRenderingConnection(TgcPortalRenderingPortal portal, TgcPortalRenderingCell nextCell, TgcConvexPolygon polygon, Plane plane)
+        public TgcPortalRenderingConnection(TgcPortalRenderingPortal portal, TgcPortalRenderingCell nextCell,
+            TgcConvexPolygon polygon, Plane plane)
         {
-            this.portal = portal;
-            this.nextCell = nextCell;
-            this.polygon = polygon;
-            this.plane = plane;
+            Portal = portal;
+            NextCell = nextCell;
+            Polygon = polygon;
+            Plane = plane;
         }
-
-        private TgcPortalRenderingPortal portal;
 
         /// <summary>
-        /// Portal de la conexion
+        ///     Portal de la conexion
         /// </summary>
-        public TgcPortalRenderingPortal Portal
-        {
-            get { return portal; }
-        }
-
-        private TgcPortalRenderingCell nextCell;
+        public TgcPortalRenderingPortal Portal { get; }
 
         /// <summary>
-        /// Celda con la cual comunica
+        ///     Celda con la cual comunica
         /// </summary>
-        public TgcPortalRenderingCell NextCell
-        {
-            get { return nextCell; }
-            set { nextCell = value; }
-        }
-
-        private TgcConvexPolygon polygon;
+        public TgcPortalRenderingCell NextCell { get; set; }
 
         /// <summary>
-        /// Polígono plano que representa el portal.
-        /// Los vértices están en clockwise-order según la celda de origen
+        ///     Polígono plano que representa el portal.
+        ///     Los vértices están en clockwise-order según la celda de origen
         /// </summary>
-        public TgcConvexPolygon Polygon
-        {
-            get { return polygon; }
-        }
-
-        private Plane plane;
+        public TgcConvexPolygon Polygon { get; }
 
         /// <summary>
-        /// Plano del portal, apuntando hacia la celda origen
+        ///     Plano del portal, apuntando hacia la celda origen
         /// </summary>
-        public Plane Plane
-        {
-            get { return plane; }
-        }
+        public Plane Plane { get; }
 
         public override string ToString()
         {
-            return "Connection: [" + portal.ToString() + "] - [" + nextCell.ToString() + "]";
+            return "Connection: [" + Portal + "] - [" + NextCell + "]";
         }
     }
 }

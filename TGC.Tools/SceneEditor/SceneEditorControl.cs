@@ -1,81 +1,53 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
-using System.IO;
-using Microsoft.DirectX;
-using SistPaquetesClient.core;
-using TgcViewer.Utils.Terrain;
-using System.Xml;
-using TgcViewer.Utils.TgcGeometry;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Input;
 using System.Diagnostics;
+using System.IO;
+using System.Windows.Forms;
+using TGC.Tools.Utils.Input;
+using TGC.Tools.Utils.Terrain;
+using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Tools.Utils.Ui;
 
-namespace Examples.SceneEditor
+namespace TGC.Tools.SceneEditor
 {
     /// <summary>
-    /// Control de .NET para crear un Modifier personalizado para el ejemplo SceneEditor
+    ///     Control de .NET para crear un Modifier personalizado para el ejemplo SceneEditor
     /// </summary>
     public partial class SceneEditorControl : UserControl
     {
-        TgcSceneEditor editor;
-        OpenFileDialog openMeshDialog;
-        OpenFileDialog openHeighmapDialog;
-        OpenFileDialog openTextureDialog;
-        SaveFileDialog saveSceneDialog;
-        TgcSceneLoader sceneLoader;
-        TgcSceneParser parser;
-        int meshCounter = 1;
-        int meshGroupCounter = 0;
-        string meshFilePath;
-        string meshFolderName;
-        string heighmapFilePath;
-        string terrainTextureFilePath;
-        GuiState currentState;
-        TgcPickingRay pickingRay;
-        SceneEditorTranslateGizmo translateGizmo;
-        SceneEditorHelpWindow helpWindow;
-        
+        private GuiState currentState;
+        private readonly TgcSceneEditor editor;
+        private string heighmapFilePath;
+        private readonly SceneEditorHelpWindow helpWindow;
+        private int meshCounter = 1;
+        private string meshFilePath;
+        private string meshFolderName;
+        private int meshGroupCounter;
+
+        private readonly OpenFileDialog openHeighmapDialog;
+        private readonly OpenFileDialog openMeshDialog;
+        private readonly OpenFileDialog openTextureDialog;
+        private readonly TgcSceneParser parser;
+        private readonly TgcPickingRay pickingRay;
+        private readonly SaveFileDialog saveSceneDialog;
+        private readonly TgcSceneLoader sceneLoader;
+
+        private string terrainTextureFilePath;
+
         /// <summary>
-        /// Terreno del escenario
+        ///     Terreno del escenario
         /// </summary>
-        TgcSimpleTerrain tgcTerrain;
-        public TgcSimpleTerrain TgcTerrain
-        {
-            get { return tgcTerrain; }
-        } 
+        private TgcSimpleTerrain tgcTerrain;
 
-        List<SceneEditorMeshObject> meshObjects = new List<SceneEditorMeshObject>();
-        /// <summary>
-        /// Lista de todos los objetos del escenario
-        /// </summary>
-        public List<SceneEditorMeshObject> MeshObjects
-        {
-            get { return meshObjects; }
-        }
-
-        List<SceneEditorMeshObject> selectedMeshList;
-        /// <summary>
-        /// Lista de objetos del escenario que estan seleccionados 
-        /// </summary>
-        public List<SceneEditorMeshObject> SelectedMeshList
-        {
-            get { return selectedMeshList; }
-        }
-
-
-
+        private readonly SceneEditorTranslateGizmo translateGizmo;
 
         public SceneEditorControl(TgcSceneEditor editor)
         {
             InitializeComponent();
-            
+
             this.editor = editor;
             parser = new TgcSceneParser();
             sceneLoader = new TgcSceneLoader();
@@ -116,42 +88,55 @@ namespace Examples.SceneEditor
             saveSceneDialog.Filter = ".XML |*.xml";
             saveSceneDialog.AddExtension = true;
 
-            selectedMeshList = new List<SceneEditorMeshObject>();
-            
+            SelectedMeshList = new List<SceneEditorMeshObject>();
+
             //Estado inicial
             currentState = GuiState.Nothing;
             tabControl.SelectedTab = tabControl.TabPages["tabPageCreate"];
 
             //Camara inicial
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(50.406f, 185.5353f, -143.7283f), new Vector3(-92.5515f, -567.6361f, 498.3744f));
+            GuiController.Instance.FpsCamera.setCamera(new Vector3(50.406f, 185.5353f, -143.7283f),
+                new Vector3(-92.5515f, -567.6361f, 498.3744f));
+        }
+
+        public TgcSimpleTerrain TgcTerrain
+        {
+            get { return tgcTerrain; }
         }
 
         /// <summary>
-        /// Mostrar ventana de Help
+        ///     Lista de todos los objetos del escenario
+        /// </summary>
+        public List<SceneEditorMeshObject> MeshObjects { get; } = new List<SceneEditorMeshObject>();
+
+        /// <summary>
+        ///     Lista de objetos del escenario que estan seleccionados
+        /// </summary>
+        public List<SceneEditorMeshObject> SelectedMeshList { get; }
+
+        /// <summary>
+        ///     Mostrar ventana de Help
         /// </summary>
         private void buttonHelp_Click_1(object sender, EventArgs e)
         {
             helpWindow.ShowDialog(this);
         }
 
-
-
         #region GUI States
 
         /// <summary>
-        /// Estados de la interfaz grafica
+        ///     Estados de la interfaz grafica
         /// </summary>
-        enum GuiState
+        private enum GuiState
         {
             Nothing,
             SelectionMode,
             CameraMode,
-            TranslateMode,
+            TranslateMode
         }
 
-
         /// <summary>
-        /// Modo: SelectionMode
+        ///     Modo: SelectionMode
         /// </summary>
         private void radioButtonSelectionMode_CheckedChanged(object sender, EventArgs e)
         {
@@ -160,13 +145,10 @@ namespace Examples.SceneEditor
                 unselectAllModes(radioButtonSelectionMode);
                 currentState = GuiState.SelectionMode;
             }
-            else
-            {
-            }
         }
 
         /// <summary>
-        /// Modo: CameraMode
+        ///     Modo: CameraMode
         /// </summary>
         private void radioButtonCameraMode_CheckedChanged(object sender, EventArgs e)
         {
@@ -185,7 +167,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Modo: TranslateMode
+        ///     Modo: TranslateMode
         /// </summary>
         private void radioButtonTranslateMode_CheckedChanged(object sender, EventArgs e)
         {
@@ -193,9 +175,9 @@ namespace Examples.SceneEditor
             {
                 unselectAllModes(radioButtonTranslateMode);
                 currentState = GuiState.TranslateMode;
-                if (selectedMeshList.Count > 0)
+                if (SelectedMeshList.Count > 0)
                 {
-                    translateGizmo.setMesh(selectedMeshList[0]);
+                    translateGizmo.setMesh(SelectedMeshList[0]);
                 }
             }
             else
@@ -205,7 +187,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Desactiva todos los modos
+        ///     Desactiva todos los modos
         /// </summary>
         private void unselectAllModes(Control c)
         {
@@ -221,14 +203,12 @@ namespace Examples.SceneEditor
                 radioButtonTranslateMode.Checked = false;
         }
 
-
-        #endregion
-
+        #endregion GUI States
 
         #region Render Loop
 
         /// <summary>
-        /// Render Loop
+        ///     Render Loop
         /// </summary>
         internal void render()
         {
@@ -245,7 +225,7 @@ namespace Examples.SceneEditor
             }
 
             //Renderizar modelos visibles
-            foreach (SceneEditorMeshObject meshObj in meshObjects)
+            foreach (var meshObj in MeshObjects)
             {
                 if (meshObj.visible)
                 {
@@ -254,7 +234,7 @@ namespace Examples.SceneEditor
             }
 
             //Mostrar BoundingBox de modelos seleccionados
-            foreach (SceneEditorMeshObject selectedMeshObj in selectedMeshList)
+            foreach (var selectedMeshObj in SelectedMeshList)
             {
                 selectedMeshObj.mesh.BoundingBox.render();
             }
@@ -264,14 +244,14 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Hacer FrustumCulling por fuerza bruta para detectar que modelos se ven
+        ///     Hacer FrustumCulling por fuerza bruta para detectar que modelos se ven
         /// </summary>
         private void doFrustumCulling()
         {
-            TgcFrustum frustum = GuiController.Instance.Frustum;
-            foreach (SceneEditorMeshObject meshObj in meshObjects)
+            var frustum = GuiController.Instance.Frustum;
+            foreach (var meshObj in MeshObjects)
             {
-                TgcCollisionUtils.FrustumResult r = TgcCollisionUtils.classifyFrustumAABB(frustum, meshObj.mesh.BoundingBox);
+                var r = TgcCollisionUtils.classifyFrustumAABB(frustum, meshObj.mesh.BoundingBox);
                 if (r == TgcCollisionUtils.FrustumResult.OUTSIDE)
                 {
                     meshObj.visible = false;
@@ -284,7 +264,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Se cierra el ejemplo. Liberar recursos
+        ///     Se cierra el ejemplo. Liberar recursos
         /// </summary>
         internal void close()
         {
@@ -293,18 +273,18 @@ namespace Examples.SceneEditor
                 tgcTerrain.dispose();
             }
 
-            foreach (SceneEditorMeshObject meshObj in meshObjects)
+            foreach (var meshObj in MeshObjects)
             {
                 meshObj.mesh.dispose();
             }
         }
 
         /// <summary>
-        /// Manejar eventos de Input
+        ///     Manejar eventos de Input
         /// </summary>
         private void handleInput()
         {
-            TgcD3dInput input = GuiController.Instance.D3dInput;
+            var input = GuiController.Instance.D3dInput;
 
             //Seleccionar modelo
             if (currentState == GuiState.SelectionMode)
@@ -316,9 +296,9 @@ namespace Examples.SceneEditor
                 }
             }
             //Trasladar modelo seleccionado
-            else if(currentState == GuiState.TranslateMode)
+            else if (currentState == GuiState.TranslateMode)
             {
-                if (selectedMeshList.Count > 0)
+                if (SelectedMeshList.Count > 0)
                 {
                     //Comenzar a trasladar
                     if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -339,27 +319,26 @@ namespace Examples.SceneEditor
             }
         }
 
-        #endregion
-    
+        #endregion Render Loop
 
         #region CreateMesh
 
         /// <summary>
-        /// Abrir archivo de Mesh, pero todavia no se parsea
+        ///     Abrir archivo de Mesh, pero todavia no se parsea
         /// </summary>
         private void openFile_Click(object sender, EventArgs e)
         {
             if (openMeshDialog.ShowDialog() == DialogResult.OK)
             {
                 meshFilePath = openMeshDialog.FileName;
-                FileInfo fInfo = new FileInfo(meshFilePath);
+                var fInfo = new FileInfo(meshFilePath);
                 fileName.Text = fInfo.Name;
                 meshFolderName = fInfo.Directory.Name;
             }
         }
 
         /// <summary>
-        /// Crear el mesh y cargarlo en la tabla
+        ///     Crear el mesh y cargarlo en la tabla
         /// </summary>
         private void meshCreate_Click(object sender, EventArgs e)
         {
@@ -371,28 +350,27 @@ namespace Examples.SceneEditor
             try
             {
                 //Parsear XML de mesh
-                string mediaPath = meshFilePath.Substring(0, meshFilePath.LastIndexOf('\\') + 1);
-                string xmlString = File.ReadAllText(meshFilePath);
-                TgcSceneData sceneData = parser.parseSceneFromString(xmlString);
-
+                var mediaPath = meshFilePath.Substring(0, meshFilePath.LastIndexOf('\\') + 1);
+                var xmlString = File.ReadAllText(meshFilePath);
+                var sceneData = parser.parseSceneFromString(xmlString);
 
                 //Crear el mesh tantas veces como se haya pedido
-                int cantidad = (int)amountToCreate.Value;
-                Vector3 initialPos = getInitialPos();
-                for (int i = 0; i < cantidad; i++)
+                var cantidad = (int)amountToCreate.Value;
+                var initialPos = getInitialPos();
+                for (var i = 0; i < cantidad; i++)
                 {
-                    TgcScene scene = sceneLoader.loadScene(sceneData, mediaPath);
-                    float radius = scene.Meshes[0].BoundingBox.calculateBoxRadius();
-                    float posOffsetX = radius * 2;
+                    var scene = sceneLoader.loadScene(sceneData, mediaPath);
+                    var radius = scene.Meshes[0].BoundingBox.calculateBoxRadius();
+                    var posOffsetX = radius * 2;
 
                     //cargar meshes en dataGrid
-                    foreach (TgcMesh mesh in scene.Meshes)
+                    foreach (var mesh in scene.Meshes)
                     {
-                        SceneEditorMeshObject mo = new SceneEditorMeshObject();
+                        var mo = new SceneEditorMeshObject();
                         mo.mesh = mesh;
                         mo.name = mesh.Name + meshCounter++;
                         mo.userInfo = "";
-                        mo.index = meshObjects.Count;
+                        mo.index = MeshObjects.Count;
                         mo.fileName = fileName.Text;
                         mo.groupIndex = meshGroupCounter;
                         mo.folderName = meshFolderName;
@@ -400,7 +378,7 @@ namespace Examples.SceneEditor
                         //Mover mesh a la posicion correcta
                         mesh.Position = new Vector3(initialPos.X + i * posOffsetX, initialPos.Y, initialPos.Z);
 
-                        meshObjects.Add(mo);
+                        MeshObjects.Add(mo);
                         dataGridMeshList.Rows.Add(dataGridMeshList.Rows.Count + 1, meshGroupCounter, mo.name);
                     }
 
@@ -413,18 +391,17 @@ namespace Examples.SceneEditor
                 //pasar a modo camara con edicion de mesh
                 radioButtonCameraMode.Checked = true;
                 tabControl.SelectedTab = tabControl.TabPages["tabPageModify"];
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Hubo un error al cargar el archivo " + fileName.Text, "Error al cargar Mesh", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Debug.Write("Error al cargar Mesh de TGC " +  ex.Message);
+                MessageBox.Show("Hubo un error al cargar el archivo " + fileName.Text, "Error al cargar Mesh",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.Write("Error al cargar Mesh de TGC " + ex.Message);
             }
-            
         }
 
         /// <summary>
-        /// Parsea la posicion inicial en donde ubicar los mesh creados
+        ///     Parsea la posicion inicial en donde ubicar los mesh creados
         /// </summary>
         private Vector3 getInitialPos()
         {
@@ -444,14 +421,12 @@ namespace Examples.SceneEditor
             return new Vector3(float.Parse(createPosX.Text), float.Parse(createPosY.Text), float.Parse(createPosZ.Text));
         }
 
-        #endregion
-
+        #endregion CreateMesh
 
         #region Scene
 
-
         /// <summary>
-        /// Velocidad de camara FPS
+        ///     Velocidad de camara FPS
         /// </summary>
         private void cameraSpeed_ValueChanged(object sender, EventArgs e)
         {
@@ -460,57 +435,58 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Exportar escena a XML
+        ///     Exportar escena a XML
         /// </summary>
         private void exportSceneButton_Click(object sender, EventArgs e)
         {
             saveSceneDialog.Title = "Export Scene";
             if (saveSceneDialog.ShowDialog() == DialogResult.OK)
             {
-                FileInfo fInfo = new FileInfo(saveSceneDialog.FileName);
-                string sceneName = fInfo.Name.Split('.')[0];
-                string saveDir = fInfo.DirectoryName;
+                var fInfo = new FileInfo(saveSceneDialog.FileName);
+                var sceneName = fInfo.Name.Split('.')[0];
+                var saveDir = fInfo.DirectoryName;
 
-                TgcScene exportScene = new TgcScene(sceneName, saveDir);
-                foreach (SceneEditorMeshObject meshObject in meshObjects)
+                var exportScene = new TgcScene(sceneName, saveDir);
+                foreach (var meshObject in MeshObjects)
                 {
                     exportScene.Meshes.Add(meshObject.mesh);
                 }
-                TgcSceneExporter exporter = new TgcSceneExporter();
+                var exporter = new TgcSceneExporter();
                 exporter.exportSceneToXml(exportScene, saveDir);
 
-                MessageBox.Show(this, "Escena exportada a formato TGC satisfactoriamente.\n" + "El terreno no fue exportado", 
+                MessageBox.Show(this,
+                    "Escena exportada a formato TGC satisfactoriamente.\n" + "El terreno no fue exportado",
                     "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         /// <summary>
-        /// Exportación customizada
+        ///     Exportación customizada
         /// </summary>
         private void buttonCustomExport_Click(object sender, EventArgs e)
         {
             saveSceneDialog.Title = "Exportación customizada a archivo XML";
             if (saveSceneDialog.ShowDialog() == DialogResult.OK)
             {
-                string savePath = saveSceneDialog.FileName;
+                var savePath = saveSceneDialog.FileName;
                 editor.exportScene(savePath);
                 MessageBox.Show("Escena exportada satisfactoriamente", "Exportación");
             }
         }
 
         /// <summary>
-        /// Devuelve los objetos del escenario ordenados por numero de grupo
+        ///     Devuelve los objetos del escenario ordenados por numero de grupo
         /// </summary>
         public List<SceneEditorMeshObject> getMeshObjectsOrderByGroup()
         {
-            List<SceneEditorMeshObject> sortedList = new List<SceneEditorMeshObject>();
-            sortedList.AddRange(meshObjects);
+            var sortedList = new List<SceneEditorMeshObject>();
+            sortedList.AddRange(MeshObjects);
             sortedList.Sort(new ComparadorGrupoMeshObject());
             return sortedList;
         }
 
         /// <summary>
-        /// Comparador que ordena por numero de grupo
+        ///     Comparador que ordena por numero de grupo
         /// </summary>
         private class ComparadorGrupoMeshObject : IComparer<SceneEditorMeshObject>
         {
@@ -520,13 +496,7 @@ namespace Examples.SceneEditor
             }
         }
 
-
-        
-
-
-
-        #endregion
-
+        #endregion Scene
 
         #region Translaste Gizmo
 
@@ -549,13 +519,12 @@ namespace Examples.SceneEditor
             translateGizmo.endDragging();
         }
 
-        #endregion
-
+        #endregion Translaste Gizmo
 
         #region SelectionMode
 
         /// <summary>
-        /// Hacer picking y seleccionar modelo si hay colision
+        ///     Hacer picking y seleccionar modelo si hay colision
         /// </summary>
         private void findSelectedMeshWithPicking()
         {
@@ -563,9 +532,9 @@ namespace Examples.SceneEditor
             Vector3 collisionP;
 
             //Hacer picking sobre todos los modelos y quedarse con el mas cerca
-            float minDistance = float.MaxValue;
+            var minDistance = float.MaxValue;
             SceneEditorMeshObject collisionMeshObj = null;
-            foreach (SceneEditorMeshObject meshObj in meshObjects)
+            foreach (var meshObj in MeshObjects)
             {
                 if (!meshObj.visible)
                 {
@@ -578,11 +547,11 @@ namespace Examples.SceneEditor
                     continue;
                 }
 
-                TgcBoundingBox aabb = meshObj.mesh.BoundingBox;
-                bool result = TgcCollisionUtils.intersectRayAABB(pickingRay.Ray, aabb, out collisionP);
+                var aabb = meshObj.mesh.BoundingBox;
+                var result = TgcCollisionUtils.intersectRayAABB(pickingRay.Ray, aabb, out collisionP);
                 if (result)
                 {
-                    float lengthSq = Vector3.Subtract(collisionP, pickingRay.Ray.Origin).LengthSq();
+                    var lengthSq = Vector3.Subtract(collisionP, pickingRay.Ray.Origin).LengthSq();
                     if (lengthSq < minDistance)
                     {
                         minDistance = lengthSq;
@@ -595,7 +564,7 @@ namespace Examples.SceneEditor
             if (collisionMeshObj != null)
             {
                 //Deseleccionar todo
-                for (int i = 0; i < dataGridMeshList.Rows.Count; i++)
+                for (var i = 0; i < dataGridMeshList.Rows.Count; i++)
                 {
                     dataGridMeshList.Rows[i].Selected = false;
                 }
@@ -606,13 +575,12 @@ namespace Examples.SceneEditor
             }
         }
 
-
         /// <summary>
-        /// Informa si un objeto esta actualmente seleccionado
+        ///     Informa si un objeto esta actualmente seleccionado
         /// </summary>
         private bool isMeshObjectSelected(SceneEditorMeshObject meshObj)
         {
-            foreach (SceneEditorMeshObject selectMeshObj in selectedMeshList)
+            foreach (var selectMeshObj in SelectedMeshList)
             {
                 if (selectMeshObj == meshObj)
                 {
@@ -622,35 +590,34 @@ namespace Examples.SceneEditor
             return false;
         }
 
-        #endregion
-
+        #endregion SelectionMode
 
         #region MeshEdit-General
 
         /// <summary>
-        /// Cuando seleccionan un mesh del dataGrid.
-        /// Obtener info y cargarla en el panel de edicion
+        ///     Cuando seleccionan un mesh del dataGrid.
+        ///     Obtener info y cargarla en el panel de edicion
         /// </summary>
         private void dataGridMeshList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridMeshList.SelectedRows.Count > 0)
             {
                 //cargar lista de seleccion, al revez
-                selectedMeshList.Clear();
-                for (int i = dataGridMeshList.SelectedRows.Count - 1; i >= 0; i--)
+                SelectedMeshList.Clear();
+                for (var i = dataGridMeshList.SelectedRows.Count - 1; i >= 0; i--)
                 {
-                    int index = dataGridMeshList.SelectedRows[i].Index;
-                    selectedMeshList.Add(meshObjects[index]);
+                    var index = dataGridMeshList.SelectedRows[i].Index;
+                    SelectedMeshList.Add(MeshObjects[index]);
                 }
 
                 //Seleccionar primero de la lista
-                SceneEditorMeshObject selectedMeshObj = selectedMeshList[0];
+                var selectedMeshObj = SelectedMeshList[0];
                 selectMeshObject(selectedMeshObj);
             }
         }
 
         /// <summary>
-        /// Seleccionar objeto
+        ///     Seleccionar objeto
         /// </summary>
         private void selectMeshObject(SceneEditorMeshObject selectedMeshObj)
         {
@@ -660,7 +627,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Habilitar paneles de edicion de Mesh
+        ///     Habilitar paneles de edicion de Mesh
         /// </summary>
         private void enableEditMeshPanels(bool flag)
         {
@@ -672,23 +639,23 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Actualizar valores de edicion de mesh de la interfaz
+        ///     Actualizar valores de edicion de mesh de la interfaz
         /// </summary>
         private void updateEditMeshValues(SceneEditorMeshObject meshObj)
         {
             meshName.Text = meshObj.name;
 
-            Vector3 pos = meshObj.mesh.Position;
+            var pos = meshObj.mesh.Position;
             meshPosX.Text = pos.X.ToString();
             meshPosY.Text = pos.Y.ToString();
             meshPosZ.Text = pos.Z.ToString();
 
-            Vector3 rot = meshObj.mesh.Rotation;
+            var rot = meshObj.mesh.Rotation;
             meshRotX.Text = rot.X.ToString();
             meshRotY.Text = rot.Y.ToString();
             meshRotZ.Text = rot.Z.ToString();
 
-            Vector3 scale = meshObj.mesh.Scale;
+            var scale = meshObj.mesh.Scale;
             meshScaleX.Text = scale.X.ToString();
             meshScaleY.Text = scale.Y.ToString();
             meshScaleZ.Text = scale.Z.ToString();
@@ -697,41 +664,40 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Remover un mesh
+        ///     Remover un mesh
         /// </summary>
         private void meshRemove_Click(object sender, EventArgs e)
         {
             //Ordenar seleccion en forma descendente segun Index en la dataGrid
-            selectedMeshList.Sort(new ComparadorMeshObjectEliminar());
-            
+            SelectedMeshList.Sort(new ComparadorMeshObjectEliminar());
+
             //clonar lista de seleccion
-            List<SceneEditorMeshObject> clonedList = new List<SceneEditorMeshObject>();
-            foreach (SceneEditorMeshObject selectedMeshObj in selectedMeshList)
+            var clonedList = new List<SceneEditorMeshObject>();
+            foreach (var selectedMeshObj in SelectedMeshList)
             {
                 clonedList.Add(selectedMeshObj);
             }
 
             //Eliminar en base a lista clonada
-            foreach (SceneEditorMeshObject selectedMeshObj in clonedList)
+            foreach (var selectedMeshObj in clonedList)
             {
                 dataGridMeshList.Rows.RemoveAt(selectedMeshObj.index);
-                meshObjects.RemoveAt(selectedMeshObj.index);
+                MeshObjects.RemoveAt(selectedMeshObj.index);
                 selectedMeshObj.mesh.dispose();
             }
-            selectedMeshList.Clear();
+            SelectedMeshList.Clear();
             seleccionarPrimerElementoDataGrid();
 
             //arreglar indices de objetos
-            int index = 0;
-            foreach (SceneEditorMeshObject selectedMeshObj in meshObjects)
+            var index = 0;
+            foreach (var selectedMeshObj in MeshObjects)
             {
                 selectedMeshObj.index = index++;
             }
-            
         }
 
         /// <summary>
-        /// Seleccionar el primer elemento de la dataGrid, si quedo algo
+        ///     Seleccionar el primer elemento de la dataGrid, si quedo algo
         /// </summary>
         private void seleccionarPrimerElementoDataGrid()
         {
@@ -752,7 +718,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Ordena los objetos en forma descendente segun Index en la dataGrid
+        ///     Ordena los objetos en forma descendente segun Index en la dataGrid
         /// </summary>
         private class ComparadorMeshObjectEliminar : IComparer<SceneEditorMeshObject>
         {
@@ -763,11 +729,11 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Cambiar nombre de mesh
+        ///     Cambiar nombre de mesh
         /// </summary>
         private void meshName_Leave(object sender, EventArgs e)
         {
-            SceneEditorMeshObject selectedMeshObj = selectedMeshList[0];
+            var selectedMeshObj = SelectedMeshList[0];
 
             //cambiarlo en mesh
             selectedMeshObj.name = meshName.Text;
@@ -777,25 +743,24 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Cargar UserInfo
+        ///     Cargar UserInfo
         /// </summary>
         private void userInfo_TextChanged(object sender, EventArgs e)
         {
-            selectedMeshList[0].userInfo = userInfo.Text;
+            SelectedMeshList[0].userInfo = userInfo.Text;
         }
 
-        #endregion
-
+        #endregion MeshEdit-General
 
         #region MeshEdit - Position
 
         /// <summary>
-        /// Actualizar posicion de malla seleccionada en base a los Inputs
+        ///     Actualizar posicion de malla seleccionada en base a los Inputs
         /// </summary>
         private void updateMeshPositionFromGui()
         {
-            SceneEditorMeshObject meshObj = selectedMeshList[0];
-            Vector3 newPos = meshObj.mesh.Position;
+            var meshObj = SelectedMeshList[0];
+            var newPos = meshObj.mesh.Position;
 
             //Nueva posicion en base a input de usuario
             if (ValidationUtils.validateFloat(meshPosX.Text))
@@ -833,7 +798,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Actualizar la posicion X
+        ///     Actualizar la posicion X
         /// </summary>
         private void meshPosX_Leave(object sender, EventArgs e)
         {
@@ -841,7 +806,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Actualizar posicion Y
+        ///     Actualizar posicion Y
         /// </summary>
         private void meshPosY_Leave(object sender, EventArgs e)
         {
@@ -849,26 +814,24 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Actualizar posicion Z
+        ///     Actualizar posicion Z
         /// </summary>
         private void meshPosZ_Leave(object sender, EventArgs e)
         {
             updateMeshPositionFromGui();
         }
 
-        #endregion
-
+        #endregion MeshEdit - Position
 
         #region MeshEdit - Rotation
 
-
         /// <summary>
-        /// Actualizar rotación de malla seleccionada en base a los Inputs
+        ///     Actualizar rotación de malla seleccionada en base a los Inputs
         /// </summary>
         private void updateMeshRotationFromGui()
         {
-            SceneEditorMeshObject meshObj = selectedMeshList[0];
-            Vector3 newRot = meshObj.mesh.Rotation;
+            var meshObj = SelectedMeshList[0];
+            var newRot = meshObj.mesh.Rotation;
             float minValue = 0;
             float maxValue = 360;
 
@@ -911,7 +874,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Actualizar rotacion X
+        ///     Actualizar rotacion X
         /// </summary>
         private void meshRotX_Leave(object sender, EventArgs e)
         {
@@ -919,7 +882,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Actualizar rotacion Y
+        ///     Actualizar rotacion Y
         /// </summary>
         private void meshRotY_Leave(object sender, EventArgs e)
         {
@@ -927,7 +890,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Actualizar rotacion Z
+        ///     Actualizar rotacion Z
         /// </summary>
         private void meshRotZ_Leave(object sender, EventArgs e)
         {
@@ -935,17 +898,17 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Actualizar rotacion de mesh en base a los trackbars de rotacion
+        ///     Actualizar rotacion de mesh en base a los trackbars de rotacion
         /// </summary>
         private void updateMeshRotationFromTrackbars()
         {
-            SceneEditorMeshObject meshObj = selectedMeshList[0];
-            Vector3 newRot = meshObj.mesh.Rotation;
+            var meshObj = SelectedMeshList[0];
+            var newRot = meshObj.mesh.Rotation;
 
             //Actualizar rotacion en base a los trackbars
-            newRot.X = (float)trackBarRotationX.Value;
-            newRot.Y = (float)trackBarRotationY.Value;
-            newRot.Z = (float)trackBarRotationZ.Value;
+            newRot.X = trackBarRotationX.Value;
+            newRot.Y = trackBarRotationY.Value;
+            newRot.Z = trackBarRotationZ.Value;
 
             //Actualizar inputs de rotacion
             meshRotX.Text = newRot.X.ToString();
@@ -960,7 +923,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Trackbar de rotación X
+        ///     Trackbar de rotación X
         /// </summary>
         private void trackBarRotationX_ValueChanged(object sender, EventArgs e)
         {
@@ -968,7 +931,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Trackbar de rotación Y
+        ///     Trackbar de rotación Y
         /// </summary>
         private void trackBarRotationY_Scroll(object sender, EventArgs e)
         {
@@ -976,7 +939,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Trackbar de rotación Z
+        ///     Trackbar de rotación Z
         /// </summary>
         private void trackBarRotationZ_Scroll(object sender, EventArgs e)
         {
@@ -984,29 +947,27 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Rotar BoundingBox
+        ///     Rotar BoundingBox
         /// </summary>
         private void buttonEditMeshRotateBoundingBox_Click(object sender, EventArgs e)
         {
-            TgcMesh mesh = selectedMeshList[0].mesh;
+            var mesh = SelectedMeshList[0].mesh;
             mesh.BoundingBox.transform(mesh.Transform);
 
             //meshObj.mesh.BoundingBox.rotate(meshObj.mesh.Rotation);
         }
 
-
-        #endregion
-
+        #endregion MeshEdit - Rotation
 
         #region MeshEdit - Scale
 
         /// <summary>
-        /// Actualizar escala de mesh en base a valores de inputs
+        ///     Actualizar escala de mesh en base a valores de inputs
         /// </summary>
         private void updateMeshScaleFromGui()
         {
-            SceneEditorMeshObject meshObj = selectedMeshList[0];
-            Vector3 newScale = meshObj.mesh.Scale;
+            var meshObj = SelectedMeshList[0];
+            var newScale = meshObj.mesh.Scale;
 
             //Nueva posicion en base a input de usuario
             if (ValidationUtils.validatePossitiveFloat(meshScaleX.Text))
@@ -1038,7 +999,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Escalar X
+        ///     Escalar X
         /// </summary>
         private void meshScaleX_Leave(object sender, EventArgs e)
         {
@@ -1046,7 +1007,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Escalar Y
+        ///     Escalar Y
         /// </summary>
         private void meshScaleY_Leave(object sender, EventArgs e)
         {
@@ -1054,47 +1015,45 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Escalar Z
+        ///     Escalar Z
         /// </summary>
         private void meshScaleZ_Leave(object sender, EventArgs e)
         {
             updateMeshScaleFromGui();
         }
 
-
-        #endregion
-
+        #endregion MeshEdit - Scale
 
         #region Terreno
 
         /// <summary>
-        /// Abrir Heightmap
+        ///     Abrir Heightmap
         /// </summary>
         private void openHeightmap_Click(object sender, EventArgs e)
         {
             if (openHeighmapDialog.ShowDialog() == DialogResult.OK)
             {
                 heighmapFilePath = openHeighmapDialog.FileName;
-                string[] array = heighmapFilePath.Split('\\');
+                var array = heighmapFilePath.Split('\\');
                 heighmap.Text = array[array.Length - 1];
             }
         }
 
         /// <summary>
-        /// Abrir textura de terreno
+        ///     Abrir textura de terreno
         /// </summary>
         private void openTerrainTexture_Click(object sender, EventArgs e)
         {
             if (openTextureDialog.ShowDialog() == DialogResult.OK)
             {
                 terrainTextureFilePath = openTextureDialog.FileName;
-                string[] array = terrainTextureFilePath.Split('\\');
+                var array = terrainTextureFilePath.Split('\\');
                 terrainTexture.Text = array[array.Length - 1];
             }
         }
 
         /// <summary>
-        /// Crear Terrain
+        ///     Crear Terrain
         /// </summary>
         private void terrainCreate_Click(object sender, EventArgs e)
         {
@@ -1111,18 +1070,20 @@ namespace Examples.SceneEditor
 
                 //Crear nuevo
                 tgcTerrain = new TgcSimpleTerrain();
-                tgcTerrain.loadHeightmap(heighmapFilePath, (float)terrainXZscale.Value, (float)terrainYscale.Value, getTerrainCenter());
+                tgcTerrain.loadHeightmap(heighmapFilePath, (float)terrainXZscale.Value, (float)terrainYscale.Value,
+                    getTerrainCenter());
                 tgcTerrain.loadTexture(terrainTextureFilePath);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Hubo un error al crea un terreno desde el Heightmap " + heighmap.Text, "Error al cargar Heightmap", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Hubo un error al crea un terreno desde el Heightmap " + heighmap.Text,
+                    "Error al cargar Heightmap", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Debug.Write("Error al cargar Heightmap " + ex.Message);
             }
         }
 
         /// <summary>
-        /// Elimina el terreno, si hay
+        ///     Elimina el terreno, si hay
         /// </summary>
         private void terrainRemove_Click(object sender, EventArgs e)
         {
@@ -1134,7 +1095,7 @@ namespace Examples.SceneEditor
         }
 
         /// <summary>
-        /// Parsea la posicion del centro del terreno
+        ///     Parsea la posicion del centro del terreno
         /// </summary>
         private Vector3 getTerrainCenter()
         {
@@ -1151,73 +1112,10 @@ namespace Examples.SceneEditor
                 terrainCenterZ.Text = "0";
             }
 
-            return new Vector3(float.Parse(terrainCenterX.Text), float.Parse(terrainCenterY.Text), float.Parse(terrainCenterZ.Text));
+            return new Vector3(float.Parse(terrainCenterX.Text), float.Parse(terrainCenterY.Text),
+                float.Parse(terrainCenterZ.Text));
         }
 
-
-        #endregion
-
-        
-
-       
-
-        
-
-        
-
-        
-
-
-
-
-
-        
-
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+        #endregion Terreno
     }
 }

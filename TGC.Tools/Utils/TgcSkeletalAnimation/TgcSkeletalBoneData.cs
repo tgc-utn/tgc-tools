@@ -1,4 +1,4 @@
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Tools.Utils.TgcSkeletalAnimation
 {
     public class TgcSkeletalBoneData
     {

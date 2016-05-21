@@ -2,16 +2,16 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para elegir un color
+    ///     Modificador para elegir un color
     /// </summary>
     public class TgcColorModifier : TgcModifierPanel
     {
-        private FlowLayoutPanel colorPanel;
-        private ColorDialog colorDialog;
-        private Label colorLabel;
+        private readonly ColorDialog colorDialog;
+        private readonly Label colorLabel;
+        private readonly FlowLayoutPanel colorPanel;
 
         public TgcColorModifier(string varName, Color defaultValue)
             : base(varName)
@@ -26,7 +26,7 @@ namespace TgcViewer.Utils.Modifiers
             colorLabel.Size = new Size(80, 40);
             colorLabel.BackColor = defaultValue;
             colorLabel.BorderStyle = BorderStyle.FixedSingle;
-            colorLabel.Click += new EventHandler(colorButton_click);
+            colorLabel.Click += colorButton_click;
 
             colorPanel.Controls.Add(colorLabel);
 
@@ -47,7 +47,7 @@ namespace TgcViewer.Utils.Modifiers
 
         public override object getValue()
         {
-            return (Color)colorLabel.BackColor;
+            return colorLabel.BackColor;
         }
     }
 }

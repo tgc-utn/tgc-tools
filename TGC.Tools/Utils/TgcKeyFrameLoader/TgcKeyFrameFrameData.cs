@@ -1,4 +1,4 @@
-namespace TgcViewer.Utils.TgcKeyFrameLoader
+namespace TGC.Tools.Utils.TgcKeyFrameLoader
 {
     public class TgcKeyFrameFrameData
     {

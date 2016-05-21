@@ -1,26 +1,26 @@
-using TgcViewer.Utils.PortalRendering;
+using TGC.Tools.Utils.PortalRendering;
 
-namespace TgcViewer.Utils.TgcSceneLoader
+namespace TGC.Tools.Utils.TgcSceneLoader
 {
     public class TgcSceneData
     {
-        public string name;
-        public string texturesDir;
-
         //Info de LightMaps
         public string lightmapsDir;
 
         public bool lightmapsEnabled;
+        public TgcMaterialData[] materialsData;
 
         public TgcMeshData[] meshesData;
-        public TgcMaterialData[] materialsData;
+        public string name;
+
+        public float[] pMax;
 
         //BoundingBox de la escena
         public float[] pMin;
 
-        public float[] pMax;
-
         //Datos de PortalRendering
         public TgcPortalRenderingData portalData;
+
+        public string texturesDir;
     }
 }

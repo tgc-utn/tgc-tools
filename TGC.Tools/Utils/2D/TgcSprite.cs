@@ -1,61 +1,61 @@
 ﻿using Microsoft.DirectX;
 using System.Drawing;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Tools.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils._2D
+namespace TGC.Tools.Utils._2D
 {
     /// <summary>
-    /// Representa un Sprite 2D con transformaciones
+    ///     Representa un Sprite 2D con transformaciones
     /// </summary>
     public class TgcSprite
     {
-        private Rectangle srcRect;
+        private bool dirtyValues;
 
-        /// <summary>
-        /// Region rectangular a dibujar de la textura
-        /// </summary>
-        public Rectangle SrcRect
-        {
-            get { return srcRect; }
-            set { srcRect = value; }
-        }
+        protected Vector2 position;
+
+        protected float rotation;
+
+        protected Vector2 rotationCenter;
+
+        protected Vector2 scaling;
+
+        protected Vector2 scalingCenter;
 
         protected Matrix transformationMatrix;
 
         /// <summary>
-        /// Transformacion del Sprite
+        ///     Crear un nuevo Sprite
+        /// </summary>
+        public TgcSprite()
+        {
+            initialize();
+        }
+
+        /// <summary>
+        ///     Region rectangular a dibujar de la textura
+        /// </summary>
+        public Rectangle SrcRect { get; set; }
+
+        /// <summary>
+        ///     Transformacion del Sprite
         /// </summary>
         public Matrix TransformationMatrix
         {
             get { return transformationMatrix; }
         }
 
-        private TgcTexture texture;
-
         /// <summary>
-        /// Textura del Sprite.
+        ///     Textura del Sprite.
         /// </summary>
-        public TgcTexture Texture
-        {
-            get { return texture; }
-            set { texture = value; }
-        }
-
-        private Color color;
+        public TgcTexture Texture { get; set; }
 
         /// <summary>
-        /// Color del Sprite
+        ///     Color del Sprite
         /// </summary>
-        public Color Color
-        {
-            get { return color; }
-            set { color = value; }
-        }
-
-        protected Vector2 position;
+        public Color Color { get; set; }
 
         /// <summary>
-        /// Posicion en 2D del Sprite
+        ///     Posicion en 2D del Sprite
         /// </summary>
         public Vector2 Position
         {
@@ -67,10 +67,8 @@ namespace TgcViewer.Utils._2D
             }
         }
 
-        protected float rotation;
-
         /// <summary>
-        /// Rotacion del Sprite, en radianes
+        ///     Rotacion del Sprite, en radianes
         /// </summary>
         public float Rotation
         {
@@ -82,10 +80,8 @@ namespace TgcViewer.Utils._2D
             }
         }
 
-        protected Vector2 rotationCenter;
-
         /// <summary>
-        /// Centro de rotacion
+        ///     Centro de rotacion
         /// </summary>
         public Vector2 RotationCenter
         {
@@ -97,10 +93,8 @@ namespace TgcViewer.Utils._2D
             }
         }
 
-        protected Vector2 scalingCenter;
-
         /// <summary>
-        /// Centro de escalado
+        ///     Centro de escalado
         /// </summary>
         public Vector2 ScalingCenter
         {
@@ -112,10 +106,8 @@ namespace TgcViewer.Utils._2D
             }
         }
 
-        protected Vector2 scaling;
-
         /// <summary>
-        /// Factor de escalado en X e Y
+        ///     Factor de escalado en X e Y
         /// </summary>
         public Vector2 Scaling
         {
@@ -127,29 +119,13 @@ namespace TgcViewer.Utils._2D
             }
         }
 
-        private bool enabled;
-
         /// <summary>
-        /// Habilitar sprite
+        ///     Habilitar sprite
         /// </summary>
-        public bool Enabled
-        {
-            get { return enabled; }
-            set { enabled = value; }
-        }
-
-        private bool dirtyValues;
+        public bool Enabled { get; set; }
 
         /// <summary>
-        /// Crear un nuevo Sprite
-        /// </summary>
-        public TgcSprite()
-        {
-            initialize();
-        }
-
-        /// <summary>
-        /// Cargar valores iniciales
+        ///     Cargar valores iniciales
         /// </summary>
         public void initialize()
         {
@@ -157,7 +133,7 @@ namespace TgcViewer.Utils._2D
             transformationMatrix = Matrix.Identity;
 
             //Rectangulo vacio
-            srcRect = Rectangle.Empty;
+            SrcRect = Rectangle.Empty;
 
             //Propiedades de transformacion default
             position = Vector2.Empty;
@@ -166,26 +142,25 @@ namespace TgcViewer.Utils._2D
             rotation = 0;
             rotationCenter = Vector2.Empty;
 
-            color = Color.White;
-            enabled = true;
+            Color = Color.White;
+            Enabled = true;
             dirtyValues = false;
         }
 
         /// <summary>
-        /// Actualizar matriz de transformacion en base a todas las propiedades del Sprite
-        ///
+        ///     Actualizar matriz de transformacion en base a todas las propiedades del Sprite
         /// </summary>
         public void updateTransformationMatrix()
         {
-            this.transformationMatrix = Matrix.Transformation2D(scalingCenter, 0, scaling, rotationCenter, rotation, position);
+            transformationMatrix = Matrix.Transformation2D(scalingCenter, 0, scaling, rotationCenter, rotation, position);
         }
 
         /// <summary>
-        /// Renderizar Sprite
+        ///     Renderizar Sprite
         /// </summary>
         public void render()
         {
-            if (!enabled)
+            if (!Enabled)
                 return;
 
             //Si hubo modificaciones de propiedades, actualizar matriz de transformacion
@@ -198,11 +173,11 @@ namespace TgcViewer.Utils._2D
         }
 
         /// <summary>
-        /// Liberar recursos
+        ///     Liberar recursos
         /// </summary>
         public void dispose()
         {
-            texture.dispose();
+            Texture.dispose();
         }
     }
 }

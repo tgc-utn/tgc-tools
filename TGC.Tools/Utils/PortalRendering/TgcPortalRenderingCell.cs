@@ -1,76 +1,50 @@
 using System.Collections.Generic;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Tools.Utils.PortalRendering
 {
     /// <summary>
-    /// Celda de PortalRendering
+    ///     Celda de PortalRendering
     /// </summary>
     public class TgcPortalRenderingCell
     {
         public TgcPortalRenderingCell(string name, TgcConvexPolyhedron convexPolyhedron)
         {
-            this.name = name;
-            this.convexPolyhedron = convexPolyhedron;
-            this.meshes = new List<TgcMesh>();
-            this.connections = new List<TgcPortalRenderingConnection>();
+            Name = name;
+            ConvexPolyhedron = convexPolyhedron;
+            Meshes = new List<TgcMesh>();
+            Connections = new List<TgcPortalRenderingConnection>();
         }
-
-        private TgcConvexPolyhedron convexPolyhedron;
 
         /// <summary>
-        /// Volúmen convexo de la celda
+        ///     Volúmen convexo de la celda
         /// </summary>
-        public TgcConvexPolyhedron ConvexPolyhedron
-        {
-            get { return convexPolyhedron; }
-        }
-
-        private string name;
+        public TgcConvexPolyhedron ConvexPolyhedron { get; }
 
         /// <summary>
-        /// Nombre de la celda
+        ///     Nombre de la celda
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-        }
-
-        private List<TgcMesh> meshes;
+        public string Name { get; }
 
         /// <summary>
-        /// Modelos dentro de la celda
+        ///     Modelos dentro de la celda
         /// </summary>
-        public List<TgcMesh> Meshes
-        {
-            get { return meshes; }
-        }
-
-        private List<TgcPortalRenderingConnection> connections;
+        public List<TgcMesh> Meshes { get; }
 
         /// <summary>
-        /// Conexiones con otras celdas, a través de portales
+        ///     Conexiones con otras celdas, a través de portales
         /// </summary>
-        public List<TgcPortalRenderingConnection> Connections
-        {
-            get { return connections; }
-        }
-
-        private bool visited;
+        public List<TgcPortalRenderingConnection> Connections { get; }
 
         /// <summary>
-        /// Indica si la celda ya fue visitada por el algoritmo de visibilidad
+        ///     Indica si la celda ya fue visitada por el algoritmo de visibilidad
         /// </summary>
-        public bool Visited
-        {
-            get { return visited; }
-            set { visited = value; }
-        }
+        public bool Visited { get; set; }
 
         public override string ToString()
         {
-            return "Cell: " + name;
+            return "Cell: " + Name;
         }
     }
 }

@@ -1,20 +1,21 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para valores Float
+    ///     Modificador para valores Float
     /// </summary>
     public class TgcFloatModifier : TgcModifierPanel
     {
-        private NumericUpDown numericUpDown;
-        private TrackBar trackBar;
-        private float minValue;
-        private float maxValue;
+        private readonly float maxValue;
+        private readonly float minValue;
+        private readonly NumericUpDown numericUpDown;
 
-        private bool numericUpDownChange = false;
-        private bool trackBarChange = false;
+        private bool numericUpDownChange;
+        private readonly TrackBar trackBar;
+        private bool trackBarChange;
 
         public TgcFloatModifier(string varName, float minValue, float maxValue, float defaultValue) : base(varName)
         {
@@ -22,22 +23,22 @@ namespace TgcViewer.Utils.Modifiers
             this.maxValue = maxValue;
 
             numericUpDown = new NumericUpDown();
-            numericUpDown.Size = new System.Drawing.Size(100, 20);
+            numericUpDown.Size = new Size(100, 20);
             numericUpDown.Margin = new Padding(0);
             numericUpDown.DecimalPlaces = 4;
             numericUpDown.Minimum = (decimal)minValue;
             numericUpDown.Maximum = (decimal)maxValue;
             numericUpDown.Value = (decimal)defaultValue;
             numericUpDown.Increment = (decimal)(2f * (maxValue - minValue) / 100f);
-            numericUpDown.ValueChanged += new EventHandler(numericUpDown_ValueChanged);
+            numericUpDown.ValueChanged += numericUpDown_ValueChanged;
 
             trackBar = new TrackBar();
-            trackBar.Size = new System.Drawing.Size(100, 20);
+            trackBar.Size = new Size(100, 20);
             trackBar.Margin = new Padding(0);
             trackBar.Minimum = 0;
             trackBar.Maximum = 20;
             trackBar.Value = (int)((defaultValue - minValue) * 20 / (maxValue - minValue));
-            trackBar.ValueChanged += new EventHandler(trackBar_ValueChanged);
+            trackBar.ValueChanged += trackBar_ValueChanged;
 
             contentPanel.Controls.Add(numericUpDown);
             contentPanel.Controls.Add(trackBar);

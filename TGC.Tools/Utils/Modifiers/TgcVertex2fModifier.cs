@@ -1,28 +1,29 @@
 using Microsoft.DirectX;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para valores floats (X,Y) o (U,V) de un vertice
+    ///     Modificador para valores floats (X,Y) o (U,V) de un vertice
     /// </summary>
     public class TgcVertex2fModifier : TgcModifierPanel
     {
-        private FlowLayoutPanel vertexValuesPanel;
-        private NumericUpDown numericUpDownX;
-        private NumericUpDown numericUpDownY;
-        private TrackBar trackBarX;
-        private TrackBar trackBarY;
-        private Vector2 minValue;
         private Vector2 maxValue;
+        private Vector2 minValue;
 
-        private bool numericUpDownChangeX = false;
-        private bool numericUpDownChangeY = false;
-        private bool trackBarChangeX = false;
-        private bool trackBarChangeY = false;
+        private bool numericUpDownChangeX;
+        private bool numericUpDownChangeY;
+        private readonly NumericUpDown numericUpDownX;
+        private readonly NumericUpDown numericUpDownY;
 
         private Vector2 result = new Vector2();
+        private bool trackBarChangeX;
+        private bool trackBarChangeY;
+        private readonly TrackBar trackBarX;
+        private readonly TrackBar trackBarY;
+        private readonly FlowLayoutPanel vertexValuesPanel;
 
         public TgcVertex2fModifier(string varName, Vector2 minValue, Vector2 maxValue, Vector2 defaultValue)
             : base(varName)
@@ -32,25 +33,25 @@ namespace TgcViewer.Utils.Modifiers
 
             //numericUpDownX
             numericUpDownX = new NumericUpDown();
-            numericUpDownX.Size = new System.Drawing.Size(50, 20);
+            numericUpDownX.Size = new Size(50, 20);
             numericUpDownX.Margin = new Padding(0);
             numericUpDownX.DecimalPlaces = 4;
             numericUpDownX.Minimum = (decimal)minValue.X;
             numericUpDownX.Maximum = (decimal)maxValue.X;
             numericUpDownX.Value = (decimal)defaultValue.X;
             numericUpDownX.Increment = (decimal)(2f * (maxValue.X - minValue.X) / 100f);
-            numericUpDownX.ValueChanged += new EventHandler(numericUpDownX_ValueChanged);
+            numericUpDownX.ValueChanged += numericUpDownX_ValueChanged;
 
             //numericUpDownY
             numericUpDownY = new NumericUpDown();
-            numericUpDownY.Size = new System.Drawing.Size(50, 20);
+            numericUpDownY.Size = new Size(50, 20);
             numericUpDownY.Margin = new Padding(0);
             numericUpDownY.DecimalPlaces = 4;
             numericUpDownY.Minimum = (decimal)minValue.Y;
             numericUpDownY.Maximum = (decimal)maxValue.Y;
             numericUpDownY.Value = (decimal)defaultValue.Y;
             numericUpDownY.Increment = (decimal)(2f * (maxValue.Y - minValue.Y) / 100f);
-            numericUpDownY.ValueChanged += new EventHandler(numericUpDownY_ValueChanged);
+            numericUpDownY.ValueChanged += numericUpDownY_ValueChanged;
 
             //Panel para los dos numericUpDown
             vertexValuesPanel = new FlowLayoutPanel();
@@ -63,21 +64,21 @@ namespace TgcViewer.Utils.Modifiers
 
             //trackBarX
             trackBarX = new TrackBar();
-            trackBarX.Size = new System.Drawing.Size(100, 20);
+            trackBarX.Size = new Size(100, 20);
             trackBarX.Margin = new Padding(0);
             trackBarX.Minimum = 0;
             trackBarX.Maximum = 20;
             trackBarX.Value = (int)((defaultValue.X - minValue.X) * 20 / (maxValue.X - minValue.X));
-            trackBarX.ValueChanged += new EventHandler(trackBarX_ValueChanged);
+            trackBarX.ValueChanged += trackBarX_ValueChanged;
 
             //trackBarY
             trackBarY = new TrackBar();
-            trackBarY.Size = new System.Drawing.Size(100, 20);
+            trackBarY.Size = new Size(100, 20);
             trackBarY.Margin = new Padding(0);
             trackBarY.Minimum = 0;
             trackBarY.Maximum = 20;
             trackBarY.Value = (int)((defaultValue.Y - minValue.Y) * 20 / (maxValue.Y - minValue.Y));
-            trackBarY.ValueChanged += new EventHandler(trackBarY_ValueChanged);
+            trackBarY.ValueChanged += trackBarY_ValueChanged;
 
             contentPanel.Controls.Add(vertexValuesPanel);
             contentPanel.Controls.Add(trackBarX);

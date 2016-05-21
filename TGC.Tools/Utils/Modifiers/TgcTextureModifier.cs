@@ -2,23 +2,23 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para elegir una textura
+    ///     Modificador para elegir una textura
     /// </summary>
     public class TgcTextureModifier : TgcModifierPanel
     {
-        private PictureBox textureBox;
-        private TgcTextureBrowser textureBrowser = new TgcTextureBrowser();
-        private string defaultPath;
+        private readonly string defaultPath;
         private string selectedPath;
+        private readonly PictureBox textureBox;
+        private readonly TgcTextureBrowser textureBrowser = new TgcTextureBrowser();
 
         public TgcTextureModifier(string varName, string defaultPath)
             : base(varName)
         {
             this.defaultPath = defaultPath;
-            this.selectedPath = defaultPath;
+            selectedPath = defaultPath;
 
             textureBox = new PictureBox();
             textureBox.Margin = new Padding(0);
@@ -26,7 +26,7 @@ namespace TgcViewer.Utils.Modifiers
             textureBox.Image = getImage(defaultPath);
             textureBox.BorderStyle = BorderStyle.FixedSingle;
             textureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            textureBox.Click += new EventHandler(this.textureButton_click);
+            textureBox.Click += textureButton_click;
 
             contentPanel.Controls.Add(textureBox);
 
@@ -34,7 +34,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Obtener la imagen pedida o devolver null
+        ///     Obtener la imagen pedida o devolver null
         /// </summary>
         private Image getImage(string path)
         {
@@ -52,7 +52,7 @@ namespace TgcViewer.Utils.Modifiers
         {
             if (textureBrowser.ShowDialog() == DialogResult.OK)
             {
-                Image img = getImage(textureBrowser.SelectedImage);
+                var img = getImage(textureBrowser.SelectedImage);
                 selectedPath = textureBrowser.SelectedImage;
                 textureBox.Image = img;
             }
@@ -65,7 +65,7 @@ namespace TgcViewer.Utils.Modifiers
 
         public override object getValue()
         {
-            return (string)selectedPath;
+            return selectedPath;
         }
     }
 }

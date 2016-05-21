@@ -1,24 +1,15 @@
 ﻿using Microsoft.DirectX;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools.Primitives
+namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
 {
     /// <summary>
-    /// Primitiva generica
+    ///     Primitiva generica
     /// </summary>
     public abstract class EditPolyPrimitive
     {
         protected bool selected;
-
-        /// <summary>
-        /// Indica si la primitiva esta seleccionada
-        /// </summary>
-        public bool Selected
-        {
-            get { return selected; }
-            set { selected = value; }
-        }
 
         public EditPolyPrimitive()
         {
@@ -26,12 +17,21 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
         }
 
         /// <summary>
-        /// Tipo de primitiva
+        ///     Indica si la primitiva esta seleccionada
+        /// </summary>
+        public bool Selected
+        {
+            get { return selected; }
+            set { selected = value; }
+        }
+
+        /// <summary>
+        ///     Tipo de primitiva
         /// </summary>
         public abstract EditablePoly.PrimitiveType Type { get; }
 
         /// <summary>
-        /// Proyectar primitva a rectangulo 2D en la pantalla
+        ///     Proyectar primitva a rectangulo 2D en la pantalla
         /// </summary>
         /// <param name="transform">Mesh transform</param>
         /// <param name="box2D">Rectangulo 2D proyectado</param>
@@ -39,17 +39,17 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
         public abstract bool projectToScreen(Matrix transform, out Rectangle box2D);
 
         /// <summary>
-        /// Intersect ray againts primitive
+        ///     Intersect ray againts primitive
         /// </summary>
         public abstract bool intersectRay(TgcRay tgcRay, Matrix transform, out Vector3 q);
 
         /// <summary>
-        /// Centro de la primitiva
+        ///     Centro de la primitiva
         /// </summary>
         public abstract Vector3 computeCenter();
 
         /// <summary>
-        /// Mover primitiva
+        ///     Mover primitiva
         /// </summary>
         public abstract void move(Vector3 movement);
     }

@@ -1,78 +1,78 @@
-﻿using Examples.MeshCreator.Primitives;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Tools.MeshCreator.Primitives;
+using TGC.Tools.Utils.Input;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator
+namespace TGC.Tools.MeshCreator
 {
     /// <summary>
-    /// Cuadro 2D de seleccion de objetos con el mouse
+    ///     Cuadro 2D de seleccion de objetos con el mouse
     /// </summary>
     public class SelectionRectangle
     {
-        private MeshCreatorControl control;
-        private Vector2 initMousePos;
         private List<TgcBoundingBox> auxBoundingBoxList;
+        private readonly MeshCreatorControl control;
+        private Vector2 initMousePos;
+        private readonly SelectionRectangleMesh rectMesh;
         private bool selectiveObjectsAdditive;
-        private SelectionRectangleMesh rectMesh;
 
         public SelectionRectangle(MeshCreatorControl control)
         {
             this.control = control;
-            this.rectMesh = new SelectionRectangleMesh();
+            rectMesh = new SelectionRectangleMesh();
             auxBoundingBoxList = new List<TgcBoundingBox>();
-            this.selectiveObjectsAdditive = false;
+            selectiveObjectsAdditive = false;
         }
 
         /// <summary>
-        /// Iniciar seleccion
+        ///     Iniciar seleccion
         /// </summary>
         public void initSelection(Vector2 mousePos)
         {
-            this.initMousePos = mousePos;
+            initMousePos = mousePos;
         }
 
         /// <summary>
-        /// Bucle general de actualizacion de estado
+        ///     Bucle general de actualizacion de estado
         /// </summary>
         public void doSelectObject()
         {
-            TgcD3dInput input = GuiController.Instance.D3dInput;
+            var input = GuiController.Instance.D3dInput;
 
             //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
-            if ((input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl))
+            if ((input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl))
                 && input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 control.CurrentState = MeshCreatorControl.State.SelectingObject;
-                this.initMousePos = new Vector2(input.Xpos, input.Ypos);
-                this.selectiveObjectsAdditive = true;
+                initMousePos = new Vector2(input.Xpos, input.Ypos);
+                selectiveObjectsAdditive = true;
             }
             //Si mantiene el clic con el mouse, iniciar cuadro de seleccion
             else if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 control.CurrentState = MeshCreatorControl.State.SelectingObject;
-                this.initMousePos = new Vector2(input.Xpos, input.Ypos);
-                this.selectiveObjectsAdditive = false;
+                initMousePos = new Vector2(input.Xpos, input.Ypos);
+                selectiveObjectsAdditive = false;
             }
         }
 
         /// <summary>
-        /// Actualizar y dibujar seleccion
+        ///     Actualizar y dibujar seleccion
         /// </summary>
         public void render()
         {
-            TgcD3dInput input = GuiController.Instance.D3dInput;
+            var input = GuiController.Instance.D3dInput;
 
             //Mantiene el mouse apretado
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Definir recuadro
-                Vector2 mousePos = new Vector2(input.Xpos, input.Ypos);
-                Vector2 min = Vector2.Minimize(initMousePos, mousePos);
-                Vector2 max = Vector2.Maximize(initMousePos, mousePos);
+                var mousePos = new Vector2(input.Xpos, input.Ypos);
+                var min = Vector2.Minimize(initMousePos, mousePos);
+                var max = Vector2.Maximize(initMousePos, mousePos);
 
                 rectMesh.updateMesh(min, max);
             }
@@ -80,10 +80,10 @@ namespace Examples.MeshCreator
             else if (input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Definir recuadro
-                Vector2 mousePos = new Vector2(input.Xpos, input.Ypos);
-                Vector2 min = Vector2.Minimize(initMousePos, mousePos);
-                Vector2 max = Vector2.Maximize(initMousePos, mousePos);
-                Rectangle r = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
+                var mousePos = new Vector2(input.Xpos, input.Ypos);
+                var min = Vector2.Minimize(initMousePos, mousePos);
+                var max = Vector2.Maximize(initMousePos, mousePos);
+                var r = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
 
                 //Usar recuadro de seleccion solo si tiene un tamaño minimo
                 if (r.Width > 1 && r.Height > 1)
@@ -95,7 +95,7 @@ namespace Examples.MeshCreator
                     }
 
                     //Buscar que objetos del escenario caen dentro de la seleccion y elegirlos
-                    foreach (EditorPrimitive p in control.Meshes)
+                    foreach (var p in control.Meshes)
                     {
                         //Solo los visibles
                         if (p.Visible)
@@ -145,7 +145,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Selecciona un solo objeto
+        ///     Selecciona un solo objeto
         /// </summary>
         public void selectObject(EditorPrimitive p)
         {
@@ -154,8 +154,8 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Selecciona un solo objeto pero antes se fija si ya no estaba en la lista de seleccion.
-        /// Si ya estaba, entonces lo quita de la lista de seleccion
+        ///     Selecciona un solo objeto pero antes se fija si ya no estaba en la lista de seleccion.
+        ///     Si ya estaba, entonces lo quita de la lista de seleccion
         /// </summary>
         public void selectOrRemoveObjectIfPresent(EditorPrimitive p)
         {
@@ -174,12 +174,12 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Seleccionar todo
+        ///     Seleccionar todo
         /// </summary>
         public void selectAll()
         {
             clearSelection();
-            foreach (EditorPrimitive p in control.Meshes)
+            foreach (var p in control.Meshes)
             {
                 //Solo los visibles
                 if (p.Visible)
@@ -201,11 +201,11 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Deseleccionar todo
+        ///     Deseleccionar todo
         /// </summary>
         public void clearSelection()
         {
-            foreach (EditorPrimitive p in control.SelectionList)
+            foreach (var p in control.SelectionList)
             {
                 p.setSelected(false);
             }
@@ -220,7 +220,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Hacer picking para seleccionar el objeto mas cercano del ecenario.
+        ///     Hacer picking para seleccionar el objeto mas cercano del ecenario.
         /// </summary>
         /// <param name="additive">En True agrega/quita el objeto a la seleccion actual</param>
         public void doDirectSelection(bool additive)
@@ -228,17 +228,17 @@ namespace Examples.MeshCreator
             control.PickingRay.updateRay();
 
             //Buscar menor colision con objetos
-            float minDistSq = float.MaxValue;
+            var minDistSq = float.MaxValue;
             EditorPrimitive closestPrimitive = null;
             Vector3 q;
-            foreach (EditorPrimitive p in control.Meshes)
+            foreach (var p in control.Meshes)
             {
                 //Solo los visibles
                 if (p.Visible)
                 {
                     if (TgcCollisionUtils.intersectRayAABB(control.PickingRay.Ray, p.BoundingBox, out q))
                     {
-                        float lengthSq = Vector3.Subtract(control.PickingRay.Ray.Origin, q).LengthSq();
+                        var lengthSq = Vector3.Subtract(control.PickingRay.Ray.Origin, q).LengthSq();
                         if (lengthSq < minDistSq)
                         {
                             minDistSq = lengthSq;
@@ -277,7 +277,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Activar el gizmo actual para los objetos seleccionados
+        ///     Activar el gizmo actual para los objetos seleccionados
         /// </summary>
         public void activateCurrentGizmo()
         {
@@ -288,11 +288,11 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Centrar la camara sobre un objeto seleccionado
+        ///     Centrar la camara sobre un objeto seleccionado
         /// </summary>
         public void zoomObject()
         {
-            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
             if (aabb != null)
             {
                 control.Camera.CameraCenter = aabb.calculateBoxCenter();
@@ -300,11 +300,11 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Poner la camara en top view respecto de un objeto seleccionado
+        ///     Poner la camara en top view respecto de un objeto seleccionado
         /// </summary>
         public void setTopView()
         {
-            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
             Vector3 lookAt;
             if (aabb != null)
             {
@@ -318,11 +318,11 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Poner la camara en left view respecto de un objeto seleccionado
+        ///     Poner la camara en left view respecto de un objeto seleccionado
         /// </summary>
         public void setLeftView()
         {
-            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
             Vector3 lookAt;
             if (aabb != null)
             {
@@ -336,11 +336,11 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Poner la camara en front view respecto de un objeto seleccionado
+        ///     Poner la camara en front view respecto de un objeto seleccionado
         /// </summary>
         public void setFrontView()
         {
-            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
             Vector3 lookAt;
             if (aabb != null)
             {
@@ -354,12 +354,12 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Obtener pivote central para efectuar la rotacion.
-        /// Se busca el centro de todos los AABB
+        ///     Obtener pivote central para efectuar la rotacion.
+        ///     Se busca el centro de todos los AABB
         /// </summary>
         public Vector3 getRotationPivot()
         {
-            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
             return aabb.calculateBoxCenter();
         }
     }

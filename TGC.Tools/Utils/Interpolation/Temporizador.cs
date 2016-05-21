@@ -1,57 +1,38 @@
-﻿namespace TgcViewer.Utils.Interpolation
+﻿namespace TGC.Tools.Utils.Interpolation
 {
     /// <summary>
-    /// Utilidad para controlar el avance del tiempo hasta un tope determinado (como una cuenta regresiva)
+    ///     Utilidad para controlar el avance del tiempo hasta un tope determinado (como una cuenta regresiva)
     /// </summary>
     public class Temporizador
     {
-        private float current;
-
         /// <summary>
-        /// Valor actual
+        ///     Valor actual
         /// </summary>
-        public float Current
-        {
-            get { return current; }
-            set { current = value; }
-        }
-
-        private float stopSegs;
+        public float Current { get; set; }
 
         /// <summary>
-        /// Fin de la cuenta regresiva, en segundos.
+        ///     Fin de la cuenta regresiva, en segundos.
         /// </summary>
-        public float StopSegs
-        {
-            get { return stopSegs; }
-            set { stopSegs = value; }
-        }
+        public float StopSegs { get; set; }
 
         /// <summary>
-        /// Crear temporizador
-        /// </summary>
-        public Temporizador()
-        {
-        }
-
-        /// <summary>
-        /// Cargar valores iniciales del temporizador
+        ///     Cargar valores iniciales del temporizador
         /// </summary>
         public void reset()
         {
-            this.current = 0;
+            Current = 0;
         }
 
         /// <summary>
-        /// Avanzar el tiempo
+        ///     Avanzar el tiempo
         /// </summary>
         /// <returns>True si llego a su fin</returns>
         public bool update()
         {
-            current += GuiController.Instance.ElapsedTime;
-            if (current > stopSegs)
+            Current += GuiController.Instance.ElapsedTime;
+            if (Current > StopSegs)
             {
-                current = stopSegs;
+                Current = StopSegs;
                 return true;
             }
             return false;

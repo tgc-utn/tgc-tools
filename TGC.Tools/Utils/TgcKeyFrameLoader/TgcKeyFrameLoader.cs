@@ -3,27 +3,27 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcKeyFrameLoader
+namespace TGC.Tools.Utils.TgcKeyFrameLoader
 {
     /// <summary>
-    /// Herramienta para cargar una Malla con animacion por KeyFrame, segun formato TGC
+    ///     Herramienta para cargar una Malla con animacion por KeyFrame, segun formato TGC
     /// </summary>
     public class TgcKeyFrameLoader
     {
-        private Dictionary<string, TgcTexture> texturesDict;
-        private Device device;
+        private readonly Device device;
+        private readonly Dictionary<string, TgcTexture> texturesDict;
 
         public TgcKeyFrameLoader()
         {
-            this.device = GuiController.Instance.D3dDevice;
+            device = GuiController.Instance.D3dDevice;
             texturesDict = new Dictionary<string, TgcTexture>();
         }
 
         /// <summary>
-        /// Carga un modelo a partir de un archivo
+        ///     Carga un modelo a partir de un archivo
         /// </summary>
         /// <param name="filePath">Ubicacion del archivo XML</param>
         /// <param name="mediaPath">Path a partir del cual hay que buscar las Texturas</param>
@@ -32,7 +32,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         {
             try
             {
-                string xmlString = File.ReadAllText(filePath);
+                var xmlString = File.ReadAllText(filePath);
                 return loadMeshFromString(xmlString, mediaPath);
             }
             catch (Exception ex)
@@ -42,28 +42,29 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Carga un modelo a partir de un archivo.
-        /// Se elige el directorio de texturas y recursos en base al directorio en el cual se encuntra el archivo del modelo.
+        ///     Carga un modelo a partir de un archivo.
+        ///     Se elige el directorio de texturas y recursos en base al directorio en el cual se encuntra el archivo del modelo.
         /// </summary>
         /// <param name="filePath">Ubicacion del archivo XML</param>
         /// <returns>Modelo cargado</returns>
         public TgcKeyFrameMesh loadMeshFromFile(string filePath)
         {
-            string mediaPath = new FileInfo(filePath).DirectoryName + "\\";
+            var mediaPath = new FileInfo(filePath).DirectoryName + "\\";
             return loadMeshFromFile(filePath, mediaPath);
         }
 
         /// <summary>
-        /// Carga un modelo y un conjunto de animaciones a partir de varios archivos
+        ///     Carga un modelo y un conjunto de animaciones a partir de varios archivos
         /// </summary>
         /// <param name="meshFilePath">Ubicacion del archivo XML del modelo</param>
         /// <param name="mediaPath">Path a partir del cual hay que buscar las Texturas</param>
         /// <param name="animationsFilePath">Array con ubicaciones de los archivos XML de cada animación</param>
         /// <returns>Modelo cargado con sus animaciones</returns>
-        public TgcKeyFrameMesh loadMeshAndAnimationsFromFile(string meshFilePath, string mediaPath, string[] animationsFilePath)
+        public TgcKeyFrameMesh loadMeshAndAnimationsFromFile(string meshFilePath, string mediaPath,
+            string[] animationsFilePath)
         {
-            TgcKeyFrameMesh mesh = loadMeshFromFile(meshFilePath, mediaPath);
-            foreach (string animPath in animationsFilePath)
+            var mesh = loadMeshFromFile(meshFilePath, mediaPath);
+            foreach (var animPath in animationsFilePath)
             {
                 loadAnimationFromFile(mesh, animPath);
             }
@@ -71,34 +72,34 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Carga un modelo y un conjunto de animaciones a partir de varios archivos.
-        /// Se elige el directorio de texturas y recursos en base al directorio en el cual se encuntra el archivo del modelo.
+        ///     Carga un modelo y un conjunto de animaciones a partir de varios archivos.
+        ///     Se elige el directorio de texturas y recursos en base al directorio en el cual se encuntra el archivo del modelo.
         /// </summary>
         /// <param name="meshFilePath">Ubicacion del archivo XML del modelo</param>
         /// <param name="animationsFilePath">Array con ubicaciones de los archivos XML de cada animación</param>
         /// <returns>Modelo cargado con sus animaciones</returns>
         public TgcKeyFrameMesh loadMeshAndAnimationsFromFile(string meshFilePath, string[] animationsFilePath)
         {
-            string mediaPath = new FileInfo(meshFilePath).DirectoryName + "\\";
+            var mediaPath = new FileInfo(meshFilePath).DirectoryName + "\\";
             return loadMeshAndAnimationsFromFile(meshFilePath, mediaPath, animationsFilePath);
         }
 
         /// <summary>
-        /// Carga un modelo a partir del string del XML
+        ///     Carga un modelo a partir del string del XML
         /// </summary>
         /// <param name="xmlString">contenido del XML</param>
         /// <param name="mediaPath">Path a partir del cual hay que buscar las Texturas</param>
         /// <returns>Modelo cargado</returns>
         public TgcKeyFrameMesh loadMeshFromString(string xmlString, string mediaPath)
         {
-            TgcKeyFrameParser parser = new TgcKeyFrameParser();
-            TgcKeyFrameMeshData meshData = parser.parseMeshFromString(xmlString);
+            var parser = new TgcKeyFrameParser();
+            var meshData = parser.parseMeshFromString(xmlString);
             return loadMesh(meshData, mediaPath);
         }
 
         /// <summary>
-        /// Carga una animación a un modelo ya cargado, en base a un archivo
-        /// La animación se agrega al modelo.
+        ///     Carga una animación a un modelo ya cargado, en base a un archivo
+        ///     La animación se agrega al modelo.
         /// </summary>
         /// <param name="mesh">Modelo ya cargado</param>
         /// <param name="filePath">Ubicacion del archivo XML de la animación</param>
@@ -106,7 +107,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         {
             try
             {
-                string xmlString = File.ReadAllText(filePath);
+                var xmlString = File.ReadAllText(filePath);
                 return loadAnimationFromString(mesh, xmlString);
             }
             catch (Exception ex)
@@ -116,21 +117,21 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Carga una animación a un modelo ya cargado, a partir del string del XML.
-        /// La animación se agrega al modelo.
+        ///     Carga una animación a un modelo ya cargado, a partir del string del XML.
+        ///     La animación se agrega al modelo.
         /// </summary>
         /// <param name="mesh">Modelo ya cargado</param>
         /// <param name="xmlString">contenido del XML</param>
         public TgcKeyFrameAnimation loadAnimationFromString(TgcKeyFrameMesh mesh, string xmlString)
         {
-            TgcKeyFrameParser parser = new TgcKeyFrameParser();
-            TgcKeyFrameAnimationData animationData = parser.parseAnimationFromString(xmlString);
+            var parser = new TgcKeyFrameParser();
+            var animationData = parser.parseAnimationFromString(xmlString);
             return loadAnimation(mesh, animationData);
         }
 
         /// <summary>
-        /// Carga una animación a un modelo ya cargado, a partir de un objeto TgcKeyFrameAnimationData ya parseado
-        /// La animación se agrega al modelo.
+        ///     Carga una animación a un modelo ya cargado, a partir de un objeto TgcKeyFrameAnimationData ya parseado
+        ///     La animación se agrega al modelo.
         /// </summary>
         /// <param name="mesh">Modelo ya cargado</param>
         /// <param name="animationData">Objeto de animacion con datos ya cargados</param>
@@ -149,13 +150,13 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                 boundingBox = mesh.BoundingBox;
             }
 
-            TgcKeyFrameAnimation animation = new TgcKeyFrameAnimation(animationData, boundingBox);
+            var animation = new TgcKeyFrameAnimation(animationData, boundingBox);
             mesh.Animations.Add(animationData.name, animation);
             return animation;
         }
 
         /// <summary>
-        /// Carga un Modelo a partir de un objeto TgcKeyFrameMeshData ya parseado
+        ///     Carga un Modelo a partir de un objeto TgcKeyFrameMeshData ya parseado
         /// </summary>
         /// <param name="meshData">Objeto con datos ya parseados</param>
         /// <param name="mediaPath">Path a partir del cual hay que buscar las Texturas</param>
@@ -163,11 +164,11 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         public TgcKeyFrameMesh loadMesh(TgcKeyFrameMeshData meshData, string mediaPath)
         {
             //Cargar Texturas
-            TgcKeyFrameLoaderMaterialAux[] materialsArray = new TgcKeyFrameLoaderMaterialAux[meshData.materialsData.Length];
-            for (int i = 0; i < meshData.materialsData.Length; i++)
+            var materialsArray = new TgcKeyFrameLoaderMaterialAux[meshData.materialsData.Length];
+            for (var i = 0; i < meshData.materialsData.Length; i++)
             {
-                TgcMaterialData materialData = meshData.materialsData[i];
-                string texturesPath = mediaPath + meshData.texturesDir + "\\";
+                var materialData = meshData.materialsData[i];
+                var texturesPath = mediaPath + meshData.texturesDir + "\\";
 
                 //Crear StandardMaterial
                 if (materialData.type.Equals(TgcMaterialData.StandardMaterial))
@@ -178,10 +179,10 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                 //Crear MultiMaterial
                 else if (materialData.type.Equals(TgcMaterialData.MultiMaterial))
                 {
-                    TgcKeyFrameLoaderMaterialAux matAux = new TgcKeyFrameLoaderMaterialAux();
+                    var matAux = new TgcKeyFrameLoaderMaterialAux();
                     materialsArray[i] = matAux;
                     matAux.subMaterials = new TgcKeyFrameLoaderMaterialAux[materialData.subMaterials.Length];
-                    for (int j = 0; j < materialData.subMaterials.Length; j++)
+                    for (var j = 0; j < materialData.subMaterials.Length; j++)
                     {
                         matAux.subMaterials[j] = createTextureAndMaterial(materialData.subMaterials[j], texturesPath);
                     }
@@ -207,9 +208,9 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             if (meshData.pMin != null && meshData.pMax != null)
             {
                 tgcMesh.BoundingBox = new TgcBoundingBox(
-                        TgcParserUtils.float3ArrayToVector3(meshData.pMin),
-                        TgcParserUtils.float3ArrayToVector3(meshData.pMax)
-                        );
+                    TgcParserUtils.float3ArrayToVector3(meshData.pMin),
+                    TgcParserUtils.float3ArrayToVector3(meshData.pMax)
+                    );
             }
             else
             {
@@ -221,24 +222,26 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Crea un mesh con uno o varios DiffuseMap
+        ///     Crea un mesh con uno o varios DiffuseMap
         /// </summary>
         /// <returns></returns>
-        private TgcKeyFrameMesh crearMeshDiffuseMap(TgcKeyFrameLoaderMaterialAux[] materialsArray, TgcKeyFrameMeshData meshData)
+        private TgcKeyFrameMesh crearMeshDiffuseMap(TgcKeyFrameLoaderMaterialAux[] materialsArray,
+            TgcKeyFrameMeshData meshData)
         {
             //Crear Mesh
-            Mesh mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length, MeshFlags.Managed, DiffuseMapVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, DiffuseMapVertexElements, device);
 
             //Cargar VertexBuffer
-            using (VertexBuffer vb = mesh.VertexBuffer)
+            using (var vb = mesh.VertexBuffer)
             {
-                GraphicsStream data = vb.Lock(0, 0, LockFlags.None);
-                for (int j = 0; j < meshData.coordinatesIndices.Length; j++)
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < meshData.coordinatesIndices.Length; j++)
                 {
-                    DiffuseMapVertex v = new DiffuseMapVertex();
+                    var v = new DiffuseMapVertex();
 
                     //vertices
-                    int coordIdx = meshData.coordinatesIndices[j] * 3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -246,12 +249,12 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                         );
 
                     //texture coordinates diffuseMap
-                    int texCoordIdx = meshData.texCoordinatesIndices[j] * 2;
+                    var texCoordIdx = meshData.texCoordinatesIndices[j] * 2;
                     v.Tu = meshData.textureCoordinates[texCoordIdx];
                     v.Tv = meshData.textureCoordinates[texCoordIdx + 1];
 
                     //color
-                    int colorIdx = meshData.colorIndices[j];
+                    var colorIdx = meshData.colorIndices[j];
                     v.Color = meshData.verticesColors[colorIdx];
 
                     data.Write(v);
@@ -260,10 +263,10 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             }
 
             //Cargar IndexBuffer
-            using (IndexBuffer ib = mesh.IndexBuffer)
+            using (var ib = mesh.IndexBuffer)
             {
-                short[] indices = new short[meshData.coordinatesIndices.Length];
-                for (int j = 0; j < indices.Length; j++)
+                var indices = new short[meshData.coordinatesIndices.Length];
+                for (var j = 0; j < indices.Length; j++)
                 {
                     indices[j] = (short)j;
                 }
@@ -271,27 +274,27 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             }
 
             //Configurar Material y Textura para un solo SubSet
-            TgcKeyFrameLoaderMaterialAux matAux = materialsArray[meshData.materialId];
+            var matAux = materialsArray[meshData.materialId];
             Material[] meshMaterials;
             TgcTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
-                meshMaterials = new Material[] { matAux.materialId };
-                meshTextures = new TgcTexture[] { matAux.texture };
+                meshMaterials = new[] { matAux.materialId };
+                meshTextures = new[] { matAux.texture };
             }
 
             //Configurar Material y Textura para varios SubSet
             else
             {
                 //Cargar attributeBuffer con los id de las texturas de cada triángulo
-                int[] attributeBuffer = mesh.LockAttributeBufferArray(LockFlags.None);
+                var attributeBuffer = mesh.LockAttributeBufferArray(LockFlags.None);
                 Array.Copy(meshData.materialsIds, attributeBuffer, attributeBuffer.Length);
                 mesh.UnlockAttributeBuffer(attributeBuffer);
 
                 //Cargar array de Materials y Texturas
                 meshMaterials = new Material[matAux.subMaterials.Length];
                 meshTextures = new TgcTexture[matAux.subMaterials.Length];
-                for (int m = 0; m < matAux.subMaterials.Length; m++)
+                for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
                     meshTextures[m] = matAux.subMaterials[m].texture;
@@ -299,7 +302,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             }
 
             //Cargar datos que originales que tienen que mantenerse
-            TgcKeyFrameMesh.OriginalData originalData = new TgcKeyFrameMesh.OriginalData();
+            var originalData = new TgcKeyFrameMesh.OriginalData();
             originalData.coordinatesIndices = meshData.coordinatesIndices;
             originalData.colorIndices = meshData.colorIndices;
             originalData.verticesColors = meshData.verticesColors;
@@ -307,31 +310,33 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             originalData.textureCoordinates = meshData.textureCoordinates;
 
             //Crear mesh de TGC
-            TgcKeyFrameMesh tgcMesh = new TgcKeyFrameMesh(mesh, meshData.name, TgcKeyFrameMesh.MeshRenderType.DIFFUSE_MAP, originalData);
+            var tgcMesh = new TgcKeyFrameMesh(mesh, meshData.name, TgcKeyFrameMesh.MeshRenderType.DIFFUSE_MAP,
+                originalData);
             tgcMesh.Materials = meshMaterials;
             tgcMesh.DiffuseMaps = meshTextures;
             return tgcMesh;
         }
 
         /// <summary>
-        /// Crea un mesh sin texturas, solo con VertexColors
+        ///     Crea un mesh sin texturas, solo con VertexColors
         /// </summary>
         /// <param name="meshData"></param>
         private TgcKeyFrameMesh crearMeshSoloColor(TgcKeyFrameMeshData meshData)
         {
             //Crear Mesh
-            Mesh mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length, MeshFlags.Managed, VertexColorVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, VertexColorVertexElements, device);
 
             //Cargar VertexBuffer
-            using (VertexBuffer vb = mesh.VertexBuffer)
+            using (var vb = mesh.VertexBuffer)
             {
-                GraphicsStream data = vb.Lock(0, 0, LockFlags.None);
-                for (int j = 0; j < meshData.coordinatesIndices.Length; j++)
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < meshData.coordinatesIndices.Length; j++)
                 {
-                    VertexColorVertex v = new VertexColorVertex();
+                    var v = new VertexColorVertex();
 
                     //vertices
-                    int coordIdx = meshData.coordinatesIndices[j] * 3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -339,7 +344,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                         );
 
                     //color
-                    int colorIdx = meshData.colorIndices[j];
+                    var colorIdx = meshData.colorIndices[j];
                     v.Color = meshData.verticesColors[colorIdx];
 
                     data.Write(v);
@@ -348,10 +353,10 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             }
 
             //Cargar indexBuffer en forma plana
-            using (IndexBuffer ib = mesh.IndexBuffer)
+            using (var ib = mesh.IndexBuffer)
             {
-                short[] indices = new short[meshData.coordinatesIndices.Length];
-                for (int i = 0; i < indices.Length; i++)
+                var indices = new short[meshData.coordinatesIndices.Length];
+                for (var i = 0; i < indices.Length; i++)
                 {
                     indices[i] = (short)i;
                 }
@@ -359,7 +364,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             }
 
             //Cargar datos que originales que tienen que mantenerse
-            TgcKeyFrameMesh.OriginalData originalData = new TgcKeyFrameMesh.OriginalData();
+            var originalData = new TgcKeyFrameMesh.OriginalData();
             originalData.coordinatesIndices = meshData.coordinatesIndices;
             originalData.colorIndices = meshData.colorIndices;
             originalData.verticesColors = meshData.verticesColors;
@@ -367,19 +372,20 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             originalData.textureCoordinates = null;
 
             //Crear mesh de TGC
-            TgcKeyFrameMesh tgcMesh = new TgcKeyFrameMesh(mesh, meshData.name, TgcKeyFrameMesh.MeshRenderType.VERTEX_COLOR, originalData);
+            var tgcMesh = new TgcKeyFrameMesh(mesh, meshData.name, TgcKeyFrameMesh.MeshRenderType.VERTEX_COLOR,
+                originalData);
             return tgcMesh;
         }
 
         /// <summary>
-        /// Crea Material y Textura
+        ///     Crea Material y Textura
         /// </summary>
         private TgcKeyFrameLoaderMaterialAux createTextureAndMaterial(TgcMaterialData materialData, string texturesPath)
         {
-            TgcKeyFrameLoaderMaterialAux matAux = new TgcKeyFrameLoaderMaterialAux();
+            var matAux = new TgcKeyFrameLoaderMaterialAux();
 
             //Crear material
-            Material material = new Material();
+            var material = new Material();
             matAux.materialId = material;
             material.AmbientColor = new ColorValue(
                 materialData.ambientColor[0],
@@ -411,7 +417,8 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                 }
                 else
                 {
-                    texture = TgcTexture.createTexture(device, materialData.fileName, texturesPath + "\\" + materialData.fileName);
+                    texture = TgcTexture.createTexture(device, materialData.fileName,
+                        texturesPath + "\\" + materialData.fileName);
                     texturesDict[materialData.fileName] = texture;
                     //TODO usar para algo el OFFSET y el TILING
                 }
@@ -425,26 +432,34 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             return matAux;
         }
 
+        /// <summary>
+        ///     Estructura auxiliar para cargar SubMaterials y Texturas
+        /// </summary>
+        private class TgcKeyFrameLoaderMaterialAux
+        {
+            public Material materialId;
+            public TgcKeyFrameLoaderMaterialAux[] subMaterials;
+            public TgcTexture texture;
+        }
+
         #region Mesh FVF
 
         /// <summary>
-        /// FVF para formato de malla VERTEX_COLOR
+        ///     FVF para formato de malla VERTEX_COLOR
         /// </summary>
-        public static readonly VertexElement[] VertexColorVertexElements = new VertexElement[]
+        public static readonly VertexElement[] VertexColorVertexElements =
         {
             new VertexElement(0, 0, DeclarationType.Float3,
-                                    DeclarationMethod.Default,
-                                    DeclarationUsage.Position, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.Position, 0),
             new VertexElement(0, 12, DeclarationType.Color,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.Color, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.Color, 0),
             VertexElement.VertexDeclarationEnd
         };
 
         /// <summary>
-        /// Estructura de Vertice para formato de malla VERTEX_COLOR
+        ///     Estructura de Vertice para formato de malla VERTEX_COLOR
         /// </summary>
         public struct VertexColorVertex
         {
@@ -453,27 +468,24 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// FVF para formato de malla DIFFUSE_MAP
+        ///     FVF para formato de malla DIFFUSE_MAP
         /// </summary>
-        public static readonly VertexElement[] DiffuseMapVertexElements = new VertexElement[]
+        public static readonly VertexElement[] DiffuseMapVertexElements =
         {
             new VertexElement(0, 0, DeclarationType.Float3,
-                                    DeclarationMethod.Default,
-                                    DeclarationUsage.Position, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.Position, 0),
             new VertexElement(0, 12, DeclarationType.Color,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.Color, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.Color, 0),
             new VertexElement(0, 16, DeclarationType.Float2,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.TextureCoordinate, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.TextureCoordinate, 0),
             VertexElement.VertexDeclarationEnd
         };
 
         /// <summary>
-        /// Estructura de Vertice para formato de malla DIFFUSE_MAP
+        ///     Estructura de Vertice para formato de malla DIFFUSE_MAP
         /// </summary>
         public struct DiffuseMapVertex
         {
@@ -484,15 +496,5 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         #endregion Mesh FVF
-
-        /// <summary>
-        /// Estructura auxiliar para cargar SubMaterials y Texturas
-        /// </summary>
-        private class TgcKeyFrameLoaderMaterialAux
-        {
-            public Material materialId;
-            public TgcTexture texture;
-            public TgcKeyFrameLoaderMaterialAux[] subMaterials;
-        }
     }
 }

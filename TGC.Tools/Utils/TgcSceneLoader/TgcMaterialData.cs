@@ -1,4 +1,4 @@
-namespace TgcViewer.Utils.TgcSceneLoader
+namespace TGC.Tools.Utils.TgcSceneLoader
 {
     public class TgcMaterialData
     {
@@ -6,25 +6,26 @@ namespace TgcViewer.Utils.TgcSceneLoader
         public static readonly string StandardMaterial = "Standardmaterial";
 
         public static readonly string MultiMaterial = "Multimaterial";
-
-        public string name;
-        public string type;
-
-        //Submaterials
-        public TgcMaterialData[] subMaterials;
+        public bool alphaBlendEnable;
 
         //Material
         public float[] ambientColor;
 
         public float[] diffuseColor;
-        public float[] specularColor;
-        public float opacity;
-        public bool alphaBlendEnable;
 
         //Bitmap
         public string fileName;
 
-        public float[] uvTiling;
+        public string name;
+        public float opacity;
+        public float[] specularColor;
+
+        //Submaterials
+        public TgcMaterialData[] subMaterials;
+
+        public string type;
         public float[] uvOffset;
+
+        public float[] uvTiling;
     }
 }

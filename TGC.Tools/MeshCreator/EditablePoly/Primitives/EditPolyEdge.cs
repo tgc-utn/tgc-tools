@@ -1,12 +1,12 @@
 ﻿using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools.Primitives
+namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
 {
     /// <summary>
-    /// Arista de EditablePoly
+    ///     Arista de EditablePoly
     /// </summary>
     public class EditPolyEdge : EditPolyPrimitive
     {
@@ -16,14 +16,14 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
         public EditPolyVertex b;
         public List<EditPolyPolygon> faces;
 
-        public override string ToString()
-        {
-            return a.vbIndex + " => " + b.vbIndex;
-        }
-
         public override EditablePoly.PrimitiveType Type
         {
             get { return EditablePoly.PrimitiveType.Edge; }
+        }
+
+        public override string ToString()
+        {
+            return a.vbIndex + " => " + b.vbIndex;
         }
 
         public override bool projectToScreen(Matrix transform, out Rectangle box2D)
@@ -61,11 +61,11 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
         }
 
         /// <summary>
-        /// Quitar poligono de la lista
+        ///     Quitar poligono de la lista
         /// </summary>
         public void removePolygon(EditPolyPolygon p)
         {
-            for (int i = 0; i < faces.Count; i++)
+            for (var i = 0; i < faces.Count; i++)
             {
                 if (faces[i] == p)
                 {

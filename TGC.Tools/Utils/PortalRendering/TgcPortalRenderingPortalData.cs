@@ -1,18 +1,18 @@
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Tools.Utils.PortalRendering
 {
     /// <summary>
-    /// Datos de un Portal de PortalRendering
+    ///     Datos de un Portal de PortalRendering
     /// </summary>
     public class TgcPortalRenderingPortalData
     {
-        public string name;
-        public float[] pMin;
-        public float[] pMax;
-        public int cellA;
-        public int cellB;
         public float[] boundingVerticesA;
         public float[] boundingVerticesB;
+        public int cellA;
+        public int cellB;
+        public string name;
         public float[] planeA;
         public float[] planeB;
+        public float[] pMax;
+        public float[] pMin;
     }
 }

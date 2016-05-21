@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TGC.Tools</RootNamespace>
     <AssemblyName>TGC.Tools</AssemblyName>
-    <StartupObject>TgcViewer.Program</StartupObject>
+    <StartupObject>TGC.Tools.Program</StartupObject>
     <ApplicationIcon>IconoTgc.ico</ApplicationIcon>
     <Win32Resource>
     </Win32Resource>

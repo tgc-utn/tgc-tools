@@ -1,14 +1,15 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para un intervalo discreto de valores
+    ///     Modificador para un intervalo discreto de valores
     /// </summary>
     public class TgcIntervalModifier : TgcModifierPanel
     {
-        private ComboBox comboBox;
+        private readonly ComboBox comboBox;
         private int selectedIndex;
 
         public TgcIntervalModifier(string varName, object[] values, int defaultIndex)
@@ -18,17 +19,17 @@ namespace TgcViewer.Utils.Modifiers
 
             comboBox = new ComboBox();
             comboBox.Margin = new Padding(0);
-            comboBox.Size = new System.Drawing.Size(100, 20);
+            comboBox.Size = new Size(100, 20);
             comboBox.Items.AddRange(values);
             comboBox.SelectedIndex = selectedIndex;
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox.SelectionChangeCommitted += new EventHandler(comboBox_SelectionChangeCommitted);
+            comboBox.SelectionChangeCommitted += comboBox_SelectionChangeCommitted;
 
             contentPanel.Controls.Add(comboBox);
         }
 
         /// <summary>
-        /// Cuando el valor del combo cambia y fue confirmado realmente
+        ///     Cuando el valor del combo cambia y fue confirmado realmente
         /// </summary>
         private void comboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {

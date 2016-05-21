@@ -1,77 +1,81 @@
 ﻿using Microsoft.DirectX;
 using System.Drawing;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.Gizmos
+namespace TGC.Tools.MeshCreator.Gizmos
 {
     /// <summary>
-    /// Mesh para renderizar un gizmo de Translate
+    ///     Mesh para renderizar un gizmo de Translate
     /// </summary>
     public class TranslateGizmoMesh
     {
+        public enum Axis
+        {
+            X,
+            Y,
+            Z,
+            XY,
+            XZ,
+            YZ,
+            None
+        }
+
         private const float LARGE_AXIS_SIZE = 200f;
         private const float INTERMEDIATE_AXIS_SIZE = 30f;
         private const float SHORT_AXIS_SIZE = 5f;
 
-        public enum Axis
-        {
-            X, Y, Z, XY, XZ, YZ, None,
-        }
-
-        private TgcBox boxX;
-        private TgcBox boxY;
-        private TgcBox boxZ;
-        private TgcBox boxXZ;
-        private TgcBox boxXY;
-        private TgcBox boxYZ;
-
-        private Axis selectedAxis;
-
-        /// <summary>
-        /// Eje seleccionado
-        /// </summary>
-        public Axis SelectedAxis
-        {
-            get { return selectedAxis; }
-        }
-
-        private Vector3 gizmoCenter;
-
-        /// <summary>
-        /// Centro del gizmo
-        /// </summary>
-        public Vector3 GizmoCenter
-        {
-            get { return gizmoCenter; }
-        }
+        private readonly TgcBox boxX;
+        private readonly TgcBox boxXY;
+        private readonly TgcBox boxXZ;
+        private readonly TgcBox boxY;
+        private readonly TgcBox boxYZ;
+        private readonly TgcBox boxZ;
 
         public TranslateGizmoMesh()
         {
-            selectedAxis = Axis.None;
+            SelectedAxis = Axis.None;
 
-            boxX = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
-            boxY = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Green);
-            boxZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.Blue);
-            boxXZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
-            boxXY = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Orange);
-            boxYZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
+            boxX = TgcBox.fromExtremes(new Vector3(0, 0, 0),
+                new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
+            boxY = TgcBox.fromExtremes(new Vector3(0, 0, 0),
+                new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Green);
+            boxZ = TgcBox.fromExtremes(new Vector3(0, 0, 0),
+                new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.Blue);
+            boxXZ = TgcBox.fromExtremes(new Vector3(0, 0, 0),
+                new Vector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
+            boxXY = TgcBox.fromExtremes(new Vector3(0, 0, 0),
+                new Vector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Orange);
+            boxYZ = TgcBox.fromExtremes(new Vector3(0, 0, 0),
+                new Vector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
         }
 
         /// <summary>
-        /// Setear centro del gizmo y ajustar tamaño segun distancia con la camara
+        ///     Eje seleccionado
+        /// </summary>
+        public Axis SelectedAxis { get; private set; }
+
+        /// <summary>
+        ///     Centro del gizmo
+        /// </summary>
+        public Vector3 GizmoCenter { get; private set; }
+
+        /// <summary>
+        ///     Setear centro del gizmo y ajustar tamaño segun distancia con la camara
         /// </summary>
         public void setCenter(Vector3 gizmoCenter, MeshCreatorCamera camera)
         {
-            this.gizmoCenter = gizmoCenter;
-            float increment = MeshCreatorUtils.getTranslateGizmoSizeIncrement(camera, gizmoCenter);
+            GizmoCenter = gizmoCenter;
+            var increment = MeshCreatorUtils.getTranslateGizmoSizeIncrement(camera, gizmoCenter);
 
             boxX.Size = Vector3.Multiply(new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
             boxY.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
             boxZ.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), increment);
-            boxXZ.Size = Vector3.Multiply(new Vector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), increment);
-            boxXY.Size = Vector3.Multiply(new Vector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
-            boxYZ.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), increment);
+            boxXZ.Size = Vector3.Multiply(new Vector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE),
+                increment);
+            boxXY.Size = Vector3.Multiply(new Vector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE),
+                increment);
+            boxYZ.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE),
+                increment);
 
             boxX.Position = gizmoCenter + Vector3.Multiply(boxX.Size, 0.5f) + new Vector3(SHORT_AXIS_SIZE, 0, 0);
             boxY.Position = gizmoCenter + Vector3.Multiply(boxY.Size, 0.5f) + new Vector3(0, SHORT_AXIS_SIZE, 0);
@@ -89,8 +93,8 @@ namespace Examples.MeshCreator.Gizmos
         }
 
         /// <summary>
-        /// Hacer picking contra todos los ejes y devolver el eje seleccionado (si hay colision).
-        /// Tambien se evaluan los ejes compuestos (XY, XZ, YZ)
+        ///     Hacer picking contra todos los ejes y devolver el eje seleccionado (si hay colision).
+        ///     Tambien se evaluan los ejes compuestos (XY, XZ, YZ)
         /// </summary>
         public Axis doPickAxis(TgcRay ray)
         {
@@ -99,50 +103,47 @@ namespace Examples.MeshCreator.Gizmos
             {
                 return Axis.X;
             }
-            else if (TgcCollisionUtils.intersectRayAABB(ray, boxY.BoundingBox, out collP))
+            if (TgcCollisionUtils.intersectRayAABB(ray, boxY.BoundingBox, out collP))
             {
                 return Axis.Y;
             }
-            else if (TgcCollisionUtils.intersectRayAABB(ray, boxZ.BoundingBox, out collP))
+            if (TgcCollisionUtils.intersectRayAABB(ray, boxZ.BoundingBox, out collP))
             {
                 return Axis.Z;
             }
-            else if (TgcCollisionUtils.intersectRayAABB(ray, boxXZ.BoundingBox, out collP))
+            if (TgcCollisionUtils.intersectRayAABB(ray, boxXZ.BoundingBox, out collP))
             {
                 return Axis.XZ;
             }
-            else if (TgcCollisionUtils.intersectRayAABB(ray, boxXY.BoundingBox, out collP))
+            if (TgcCollisionUtils.intersectRayAABB(ray, boxXY.BoundingBox, out collP))
             {
                 return Axis.XY;
             }
-            else if (TgcCollisionUtils.intersectRayAABB(ray, boxYZ.BoundingBox, out collP))
+            if (TgcCollisionUtils.intersectRayAABB(ray, boxYZ.BoundingBox, out collP))
             {
                 return Axis.YZ;
             }
-            else
-            {
-                return Axis.None;
-            }
+            return Axis.None;
         }
 
         /// <summary>
-        /// Selecciona el eje actual del gizmo haciendo picking
+        ///     Selecciona el eje actual del gizmo haciendo picking
         /// </summary>
         public void selectAxisByPicking(TgcRay ray)
         {
-            this.selectedAxis = doPickAxis(ray);
+            SelectedAxis = doPickAxis(ray);
         }
 
         /// <summary>
-        /// Set Axis.None as selected
+        ///     Set Axis.None as selected
         /// </summary>
         public void unSelect()
         {
-            this.selectedAxis = Axis.None;
+            SelectedAxis = Axis.None;
         }
 
         /// <summary>
-        /// Indica si el eje especificado es simple (X, Y, Z) o compusto (XY, XZ, YZ)
+        ///     Indica si el eje especificado es simple (X, Y, Z) o compusto (XY, XZ, YZ)
         /// </summary>
         public bool isSingleAxis(Axis axis)
         {
@@ -150,11 +151,11 @@ namespace Examples.MeshCreator.Gizmos
         }
 
         /// <summary>
-        /// Mover ejes del gizmo
+        ///     Mover ejes del gizmo
         /// </summary>
         public void moveGizmo(Vector3 movement)
         {
-            gizmoCenter += movement;
+            GizmoCenter += movement;
             boxX.move(movement);
             boxY.move(movement);
             boxZ.move(movement);
@@ -164,7 +165,7 @@ namespace Examples.MeshCreator.Gizmos
         }
 
         /// <summary>
-        /// Dibujar gizmo
+        ///     Dibujar gizmo
         /// </summary>
         public void render()
         {
@@ -179,7 +180,7 @@ namespace Examples.MeshCreator.Gizmos
             boxY.render();
             boxZ.render();
 
-            TgcBox selectedBox = getAxisBox(selectedAxis);
+            var selectedBox = getAxisBox(SelectedAxis);
             if (selectedBox != null)
             {
                 selectedBox.BoundingBox.render();

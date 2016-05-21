@@ -1,36 +1,86 @@
 ﻿using Microsoft.DirectX;
-using System.Drawing;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Tools.Utils.Input;
+using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.Utils.TgcSceneLoader;
 
-namespace Examples.MeshCreator.Primitives
+namespace TGC.Tools.MeshCreator.Primitives
 {
     /// <summary>
-    /// Primitiva de Box 3D
+    ///     Primitiva de Box 3D
     /// </summary>
     public class BoxPrimitive : EditorPrimitive
     {
-        /// <summary>
-        /// Estado cuando se esta creando un Box
-        /// </summary>
-        private enum CreatingBoxState
-        {
-            DraggingSize,
-            DraggingHeight,
-        }
-
-        private TgcBox mesh;
+        private float creatingBoxInitMouseY;
         private CreatingBoxState currentCreatingState;
         private Vector3 initSelectionPoint;
-        private float creatingBoxInitMouseY;
+
+        private TgcBox mesh;
         private Vector3 originalSize;
 
         public BoxPrimitive(MeshCreatorControl control)
             : base(control)
         {
-            this.Name = "Box_" + EditorPrimitive.PRIMITIVE_COUNT++;
+            Name = "Box_" + PRIMITIVE_COUNT++;
+        }
+
+        public override TgcBoundingBox BoundingBox
+        {
+            get { return mesh.BoundingBox; }
+        }
+
+        public override bool AlphaBlendEnable
+        {
+            get { return mesh.AlphaBlendEnable; }
+            set { mesh.AlphaBlendEnable = value; }
+        }
+
+        public override Vector2 TextureOffset
+        {
+            get { return mesh.UVOffset; }
+            set
+            {
+                mesh.UVOffset = value;
+                mesh.updateValues();
+            }
+        }
+
+        public override Vector2 TextureTiling
+        {
+            get { return mesh.UVTiling; }
+            set
+            {
+                mesh.UVTiling = value;
+                mesh.updateValues();
+            }
+        }
+
+        public override Vector3 Position
+        {
+            get { return mesh.Position; }
+            set { mesh.Position = value; }
+        }
+
+        public override Vector3 Rotation
+        {
+            get { return mesh.Rotation; }
+        }
+
+        /// <summary>
+        ///     Configurar tamaño del box
+        /// </summary>
+        public override Vector3 Scale
+        {
+            get
+            {
+                var size = mesh.BoundingBox.calculateSize();
+                return TgcVectorUtils.div(size, originalSize);
+            }
+            set
+            {
+                var newSize = TgcVectorUtils.mul(originalSize, value);
+                mesh.setPositionSize(mesh.Position, newSize);
+                mesh.updateValues();
+            }
         }
 
         public override void render()
@@ -46,23 +96,12 @@ namespace Examples.MeshCreator.Primitives
         public override void setSelected(bool selected)
         {
             this.selected = selected;
-            Color color = selected ? MeshCreatorUtils.SELECTED_OBJECT_COLOR : MeshCreatorUtils.UNSELECTED_OBJECT_COLOR;
+            var color = selected ? MeshCreatorUtils.SELECTED_OBJECT_COLOR : MeshCreatorUtils.UNSELECTED_OBJECT_COLOR;
             mesh.BoundingBox.setRenderColor(color);
         }
 
-        public override TgcBoundingBox BoundingBox
-        {
-            get { return mesh.BoundingBox; }
-        }
-
-        public override bool AlphaBlendEnable
-        {
-            get { return mesh.AlphaBlendEnable; }
-            set { mesh.AlphaBlendEnable = value; }
-        }
-
         /// <summary>
-        /// Iniciar la creacion
+        ///     Iniciar la creacion
         /// </summary>
         public override void initCreation(Vector3 gridPoint)
         {
@@ -70,18 +109,18 @@ namespace Examples.MeshCreator.Primitives
             currentCreatingState = CreatingBoxState.DraggingSize;
 
             //Crear caja inicial
-            TgcTexture boxTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
+            var boxTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
             mesh = TgcBox.fromExtremes(initSelectionPoint, initSelectionPoint, boxTexture);
             mesh.BoundingBox.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
-            this.Layer = Control.CurrentLayer;
+            Layer = Control.CurrentLayer;
         }
 
         /// <summary>
-        /// Construir caja
+        ///     Construir caja
         /// </summary>
         public override void doCreation()
         {
-            TgcD3dInput input = GuiController.Instance.D3dInput;
+            var input = GuiController.Instance.D3dInput;
 
             switch (currentCreatingState)
             {
@@ -91,11 +130,11 @@ namespace Examples.MeshCreator.Primitives
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
                         //Determinar el size en XZ del box
-                        Vector3 collisionPoint = Control.Grid.getPicking();
+                        var collisionPoint = Control.Grid.getPicking();
 
                         //Obtener extremos del rectángulo de selección
-                        Vector3 min = Vector3.Minimize(initSelectionPoint, collisionPoint);
-                        Vector3 max = Vector3.Maximize(initSelectionPoint, collisionPoint);
+                        var min = Vector3.Minimize(initSelectionPoint, collisionPoint);
+                        var max = Vector3.Maximize(initSelectionPoint, collisionPoint);
                         min.Y = initSelectionPoint.Y;
                         max.Y = initSelectionPoint.Y + 0.2f;
 
@@ -107,7 +146,7 @@ namespace Examples.MeshCreator.Primitives
                     else if (input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
                         //Tiene el tamaño minimo tolerado
-                        Vector3 size = mesh.BoundingBox.calculateSize();
+                        var size = mesh.BoundingBox.calculateSize();
                         if (size.X > 1 && size.Z > 1)
                         {
                             currentCreatingState = CreatingBoxState.DraggingHeight;
@@ -147,12 +186,13 @@ namespace Examples.MeshCreator.Primitives
                     //Determinar altura en base a la posicion Y del mouse
                     else
                     {
-                        float heightY = creatingBoxInitMouseY - input.Ypos;
-                        float adjustedHeightY = MeshCreatorUtils.getMouseIncrementHeightSpeed(Control.Camera, this.BoundingBox, heightY);
+                        var heightY = creatingBoxInitMouseY - input.Ypos;
+                        var adjustedHeightY = MeshCreatorUtils.getMouseIncrementHeightSpeed(Control.Camera, BoundingBox,
+                            heightY);
 
-                        Vector3 min = mesh.BoundingBox.PMin;
+                        var min = mesh.BoundingBox.PMin;
                         min.Y = initSelectionPoint.Y;
-                        Vector3 max = mesh.BoundingBox.PMax;
+                        var max = mesh.BoundingBox.PMax;
                         max.Y = initSelectionPoint.Y + adjustedHeightY;
 
                         //Configurar BOX
@@ -179,86 +219,47 @@ namespace Examples.MeshCreator.Primitives
             return mesh.Texture;
         }
 
-        public override Vector2 TextureOffset
-        {
-            get { return mesh.UVOffset; }
-            set
-            {
-                mesh.UVOffset = value;
-                mesh.updateValues();
-            }
-        }
-
-        public override Vector2 TextureTiling
-        {
-            get { return mesh.UVTiling; }
-            set
-            {
-                mesh.UVTiling = value;
-                mesh.updateValues();
-            }
-        }
-
-        public override Vector3 Position
-        {
-            get { return mesh.Position; }
-            set { mesh.Position = value; }
-        }
-
-        public override Vector3 Rotation
-        {
-            get { return mesh.Rotation; }
-        }
-
         public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
         {
             mesh.Rotation = rotation;
-            Vector3 translation = pivot - mesh.Position;
-            Matrix m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix.Translation(translation);
+            var translation = pivot - mesh.Position;
+            var m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
+                    Matrix.Translation(translation);
             mesh.move(new Vector3(m.M41, m.M42, m.M43));
-        }
-
-        /// <summary>
-        /// Configurar tamaño del box
-        /// </summary>
-        public override Vector3 Scale
-        {
-            get
-            {
-                Vector3 size = mesh.BoundingBox.calculateSize();
-                return TgcVectorUtils.div(size, originalSize);
-            }
-            set
-            {
-                Vector3 newSize = TgcVectorUtils.mul(originalSize, value);
-                mesh.setPositionSize(mesh.Position, newSize);
-                mesh.updateValues();
-            }
         }
 
         public override TgcMesh createMeshToExport()
         {
-            TgcMesh m = mesh.toMesh(this.Name);
-            m.UserProperties = this.UserProperties;
-            m.Layer = this.Layer;
+            var m = mesh.toMesh(Name);
+            m.UserProperties = UserProperties;
+            m.Layer = Layer;
             return m;
         }
 
         public override EditorPrimitive clone()
         {
-            BoxPrimitive p = new BoxPrimitive(this.Control);
-            p.mesh = this.mesh.clone();
-            p.originalSize = this.originalSize;
-            p.UserProperties = this.UserProperties;
-            p.Layer = this.Layer;
+            var p = new BoxPrimitive(Control);
+            p.mesh = mesh.clone();
+            p.originalSize = originalSize;
+            p.UserProperties = UserProperties;
+            p.Layer = Layer;
             return p;
         }
 
         public override void updateBoundingBox()
         {
-            TgcMesh m = mesh.toMesh(this.Name);
-            this.mesh.BoundingBox.setExtremes(m.BoundingBox.PMin, m.BoundingBox.PMax);
+            var m = mesh.toMesh(Name);
+            mesh.BoundingBox.setExtremes(m.BoundingBox.PMin, m.BoundingBox.PMax);
             m.dispose();
+        }
+
+        /// <summary>
+        ///     Estado cuando se esta creando un Box
+        /// </summary>
+        private enum CreatingBoxState
+        {
+            DraggingSize,
+            DraggingHeight
         }
     }
 }

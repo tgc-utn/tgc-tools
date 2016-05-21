@@ -3,18 +3,18 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para elegir un archivo del FileSystem
+    ///     Modificador para elegir un archivo del FileSystem
     /// </summary>
     public class TgcFileModifier : TgcModifierPanel
     {
-        private TextBox fileName;
-        private TextBox fileTextbox;
-        private Button fileButton;
-        private OpenFileDialog openDialog;
-        private string defaultPath;
+        private readonly string defaultPath;
+        private readonly Button fileButton;
+        private readonly TextBox fileName;
+        private readonly TextBox fileTextbox;
+        private readonly OpenFileDialog openDialog;
 
         public TgcFileModifier(string varName, string defaultPath, string fileFilter)
             : base(varName)
@@ -37,7 +37,7 @@ namespace TgcViewer.Utils.Modifiers
             fileButton.Margin = new Padding(0);
             fileButton.Size = new Size(30, 20);
             fileButton.Text = "F";
-            fileButton.Click += new EventHandler(this.fileButton_click);
+            fileButton.Click += fileButton_click;
 
             contentPanel.Controls.Add(fileName);
             contentPanel.Controls.Add(fileTextbox);
@@ -66,7 +66,7 @@ namespace TgcViewer.Utils.Modifiers
 
         public override object getValue()
         {
-            return (string)fileTextbox.Text;
+            return fileTextbox.Text;
         }
     }
 }

@@ -1,7 +1,7 @@
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Tools.Utils.PortalRendering
 {
     /// <summary>
-    /// Datos de una escena con PortalRendering
+    ///     Datos de una escena con PortalRendering
     /// </summary>
     public class TgcPortalRenderingData
     {

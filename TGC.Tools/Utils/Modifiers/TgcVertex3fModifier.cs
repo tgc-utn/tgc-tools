@@ -1,32 +1,33 @@
 using Microsoft.DirectX;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para valores floats (X,Y,Z) de un vertice
+    ///     Modificador para valores floats (X,Y,Z) de un vertice
     /// </summary>
     public class TgcVertex3fModifier : TgcModifierPanel
     {
-        private FlowLayoutPanel vertexValuesPanel;
-        private NumericUpDown numericUpDownX;
-        private NumericUpDown numericUpDownY;
-        private NumericUpDown numericUpDownZ;
-        private TrackBar trackBarX;
-        private TrackBar trackBarY;
-        private TrackBar trackBarZ;
-        private Vector3 minValue;
         private Vector3 maxValue;
+        private Vector3 minValue;
 
-        private bool numericUpDownChangeX = false;
-        private bool numericUpDownChangeY = false;
-        private bool numericUpDownChangeZ = false;
-        private bool trackBarChangeX = false;
-        private bool trackBarChangeY = false;
-        private bool trackBarChangeZ = false;
+        private bool numericUpDownChangeX;
+        private bool numericUpDownChangeY;
+        private bool numericUpDownChangeZ;
+        private readonly NumericUpDown numericUpDownX;
+        private readonly NumericUpDown numericUpDownY;
+        private readonly NumericUpDown numericUpDownZ;
 
         private Vector3 result = new Vector3();
+        private bool trackBarChangeX;
+        private bool trackBarChangeY;
+        private bool trackBarChangeZ;
+        private readonly TrackBar trackBarX;
+        private readonly TrackBar trackBarY;
+        private readonly TrackBar trackBarZ;
+        private readonly FlowLayoutPanel vertexValuesPanel;
 
         public TgcVertex3fModifier(string varName, Vector3 minValue, Vector3 maxValue, Vector3 defaultValue)
             : base(varName)
@@ -36,36 +37,36 @@ namespace TgcViewer.Utils.Modifiers
 
             //numericUpDownX
             numericUpDownX = new NumericUpDown();
-            numericUpDownX.Size = new System.Drawing.Size(50, 20);
+            numericUpDownX.Size = new Size(50, 20);
             numericUpDownX.Margin = new Padding(0);
             numericUpDownX.DecimalPlaces = 4;
             numericUpDownX.Minimum = (decimal)minValue.X;
             numericUpDownX.Maximum = (decimal)maxValue.X;
             numericUpDownX.Value = (decimal)defaultValue.X;
             numericUpDownX.Increment = (decimal)(2f * (maxValue.X - minValue.X) / 100f);
-            numericUpDownX.ValueChanged += new EventHandler(numericUpDownX_ValueChanged);
+            numericUpDownX.ValueChanged += numericUpDownX_ValueChanged;
 
             //numericUpDownY
             numericUpDownY = new NumericUpDown();
-            numericUpDownY.Size = new System.Drawing.Size(50, 20);
+            numericUpDownY.Size = new Size(50, 20);
             numericUpDownY.Margin = new Padding(0);
             numericUpDownY.DecimalPlaces = 4;
             numericUpDownY.Minimum = (decimal)minValue.Y;
             numericUpDownY.Maximum = (decimal)maxValue.Y;
             numericUpDownY.Value = (decimal)defaultValue.Y;
             numericUpDownY.Increment = (decimal)(2f * (maxValue.Y - minValue.Y) / 100f);
-            numericUpDownY.ValueChanged += new EventHandler(numericUpDownY_ValueChanged);
+            numericUpDownY.ValueChanged += numericUpDownY_ValueChanged;
 
             //numericUpDownZ
             numericUpDownZ = new NumericUpDown();
-            numericUpDownZ.Size = new System.Drawing.Size(50, 20);
+            numericUpDownZ.Size = new Size(50, 20);
             numericUpDownZ.Margin = new Padding(0);
             numericUpDownZ.DecimalPlaces = 4;
             numericUpDownZ.Minimum = (decimal)minValue.Z;
             numericUpDownZ.Maximum = (decimal)maxValue.Z;
             numericUpDownZ.Value = (decimal)defaultValue.Z;
             numericUpDownZ.Increment = (decimal)(2f * (maxValue.Z - minValue.Z) / 100f);
-            numericUpDownZ.ValueChanged += new EventHandler(numericUpDownZ_ValueChanged);
+            numericUpDownZ.ValueChanged += numericUpDownZ_ValueChanged;
 
             //Panel para los tres numericUpDown
             vertexValuesPanel = new FlowLayoutPanel();
@@ -79,30 +80,30 @@ namespace TgcViewer.Utils.Modifiers
 
             //trackBarX
             trackBarX = new TrackBar();
-            trackBarX.Size = new System.Drawing.Size(100, 20);
+            trackBarX.Size = new Size(100, 20);
             trackBarX.Margin = new Padding(0);
             trackBarX.Minimum = 0;
             trackBarX.Maximum = 20;
             trackBarX.Value = (int)((defaultValue.X - minValue.X) * 20 / (maxValue.X - minValue.X));
-            trackBarX.ValueChanged += new EventHandler(trackBarX_ValueChanged);
+            trackBarX.ValueChanged += trackBarX_ValueChanged;
 
             //trackBarY
             trackBarY = new TrackBar();
-            trackBarY.Size = new System.Drawing.Size(100, 20);
+            trackBarY.Size = new Size(100, 20);
             trackBarY.Margin = new Padding(0);
             trackBarY.Minimum = 0;
             trackBarY.Maximum = 20;
             trackBarY.Value = (int)((defaultValue.Y - minValue.Y) * 20 / (maxValue.Y - minValue.Y));
-            trackBarY.ValueChanged += new EventHandler(trackBarY_ValueChanged);
+            trackBarY.ValueChanged += trackBarY_ValueChanged;
 
             //trackBarZ
             trackBarZ = new TrackBar();
-            trackBarZ.Size = new System.Drawing.Size(100, 20);
+            trackBarZ.Size = new Size(100, 20);
             trackBarZ.Margin = new Padding(0);
             trackBarZ.Minimum = 0;
             trackBarZ.Maximum = 20;
             trackBarZ.Value = (int)((defaultValue.Z - minValue.Z) * 20 / (maxValue.Z - minValue.Z));
-            trackBarZ.ValueChanged += new EventHandler(trackBarZ_ValueChanged);
+            trackBarZ.ValueChanged += trackBarZ_ValueChanged;
 
             contentPanel.Controls.Add(vertexValuesPanel);
             contentPanel.Controls.Add(trackBarX);

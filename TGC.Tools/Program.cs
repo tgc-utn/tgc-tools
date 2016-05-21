@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace TgcViewer
+namespace TGC.Tools
 {
     internal static class Program
     {
         /// <summary>
-        /// Punto de entrada principal para la aplicación.
+        ///     Punto de entrada principal para la aplicación.
         /// </summary>
         [STAThread]
         private static void Main(string[] args)

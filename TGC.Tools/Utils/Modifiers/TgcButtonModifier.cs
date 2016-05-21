@@ -1,14 +1,14 @@
 using System;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Tools.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador con un Boton
+    ///     Modificador con un Boton
     /// </summary>
     public class TgcButtonModifier : TgcModifierPanel
     {
-        private Button button;
+        private readonly Button button;
 
         public TgcButtonModifier(string varName, string text, EventHandler clickEventHandler)
             : base(varName)

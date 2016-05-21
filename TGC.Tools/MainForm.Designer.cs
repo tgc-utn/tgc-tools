@@ -1,4 +1,4 @@
-﻿namespace TgcViewer
+﻿namespace TGC.Tools
 {
     partial class MainForm
     {

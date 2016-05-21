@@ -1,28 +1,22 @@
-﻿using Examples.MeshCreator.EditablePolyTools.Primitives;
-using Examples.MeshCreator.Gizmos;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
+﻿using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
+using TGC.Tools.MeshCreator.Gizmos;
+using TGC.Tools.Utils.Input;
+using TGC.Tools.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools
+namespace TGC.Tools.MeshCreator.EditablePoly
 {
     /// <summary>
-    /// Gizmo de Translate para Editable Poly
+    ///     Gizmo de Translate para Editable Poly
     /// </summary>
     public class EditablePolyTranslateGizmo
     {
-        private enum State
-        {
-            Init,
-            Dragging,
-        }
-
-        private EditablePoly editablePoly;
-        private State currentState;
-        private Vector3 initMouseP3d;
         private Vector3 acumMovement;
-        private TranslateGizmoMesh gizmoMesh;
+        private State currentState;
+
+        private readonly EditablePoly editablePoly;
+        private readonly TranslateGizmoMesh gizmoMesh;
+        private Vector3 initMouseP3d;
 
         public EditablePolyTranslateGizmo(EditablePoly editablePoly)
         {
@@ -32,7 +26,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Activar
+        ///     Activar
         /// </summary>
         public void setEnabled(bool enabled)
         {
@@ -43,19 +37,19 @@ namespace Examples.MeshCreator.EditablePolyTools
                 currentState = State.Init;
 
                 //Posicionar gizmo
-                TgcBoundingBox aabb = EditablePolyUtils.getSelectionBoundingBox(editablePoly.SelectionList);
-                Vector3 aabbCenter = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), editablePoly.Transform);
+                var aabb = EditablePolyUtils.getSelectionBoundingBox(editablePoly.SelectionList);
+                var aabbCenter = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), editablePoly.Transform);
                 gizmoMesh.setCenter(aabbCenter, editablePoly.Control.Camera);
             }
         }
 
         /// <summary>
-        /// Actualizar eventos
+        ///     Actualizar eventos
         /// </summary>
         public void update()
         {
-            TgcD3dInput input = GuiController.Instance.D3dInput;
-            TgcPickingRay pickingRay = editablePoly.Control.PickingRay;
+            var input = GuiController.Instance.D3dInput;
+            var pickingRay = editablePoly.Control.PickingRay;
 
             switch (currentState)
             {
@@ -104,7 +98,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                         {
                             if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                             {
-                                bool additive = input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl);
+                                var additive = input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl);
                                 editablePoly.CurrentState = EditablePoly.State.SelectObject;
                                 editablePoly.doDirectSelection(additive);
                             }
@@ -126,28 +120,31 @@ namespace Examples.MeshCreator.EditablePolyTools
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
                         pickingRay.updateRay();
-                        Vector3 endMouseP3d = initMouseP3d;
+                        var endMouseP3d = initMouseP3d;
 
                         //Solo se mueve un eje
-                        Vector3 currentMove = new Vector3(0, 0, 0);
+                        var currentMove = new Vector3(0, 0, 0);
                         if (gizmoMesh.isSingleAxis(gizmoMesh.SelectedAxis))
                         {
                             //Desplazamiento en eje X
                             if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.X)
                             {
-                                endMouseP3d = editablePoly.Control.Grid.getPickingX(pickingRay.Ray, gizmoMesh.GizmoCenter);
+                                endMouseP3d = editablePoly.Control.Grid.getPickingX(pickingRay.Ray,
+                                    gizmoMesh.GizmoCenter);
                                 currentMove.X = endMouseP3d.X - initMouseP3d.X;
                             }
                             //Desplazamiento en eje Y
                             else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.Y)
                             {
-                                endMouseP3d = editablePoly.Control.Grid.getPickingY(pickingRay.Ray, gizmoMesh.GizmoCenter);
+                                endMouseP3d = editablePoly.Control.Grid.getPickingY(pickingRay.Ray,
+                                    gizmoMesh.GizmoCenter);
                                 currentMove.Y = endMouseP3d.Y - initMouseP3d.Y;
                             }
                             //Desplazamiento en eje Z
                             else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.Z)
                             {
-                                endMouseP3d = editablePoly.Control.Grid.getPickingZ(pickingRay.Ray, gizmoMesh.GizmoCenter);
+                                endMouseP3d = editablePoly.Control.Grid.getPickingZ(pickingRay.Ray,
+                                    gizmoMesh.GizmoCenter);
                                 currentMove.Z = endMouseP3d.Z - initMouseP3d.Z;
                             }
                         }
@@ -157,21 +154,24 @@ namespace Examples.MeshCreator.EditablePolyTools
                             //Plano XZ
                             if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.XZ)
                             {
-                                endMouseP3d = editablePoly.Control.Grid.getPickingXZ(pickingRay.Ray, gizmoMesh.GizmoCenter);
+                                endMouseP3d = editablePoly.Control.Grid.getPickingXZ(pickingRay.Ray,
+                                    gizmoMesh.GizmoCenter);
                                 currentMove.X = endMouseP3d.X - initMouseP3d.X;
                                 currentMove.Z = endMouseP3d.Z - initMouseP3d.Z;
                             }
                             //Plano XY
                             else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.XY)
                             {
-                                endMouseP3d = editablePoly.Control.Grid.getPickingXY(pickingRay.Ray, gizmoMesh.GizmoCenter);
+                                endMouseP3d = editablePoly.Control.Grid.getPickingXY(pickingRay.Ray,
+                                    gizmoMesh.GizmoCenter);
                                 currentMove.X = endMouseP3d.X - initMouseP3d.X;
                                 currentMove.Y = endMouseP3d.Y - initMouseP3d.Y;
                             }
                             //Plano YZ
                             else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.YZ)
                             {
-                                endMouseP3d = editablePoly.Control.Grid.getPickingYZ(pickingRay.Ray, gizmoMesh.GizmoCenter);
+                                endMouseP3d = editablePoly.Control.Grid.getPickingYZ(pickingRay.Ray,
+                                    gizmoMesh.GizmoCenter);
                                 currentMove.Y = endMouseP3d.Y - initMouseP3d.Y;
                                 currentMove.Z = endMouseP3d.Z - initMouseP3d.Z;
                             }
@@ -183,14 +183,17 @@ namespace Examples.MeshCreator.EditablePolyTools
                         //Ajustar currentMove con Snap to grid
                         if (editablePoly.Control.SnapToGridEnabled)
                         {
-                            snapMovementToGrid(ref currentMove.X, ref acumMovement.X, editablePoly.Control.SnapToGridCellSize);
-                            snapMovementToGrid(ref currentMove.Y, ref acumMovement.Y, editablePoly.Control.SnapToGridCellSize);
-                            snapMovementToGrid(ref currentMove.Z, ref acumMovement.Z, editablePoly.Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMove.X, ref acumMovement.X,
+                                editablePoly.Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMove.Y, ref acumMovement.Y,
+                                editablePoly.Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMove.Z, ref acumMovement.Z,
+                                editablePoly.Control.SnapToGridCellSize);
                         }
                         if (currentMove.LengthSq() > 0.1f)
                         {
                             //Mover objetos
-                            foreach (EditPolyPrimitive p in editablePoly.SelectionList)
+                            foreach (var p in editablePoly.SelectionList)
                             {
                                 p.move(currentMove);
                             }
@@ -221,21 +224,21 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Calcular desplazamiento en unidades de grilla
+        ///     Calcular desplazamiento en unidades de grilla
         /// </summary>
         private float snapMovementToGrid(ref float currentMove, ref float acumMove, float cellSize)
         {
             //Se movio algo?
-            float totalMove = acumMove + currentMove;
+            var totalMove = acumMove + currentMove;
             const float epsilon = 0.1f;
-            float absMove = FastMath.Abs(totalMove);
+            var absMove = FastMath.Abs(totalMove);
             float snapMove = 0;
             if (absMove > epsilon)
             {
                 if (absMove > cellSize)
                 {
                     //Moverse en unidades de la grilla
-                    currentMove = ((int)(totalMove / cellSize)) * cellSize;
+                    currentMove = (int)(totalMove / cellSize) * cellSize;
                     acumMove = 0;
                 }
                 else
@@ -250,7 +253,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
-        /// Dibujar
+        ///     Dibujar
         /// </summary>
         public void render()
         {
@@ -260,6 +263,12 @@ namespace Examples.MeshCreator.EditablePolyTools
         public void dipose()
         {
             gizmoMesh.dispose();
+        }
+
+        private enum State
+        {
+            Init,
+            Dragging
         }
     }
 }

@@ -1,38 +1,38 @@
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Tools.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcKeyFrameLoader
+namespace TGC.Tools.Utils.TgcKeyFrameLoader
 {
     public class TgcKeyFrameMeshData
     {
-        public string name;
-        public string texturesDir;
+        //Color general, por si no tiene Material
+        public float[] color;
+
+        public int[] colorIndices;
 
         //Valores por triangulo
         public int[] coordinatesIndices;
 
-        public int[] texCoordinatesIndices;
-        public int[] colorIndices;
-
-        //Color general, por si no tiene Material
-        public float[] color;
-
         //SubMaterials para cada triangulo
         public int materialId;
-
-        public int[] materialsIds;
-
-        //Valores por vertice
-        public float[] verticesCoordinates;
-
-        public float[] textureCoordinates;
-        public int[] verticesColors;
 
         //Informacion de Texturas y Materials
         public TgcMaterialData[] materialsData;
 
+        public int[] materialsIds;
+        public string name;
+
+        public float[] pMax;
+
         //BoundingBox
         public float[] pMin;
 
-        public float[] pMax;
+        public int[] texCoordinatesIndices;
+
+        public float[] textureCoordinates;
+        public string texturesDir;
+        public int[] verticesColors;
+
+        //Valores por vertice
+        public float[] verticesCoordinates;
     }
 }

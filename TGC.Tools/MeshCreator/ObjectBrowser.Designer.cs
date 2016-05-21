@@ -1,4 +1,4 @@
-﻿namespace Examples.MeshCreator
+﻿namespace TGC.Tools.MeshCreator
 {
     partial class ObjectBrowser
     {

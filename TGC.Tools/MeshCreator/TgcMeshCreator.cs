@@ -1,22 +1,17 @@
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TgcViewer;
-using TgcViewer.Example;
+using TGC.Tools.Example;
 
-namespace Examples.MeshCreator
+namespace TGC.Tools.MeshCreator
 {
     /// <summary>
-    /// Ejemplo TgcMeshCreator:
-    /// Unidades Involucradas:
+    ///     Ejemplo TgcMeshCreator:
+    ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh, Transformaciones, GameEngine
     ///     # Unidad 6 - Detección de Colisiones - BoundingBox, Picking
-    ///
-    /// Herramienta para crear modelos 3D en base a primitivas simples.
-    /// Permite luego exportarlos a un un XML de formato TgcScene.
-    /// El ejemplo crea su propio Modifier con todos los controles visuales de .NET que necesita.
-    ///
-    /// Autor: Matías Leone, Leandro Barbagallo
-    ///
+    ///     Herramienta para crear modelos 3D en base a primitivas simples.
+    ///     Permite luego exportarlos a un un XML de formato TgcScene.
+    ///     El ejemplo crea su propio Modifier con todos los controles visuales de .NET que necesita.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class TgcMeshCreator : TgcExample
     {
@@ -35,12 +30,12 @@ namespace Examples.MeshCreator
         public override string getDescription()
         {
             return "Creador de objetos 3D a paritir de primitivas simples." +
-                "Luego se puede exportar a un archivo XML de formato TgcScee para su posterior uso.";
+                   "Luego se puede exportar a un archivo XML de formato TgcScee para su posterior uso.";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Configurar camara FPS
             GuiController.Instance.RotCamera.Enable = false;
@@ -55,7 +50,7 @@ namespace Examples.MeshCreator
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Delegar render al control
             modifier.Control.render();
