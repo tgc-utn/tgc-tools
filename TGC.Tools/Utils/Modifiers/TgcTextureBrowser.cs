@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using TGC.Tools.Properties;
 
 namespace TGC.Tools.Utils.Modifiers
 {
@@ -39,7 +40,7 @@ namespace TGC.Tools.Utils.Modifiers
             browseDialog.Description = "Select folder";
             browseDialog.ShowNewFolderButton = false;
             ShowFolders = true;
-            HomeDirPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures";
+            HomeDirPath = Settings.Default.MediaDirectory + "MeshCreator\\Textures";
             AsyncModeEnable = false;
             OnSelectImage = null;
             OnClose = null;

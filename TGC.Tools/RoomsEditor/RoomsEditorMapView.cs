@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using TGC.Tools.Properties;
 using TGC.Tools.Utils.Ui;
 
 namespace TGC.Tools.RoomsEditor
@@ -44,7 +45,7 @@ namespace TGC.Tools.RoomsEditor
             roomsNameCounter = 0;
 
             //textura default para los rooms
-            defaultTextureDir = GuiController.Instance.ExamplesMediaDir + "Texturas\\";
+            defaultTextureDir = Settings.Default.MediaDirectory + "Texturas\\";
             defaultTextureImage = defaultTextureDir + "tierra.jpg";
             texturesEdit = new RoomsEditorTexturesEdit(this);
 

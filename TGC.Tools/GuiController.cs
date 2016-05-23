@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using TGC.Tools.Example;
+using TGC.Tools.Forms;
 using TGC.Tools.MeshCreator;
 using TGC.Tools.Utils;
 using TGC.Tools.Utils._2D;
@@ -58,7 +59,7 @@ namespace TGC.Tools
         /// <summary>
         ///     Crea todos los modulos necesarios de la aplicacion
         /// </summary>
-        internal void initGraphics(MainForm mainForm, Control panel3d)
+        internal void initGraphics(ToolsForm mainForm, Control panel3d)
         {
             MainForm = mainForm;
             Panel3d = panel3d;
@@ -198,21 +199,13 @@ namespace TGC.Tools
             RotCamera.resetValues();
             ThirdPersonCamera.resetValues();
 
-            //Ejecutar init
-            try
-            {
-                example.init();
+            example.init();
 
-                currentExample = example;
-                Panel3d.Focus();
-                MainForm.setCurrentExampleStatus("Ejemplo actual: " + example.getName());
-                MainForm.Text = example.getName();
-                Debug.Write("Ejecutando ejemplo: " + example.getName());
-            }
-            catch (Exception e)
-            {
-                Debug.Write("Error en init() de ejemplo: " + example.getName() + " " + e.Message);
-            }
+            currentExample = example;
+            Panel3d.Focus();
+            MainForm.setCurrentExampleStatus("Ejemplo actual: " + example.getName());
+            MainForm.Text = example.getName();
+            Debug.Write("Ejecutando ejemplo: " + example.getName());
         }
 
         /// <summary>
@@ -358,12 +351,6 @@ namespace TGC.Tools
         public TgcThirdPersonCamera ThirdPersonCamera { get; private set; }
 
         /// <summary>
-        ///     Path absoluto de la carpeta Media que contiene todo el contenido visual de los
-        ///     ejemplos, como texturas, modelos 3D, etc.
-        /// </summary>
-        public string ExamplesMediaDir { get; }
-
-        /// <summary>
         ///     Utilidad para escribir texto dentro de la pantalla 3D
         /// </summary>
         public TgcDrawText Text3d { get; private set; }
@@ -397,7 +384,7 @@ namespace TGC.Tools
         /// <summary>
         ///     Ventana principal de la aplicacion
         /// </summary>
-        public MainForm MainForm { get; private set; }
+        public ToolsForm MainForm { get; private set; }
 
         /// <summary>
         ///     Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el

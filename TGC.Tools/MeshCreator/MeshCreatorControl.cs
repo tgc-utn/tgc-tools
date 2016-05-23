@@ -8,6 +8,7 @@ using System.IO;
 using System.Windows.Forms;
 using TGC.Tools.MeshCreator.Gizmos;
 using TGC.Tools.MeshCreator.Primitives;
+using TGC.Tools.Properties;
 using TGC.Tools.Utils._2D;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.Modifiers;
@@ -69,7 +70,7 @@ namespace TGC.Tools.MeshCreator
             CreatingPrimitive = null;
             primitiveNameCounter = 0;
             CurrentGizmo = null;
-            MediaPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\";
+            MediaPath = Settings.Default.MediaDirectory + "MeshCreator\\";
             defaultTexturePath = MediaPath + "Textures\\Wood\\cajaMadera1.jpg";
             checkBoxShowObjectsBoundingBox.Checked = true;
             PopupOpened = false;
@@ -1446,7 +1447,7 @@ namespace TGC.Tools.MeshCreator
         private void buttonHelp_Click(object sender, EventArgs e)
         {
             //Abrir PDF
-            Process.Start(Environment.CurrentDirectory + "\\MeshCreator\\Guia MeshCreator.pdf");
+            Process.Start(Settings.Default.MediaDirectory + "MeshCreator\\Guia MeshCreator.pdf");
         }
 
         #endregion Eventos generales

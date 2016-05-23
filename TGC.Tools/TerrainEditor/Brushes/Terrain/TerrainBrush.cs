@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Tools.Properties;
 using TGC.Tools.Utils._2D;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.Sound;
@@ -25,7 +26,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 
             bBrush = TgcBox.fromSize(new Vector3(10, 100, 10));
             sound = new TgcStaticSound();
-            sound.loadSound(GuiController.Instance.ExamplesMediaDir + "Sound\\tierra.wav");
+            sound.loadSound(Settings.Default.MediaDirectory + "Sound\\tierra.wav");
         }
 
         /// <summary>

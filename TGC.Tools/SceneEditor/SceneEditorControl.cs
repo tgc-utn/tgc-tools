@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using TGC.Tools.Properties;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.Terrain;
 using TGC.Tools.Utils.TgcGeometry;
@@ -62,7 +63,7 @@ namespace TGC.Tools.SceneEditor
             openMeshDialog.Filter = "-TgcScene.xml |*-TgcScene.xml";
             openMeshDialog.Multiselect = false;
             //openMeshDialog.InitialDirectory = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\";
-            openMeshDialog.FileName = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\Box-TgcScene.xml";
+            openMeshDialog.FileName = Settings.Default.MediaDirectory + "ModelosTgc\\Box\\Box-TgcScene.xml";
             fileName.Text = "Box-TgcScene.xml";
             meshFilePath = openMeshDialog.FileName;
 
@@ -72,7 +73,7 @@ namespace TGC.Tools.SceneEditor
             openHeighmapDialog.Title = "Seleccionar Heighmap";
             openHeighmapDialog.Filter = ".JPG|*.jpg|.JPEG|*.jpeg|.GIF|*.gif|.PNG|*.png|.BMP|*.bmp | .TGA |*.tga";
             openHeighmapDialog.Multiselect = false;
-            openHeighmapDialog.InitialDirectory = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\";
+            openHeighmapDialog.InitialDirectory = Settings.Default.MediaDirectory + "Heighmaps\\";
 
             //openHeighmapDialog
             openTextureDialog = new OpenFileDialog();
@@ -80,7 +81,7 @@ namespace TGC.Tools.SceneEditor
             openTextureDialog.Title = "Seleccionar textura de terreno";
             openTextureDialog.Filter = ".JPG|*.jpg|.JPEG|*.jpeg|.GIF|*.gif|.PNG|*.png|.BMP|*.bmp | .TGA |*.tga";
             openTextureDialog.Multiselect = false;
-            openTextureDialog.InitialDirectory = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\";
+            openTextureDialog.InitialDirectory = Settings.Default.MediaDirectory + "Heighmaps\\";
 
             //saveSceneDialog
             saveSceneDialog = new SaveFileDialog();

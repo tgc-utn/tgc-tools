@@ -140,7 +140,7 @@ namespace TGC.Tools.Utils.Shaders
             var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Cargar shaders genericos para todo el framework
-            var shadersPath = Environment.CurrentDirectory + "\\Shaders\\";
+            var shadersPath = "Shaders\\";
             TgcMeshShader = loadEffect(shadersPath + "TgcMeshShader.fx");
             TgcMeshPhongShader = loadEffect(shadersPath + "TgcMeshPhongShader.fx");
             TgcMeshPointLightShader = loadEffect(shadersPath + "TgcMeshPointLightShader.fx");

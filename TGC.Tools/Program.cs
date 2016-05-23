@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using TGC.Tools.Forms;
 
 namespace TGC.Tools
 {
@@ -13,7 +14,7 @@ namespace TGC.Tools
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new ToolsForm());
         }
     }
 }

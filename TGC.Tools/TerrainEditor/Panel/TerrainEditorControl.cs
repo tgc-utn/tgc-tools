@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using TGC.Tools.MeshCreator;
+using TGC.Tools.Properties;
 using TGC.Tools.TerrainEditor.Brushes;
 using TGC.Tools.TerrainEditor.Brushes.Terrain;
 using TGC.Tools.TerrainEditor.Brushes.Vegetation;
@@ -36,8 +37,7 @@ namespace TGC.Tools.TerrainEditor.Panel
 
             textureBrowser = new TgcTextureBrowser();
             textureBrowser.ShowFolders = true;
-            textureBrowser.setSelectedImage(GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" +
-                                            "TerrainTexture1-256x256.jpg");
+            textureBrowser.setSelectedImage(Settings.Default.MediaDirectory + "Heighmaps\\TerrainTexture1-256x256.jpg");
             pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
             terrainEditor.Terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value,
                 (float)nudScaleY.Value, new Vector3(0, 0, 0));
@@ -116,7 +116,7 @@ namespace TGC.Tools.TerrainEditor.Panel
         {
             heightmapBrowser = new TgcTextureBrowser();
             heightmapBrowser.ShowFolders = true;
-            heightmapBrowser.setSelectedImage(GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap1.jpg");
+            heightmapBrowser.setSelectedImage(Settings.Default.MediaDirectory + "Heighmaps\\Heightmap1.jpg");
         }
 
         private void pictureBoxModifyHeightmap_Click(object sender, EventArgs e)

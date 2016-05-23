@@ -1,24 +1,24 @@
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
+using Microsoft.DirectX.Direct3D;
 using TGC.Tools.MeshCreator;
 using TGC.Tools.RoomsEditor;
 using TGC.Tools.SceneEditor;
 using TGC.Tools.TerrainEditor;
 
-namespace TGC.Tools
+namespace TGC.Tools.Forms
 {
     /// <summary>
     ///     Formulario principal de la aplicación
     /// </summary>
-    public partial class MainForm : Form
+    public partial class ToolsForm : Form
     {
         /// <summary>
         ///     Constructor principal de la aplicacion
         /// </summary>
-        public MainForm()
+        public ToolsForm()
         {
             InitializeComponent();
         }
@@ -33,8 +33,8 @@ namespace TGC.Tools
         /// </summary>
         internal bool MostrarPosicionDeCamaraEnable
         {
-            get { return mostrarPosiciónDeCámaraToolStripMenuItem.Checked; }
-            set { mostrarPosiciónDeCámaraToolStripMenuItem.Checked = value; }
+            get { return mostrarPosicionDeCamaraToolStripMenuItem.Checked; }
+            set { mostrarPosicionDeCamaraToolStripMenuItem.Checked = value; }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -148,7 +148,7 @@ namespace TGC.Tools
 
         private void mostrarPosiciónDeCámaraToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!mostrarPosiciónDeCámaraToolStripMenuItem.Checked)
+            if (!mostrarPosicionDeCamaraToolStripMenuItem.Checked)
             {
                 toolStripStatusPosition.Text = "";
             }
@@ -175,7 +175,15 @@ namespace TGC.Tools
 
             if (result.Equals(DialogResult.Yes))
             {
-                GuiController.Instance.executeSelectedExample(new TgcMeshCreator());
+                try
+                {
+                    GuiController.Instance.executeSelectedExample(new TgcMeshCreator());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error en init() de Mesh Creator \n" + ex.Message, ProductName,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -186,7 +194,15 @@ namespace TGC.Tools
 
             if (result.Equals(DialogResult.Yes))
             {
-                GuiController.Instance.executeSelectedExample(new TgcRoomsEditor());
+                try
+                {
+                    GuiController.Instance.executeSelectedExample(new TgcRoomsEditor());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error en init() de Room Editor \n" + ex.Message, ProductName,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -197,7 +213,15 @@ namespace TGC.Tools
 
             if (result.Equals(DialogResult.Yes))
             {
-                GuiController.Instance.executeSelectedExample(new TgcSceneEditor());
+                try
+                {
+                    GuiController.Instance.executeSelectedExample(new TgcSceneEditor());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error en init() de Scene Editor \n " + ex.Message, ProductName, 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -208,7 +232,15 @@ namespace TGC.Tools
 
             if (result.Equals(DialogResult.Yes))
             {
-                GuiController.Instance.executeSelectedExample(new TgcTerrainEditor());
+                try
+                {
+                    GuiController.Instance.executeSelectedExample(new TgcTerrainEditor());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error en init() de Terrain Editor \n" + ex.Message, ProductName, 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -225,7 +257,7 @@ namespace TGC.Tools
 
         private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TGC Tools :)");
+            new AboutForm().ShowDialog();
         }
     }
 }

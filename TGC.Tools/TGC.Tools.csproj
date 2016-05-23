@@ -52,7 +52,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bien\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -87,21 +87,25 @@
     </Reference>
     <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Example\TgcExample.cs" />
-    <Compile Include="GuiController.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="Forms\AboutForm.designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ToolsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ToolsForm.Designer.cs">
+      <DependentUpon>ToolsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiController.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePoly.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePolyTranslateGizmo.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePolyUtils.cs" />
@@ -155,9 +159,12 @@
     <Compile Include="MeshCreator\TgcMeshCreator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Forms\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ToolsForm.resx">
+      <DependentUpon>ToolsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
-      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MeshCreator\InputMessageBox.resx">
       <DependentUpon>InputMessageBox.cs</DependentUpon>
@@ -416,6 +423,7 @@
     <Content Include="IconoTgc.ico" />
     <None Include="Resources\shovel.gif" />
     <None Include="Resources\steamroller.gif" />
+    <None Include="Resources\robotgc.png" />
     <Content Include="Shaders\TgcKeyFrameMeshShader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

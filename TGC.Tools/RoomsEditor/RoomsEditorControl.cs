@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using TGC.Tools.Properties;
 using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.RoomsEditor
@@ -37,7 +38,7 @@ namespace TGC.Tools.RoomsEditor
             openMapDialog.Title = "Select a Map file";
             openMapDialog.Filter = ".XML |*.xml";
             openMapDialog.Multiselect = false;
-            openMapDialog.InitialDirectory = GuiController.Instance.ExamplesMediaDir;
+            openMapDialog.InitialDirectory = Settings.Default.MediaDirectory;
 
             //saveDialog
             saveDialog = new SaveFileDialog();

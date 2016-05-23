@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Tools.Properties;
 using TGC.Tools.Utils._2D;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.Sound;
@@ -35,7 +36,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
             Rotation = RotationAxis.Y;
             SoundEnabled = true;
             sound = new TgcStaticSound();
-            sound.loadSound(GuiController.Instance.ExamplesMediaDir + "Sound\\pisada arena dcha.wav", -2000);
+            sound.loadSound(Settings.Default.MediaDirectory + "Sound\\pisada arena dcha.wav", -2000);
         }
 
         protected TgcMesh Mesh { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using TGC.Tools.Properties;
 
 namespace TGC.Tools.Utils.Modifiers
 {
@@ -25,7 +26,7 @@ namespace TGC.Tools.Utils.Modifiers
             browseDialog.Title = "Select -TgcScene.xml mesh file";
             browseDialog.Filter = "-TgcScene.xml |*-TgcScene.xml";
             browseDialog.Multiselect = false;
-            HomeDirPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator";
+            HomeDirPath = Settings.Default.MediaDirectory + "MeshCreator";
         }
 
         /// <summary>

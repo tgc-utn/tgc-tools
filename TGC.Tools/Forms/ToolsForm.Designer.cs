@@ -1,6 +1,6 @@
-﻿namespace TGC.Tools
+﻿namespace TGC.Tools.Forms
 {
-    partial class MainForm
+    partial class ToolsForm
     {
         /// <summary>
         /// Variable del diseñador requerida.
@@ -28,14 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolsForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wireframeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contadorFPSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ejesCartesianosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mostrarPosiciónDeCámaraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mostrarPosicionDeCamaraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeTgcViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
@@ -50,7 +51,6 @@
             this.flowLayoutPanelModifiers = new System.Windows.Forms.FlowLayoutPanel();
             this.panel3d = new System.Windows.Forms.Panel();
             this.splitContainerPrincipal = new System.Windows.Forms.SplitContainer();
-            this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -81,13 +81,20 @@
             this.archivoToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.archivoToolStripMenuItem.Text = "Archivo";
             // 
+            // salirToolStripMenuItem
+            // 
+            this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.salirToolStripMenuItem.Text = "Salir";
+            this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
+            // 
             // verToolStripMenuItem
             // 
             this.verToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.wireframeToolStripMenuItem,
             this.contadorFPSToolStripMenuItem,
             this.ejesCartesianosToolStripMenuItem,
-            this.mostrarPosiciónDeCámaraToolStripMenuItem});
+            this.mostrarPosicionDeCamaraToolStripMenuItem});
             this.verToolStripMenuItem.Name = "verToolStripMenuItem";
             this.verToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.verToolStripMenuItem.Text = "Ver";
@@ -121,16 +128,16 @@
             this.ejesCartesianosToolStripMenuItem.Text = "Ejes cartesianos";
             this.ejesCartesianosToolStripMenuItem.Click += new System.EventHandler(this.ejesCartesianosToolStripMenuItem_Click);
             // 
-            // mostrarPosiciónDeCámaraToolStripMenuItem
+            // mostrarPosicionDeCamaraToolStripMenuItem
             // 
-            this.mostrarPosiciónDeCámaraToolStripMenuItem.Checked = true;
-            this.mostrarPosiciónDeCámaraToolStripMenuItem.CheckOnClick = true;
-            this.mostrarPosiciónDeCámaraToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mostrarPosiciónDeCámaraToolStripMenuItem.Name = "mostrarPosiciónDeCámaraToolStripMenuItem";
-            this.mostrarPosiciónDeCámaraToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.P)));
-            this.mostrarPosiciónDeCámaraToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.mostrarPosiciónDeCámaraToolStripMenuItem.Text = "Mostrar posición de cámara";
-            this.mostrarPosiciónDeCámaraToolStripMenuItem.Click += new System.EventHandler(this.mostrarPosiciónDeCámaraToolStripMenuItem_Click);
+            this.mostrarPosicionDeCamaraToolStripMenuItem.Checked = true;
+            this.mostrarPosicionDeCamaraToolStripMenuItem.CheckOnClick = true;
+            this.mostrarPosicionDeCamaraToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mostrarPosicionDeCamaraToolStripMenuItem.Name = "mostrarPosicionDeCamaraToolStripMenuItem";
+            this.mostrarPosicionDeCamaraToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.P)));
+            this.mostrarPosicionDeCamaraToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.mostrarPosicionDeCamaraToolStripMenuItem.Text = "Mostrar posición de cámara";
+            this.mostrarPosicionDeCamaraToolStripMenuItem.Click += new System.EventHandler(this.mostrarPosiciónDeCámaraToolStripMenuItem_Click);
             // 
             // ayudaToolStripMenuItem
             // 
@@ -273,13 +280,6 @@
             this.splitContainerPrincipal.SplitterDistance = 602;
             this.splitContainerPrincipal.TabIndex = 6;
             // 
-            // salirToolStripMenuItem
-            // 
-            this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.salirToolStripMenuItem.Text = "Salir";
-            this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -329,7 +329,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusCurrentExample;
         private System.Windows.Forms.ToolStripMenuItem ejesCartesianosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem acercaDeTgcViewerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mostrarPosiciónDeCámaraToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mostrarPosicionDeCamaraToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton meshCreatorToolStripButton;
         private System.Windows.Forms.ToolStripButton roomEditorToolStripButton;
         private System.Windows.Forms.ToolStripButton sceneEditorToolStripButton;

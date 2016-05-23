@@ -1,5 +1,6 @@
 ﻿using Microsoft.DirectX;
 using System.Collections.Generic;
+using TGC.Tools.Properties;
 using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.TerrainEditor.Instances
@@ -8,7 +9,7 @@ namespace TGC.Tools.TerrainEditor.Instances
     {
         protected static InstancesManager instance;
 
-        private static string location = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vegetacion\\";
+        private static string location = Settings.Default.MediaDirectory + "MeshCreator\\Meshes\\Vegetacion\\";
 
         protected Dictionary<string, TgcMesh> meshes = new Dictionary<string, TgcMesh>();
 
