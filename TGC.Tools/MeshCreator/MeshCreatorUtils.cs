@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using TGC.Tools.MeshCreator.Primitives;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.MeshCreator

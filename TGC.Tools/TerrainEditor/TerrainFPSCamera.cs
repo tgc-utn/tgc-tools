@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Diagnostics;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.TgcSceneLoader;
 using Device = Microsoft.DirectX.Direct3D.Device;

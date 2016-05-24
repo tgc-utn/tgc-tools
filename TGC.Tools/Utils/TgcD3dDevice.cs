@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.Utils

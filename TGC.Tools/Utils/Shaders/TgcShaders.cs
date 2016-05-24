@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcKeyFrameLoader;
 using TGC.Tools.Utils.TgcSceneLoader;
 using TGC.Tools.Utils.TgcSkeletalAnimation;

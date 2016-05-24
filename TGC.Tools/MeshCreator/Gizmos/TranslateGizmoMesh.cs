@@ -1,5 +1,6 @@
 ﻿using Microsoft.DirectX;
 using System.Drawing;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.MeshCreator.Gizmos

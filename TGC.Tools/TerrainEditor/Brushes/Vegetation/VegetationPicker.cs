@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Tools.Model;
 using TGC.Tools.Properties;
 using TGC.Tools.Utils._2D;
 using TGC.Tools.Utils.Input;

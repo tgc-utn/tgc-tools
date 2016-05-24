@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using TGC.Tools.Model;
 
 namespace TGC.Tools.Utils
 {

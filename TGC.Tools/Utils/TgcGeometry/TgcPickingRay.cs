@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using TGC.Tools.Model;
 
 namespace TGC.Tools.Utils.TgcGeometry
 {

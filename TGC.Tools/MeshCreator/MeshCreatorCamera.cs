@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.TgcGeometry;
 using Device = Microsoft.DirectX.Direct3D.Device;

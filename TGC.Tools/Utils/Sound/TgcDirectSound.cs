@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectSound;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.Utils.Sound

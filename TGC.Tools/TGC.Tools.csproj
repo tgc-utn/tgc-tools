@@ -105,7 +105,6 @@
     <Compile Include="Forms\ToolsForm.Designer.cs">
       <DependentUpon>ToolsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GuiController.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePoly.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePolyTranslateGizmo.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePolyUtils.cs" />
@@ -157,6 +156,7 @@
     <Compile Include="MeshCreator\SelectionRectangle.cs" />
     <Compile Include="MeshCreator\SelectionRectangleMesh.cs" />
     <Compile Include="MeshCreator\TgcMeshCreator.cs" />
+    <Compile Include="Model\GuiController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\AboutForm.resx">
@@ -293,18 +293,9 @@
     <Compile Include="Utils\2D\TgcSprite.cs" />
     <Compile Include="Utils\2D\TgcDrawer2D.cs" />
     <Compile Include="Utils\2D\TgcText2d.cs" />
-    <Compile Include="Utils\Collision\ElipsoidCollision\BoundingBoxCollider.cs" />
-    <Compile Include="Utils\Collision\ElipsoidCollision\Collider.cs" />
-    <Compile Include="Utils\Collision\ElipsoidCollision\ElipsoidCollisionManager.cs" />
-    <Compile Include="Utils\Collision\ElipsoidCollision\TriangleMeshCollider.cs" />
-    <Compile Include="Utils\Fog\TgcFog.cs" />
     <Compile Include="Utils\Input\TgcThirdPersonCamera.cs" />
     <Compile Include="Utils\Input\TgcCamera.cs" />
     <Compile Include="Utils\Input\TgcSpringThirdPersonCamera.cs" />
-    <Compile Include="Utils\Interpolation\InterpoladorLineal.cs" />
-    <Compile Include="Utils\Interpolation\InterpoladorVaiven.cs" />
-    <Compile Include="Utils\Interpolation\Position2dInterpolator.cs" />
-    <Compile Include="Utils\Interpolation\Temporizador.cs" />
     <Compile Include="Utils\Modifiers\TgcMeshBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -319,10 +310,6 @@
     <Compile Include="Utils\Modifiers\TgcTextureBrowser.Designer.cs">
       <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Particles\ColaDeParticulas.cs" />
-    <Compile Include="Utils\Particles\Particle.cs" />
-    <Compile Include="Utils\Particles\ParticleEmitter.cs" />
-    <Compile Include="Utils\Particles\PilaDeParticulas.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingCell.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingCellData.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingConnection.cs" />

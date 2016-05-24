@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using System;
 using System.Drawing;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.Utils._2D

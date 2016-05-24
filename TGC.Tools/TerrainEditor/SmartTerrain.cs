@@ -1,8 +1,7 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
-using TGC.Tools.Properties;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.Shaders;
 using TGC.Tools.Utils.TgcGeometry;
 using TGC.Tools.Utils.TgcSceneLoader;
@@ -17,7 +16,7 @@ namespace TGC.Tools.TerrainEditor
             AlphaBlendEnable = false;
 
             //Shader
-            Effect = TgcShaders.loadEffect("\\Shaders\\EditableTerrain.fx");
+            Effect = TgcShaders.loadEffect("Shaders\\EditableTerrain.fx");
             Technique = "PositionColoredTextured";
 
             aabb = new TgcBoundingBox();

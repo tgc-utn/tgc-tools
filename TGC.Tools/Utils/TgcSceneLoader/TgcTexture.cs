@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using TGC.Tools.Model;
 
 namespace TGC.Tools.Utils.TgcSceneLoader
 {

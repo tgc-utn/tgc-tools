@@ -4,6 +4,7 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Tools.MeshCreator.EditablePoly.Primitives;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.TgcSceneLoader;
 

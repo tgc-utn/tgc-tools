@@ -1,5 +1,6 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using TGC.Tools.Model;
 
 namespace TGC.Tools.Utils._2D
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using TGC.Tools.Model;
 using TGC.Tools.Utils;
 
 namespace TGC.Tools.MeshCreator

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.DirectX.Direct3D;
 using TGC.Tools.MeshCreator;
+using TGC.Tools.Model;
 using TGC.Tools.RoomsEditor;
 using TGC.Tools.SceneEditor;
 using TGC.Tools.TerrainEditor;

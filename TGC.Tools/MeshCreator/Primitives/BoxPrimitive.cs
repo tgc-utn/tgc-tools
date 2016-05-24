@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.TgcGeometry;
 using TGC.Tools.Utils.TgcSceneLoader;

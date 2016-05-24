@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.Utils.TgcSceneLoader

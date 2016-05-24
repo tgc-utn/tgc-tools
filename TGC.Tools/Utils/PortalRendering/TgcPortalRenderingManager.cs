@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcGeometry;
 using TGC.Tools.Utils.TgcSceneLoader;
 

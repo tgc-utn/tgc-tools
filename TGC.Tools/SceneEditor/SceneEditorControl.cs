@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using TGC.Tools.Model;
 using TGC.Tools.Properties;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.Terrain;

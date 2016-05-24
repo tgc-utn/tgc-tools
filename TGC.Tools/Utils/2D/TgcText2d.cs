@@ -1,5 +1,6 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using TGC.Tools.Model;
 using Font = Microsoft.DirectX.Direct3D.Font;
 
 namespace TGC.Tools.Utils._2D

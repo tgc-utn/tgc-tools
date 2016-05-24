@@ -8,6 +8,7 @@ using System.IO;
 using System.Windows.Forms;
 using TGC.Tools.MeshCreator.Gizmos;
 using TGC.Tools.MeshCreator.Primitives;
+using TGC.Tools.Model;
 using TGC.Tools.Properties;
 using TGC.Tools.Utils._2D;
 using TGC.Tools.Utils.Input;
@@ -78,7 +79,7 @@ namespace TGC.Tools.MeshCreator
             lastSavePath = null;
 
             //meshBrowser
-            defaultMeshPath = MediaPath + "\\Meshes\\Vegetation";
+            defaultMeshPath = MediaPath + "\\Meshes\\Vegetacion";
             meshBrowser = new TgcMeshBrowser();
             meshBrowser.setSelectedMesh(defaultMeshPath);
 

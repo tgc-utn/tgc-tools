@@ -1,23 +1,21 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using TGC.Tools.Example;
 using TGC.Tools.Forms;
 using TGC.Tools.MeshCreator;
 using TGC.Tools.Utils;
-using TGC.Tools.Utils._2D;
-using TGC.Tools.Utils.Fog;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.Modifiers;
 using TGC.Tools.Utils.Shaders;
 using TGC.Tools.Utils.Sound;
 using TGC.Tools.Utils.TgcGeometry;
 using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Tools.Utils._2D;
 
-namespace TGC.Tools
+namespace TGC.Tools.Model
 {
     /// <summary>
     ///     Controlador principal de la aplicación
@@ -83,7 +81,6 @@ namespace TGC.Tools
             Frustum = new TgcFrustum();
             Mp3Player = new TgcMp3Player();
             DirectSound = new TgcDirectSound();
-            Fog = new TgcFog();
             CurrentCamera = RotCamera;
             CustomRenderEnabled = false;
             Drawer2D = new TgcDrawer2D();
@@ -263,7 +260,6 @@ namespace TGC.Tools
             FpsCounterEnable = true;
             tgcD3dDevice.setDefaultValues();
             Mp3Player.closeFile();
-            Fog.resetValues();
             CustomRenderEnabled = false;
         }
 
@@ -434,11 +430,6 @@ namespace TGC.Tools
         ///     Herramienta para manipular DirectSound
         /// </summary>
         public TgcDirectSound DirectSound { get; private set; }
-
-        /// <summary>
-        ///     Herramienta para manipular el efecto de niebla
-        /// </summary>
-        public TgcFog Fog { get; private set; }
 
         /// <summary>
         ///     Color con el que se limpia la pantalla

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Tools.Model;
 
 namespace TGC.Tools.Utils.Modifiers
 {

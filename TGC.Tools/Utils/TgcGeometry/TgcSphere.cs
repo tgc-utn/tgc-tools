@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.Shaders;
 using TGC.Tools.Utils.TgcSceneLoader;
 

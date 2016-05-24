@@ -25,13 +25,25 @@ namespace TGC.Tools.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Media\\")]
         public string MediaDirectory {
             get {
                 return ((string)(this["MediaDirectory"]));
             }
             set {
                 this["MediaDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Shaders\\")]
+        public string ShadersDirectory {
+            get {
+                return ((string)(this["ShadersDirectory"]));
+            }
+            set {
+                this["ShadersDirectory"] = value;
             }
         }
     }

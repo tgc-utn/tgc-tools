@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using TGC.Tools.Example;
+using TGC.Tools.Model;
 
 namespace TGC.Tools.RoomsEditor
 {

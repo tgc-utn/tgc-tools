@@ -1,5 +1,6 @@
 using System.Xml;
 using TGC.Tools.Example;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.SceneEditor

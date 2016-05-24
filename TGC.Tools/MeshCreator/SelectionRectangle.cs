@@ -3,6 +3,7 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Tools.MeshCreator.Primitives;
+using TGC.Tools.Model;
 using TGC.Tools.Utils.Input;
 using TGC.Tools.Utils.TgcGeometry;
 

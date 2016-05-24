@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using TGC.Tools.Example;
+using TGC.Tools.Model;
 using TGC.Tools.TerrainEditor.Brushes;
 using TGC.Tools.TerrainEditor.Instances;
 using TGC.Tools.TerrainEditor.Panel;
