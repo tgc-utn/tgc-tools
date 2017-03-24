@@ -63,11 +63,11 @@ float4 ps_PositionColoredTextured(PS_INPUT_PositionColoredTextured input) : COLO
 
 technique PositionColoredTextured
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_PositionColoredTextured();
-		PixelShader = compile ps_2_0 ps_PositionColoredTextured();
-	}
+   pass Pass_0
+   {
+	  VertexShader = compile vs_3_0 vs_PositionColoredTextured();
+	  PixelShader = compile ps_3_0 ps_PositionColoredTextured();
+   }
 }
 
 /**************************************************************************************/
@@ -136,11 +136,11 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithRoundBrush(VS_INP
 
 technique PositionColoredTexturedWithRoundBrush
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_PositionColoredTexturedWithRoundBrush();
-		PixelShader = compile ps_2_0 ps_PositionColoredTexturedWithBrush();
-	}
+   pass Pass_0
+   {
+	  VertexShader = compile vs_3_0 vs_PositionColoredTexturedWithRoundBrush();
+	  PixelShader = compile ps_3_0 ps_PositionColoredTexturedWithBrush();
+   }
 }
 
 /**************************************************************************************/
@@ -181,9 +181,11 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithSquareBrush(VS_IN
 
 technique PositionColoredTexturedWithSquareBrush
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_PositionColoredTexturedWithSquareBrush();
-		PixelShader = compile ps_2_0  ps_PositionColoredTexturedWithBrush();
-	}
+   pass Pass_0
+   {
+	 
+	  VertexShader = compile vs_3_0 vs_PositionColoredTexturedWithSquareBrush();
+	  PixelShader = compile ps_3_0  ps_PositionColoredTexturedWithBrush();
+   }
+ 
 }
