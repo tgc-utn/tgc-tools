@@ -49,18 +49,14 @@ namespace TGC.Tools.TerrainEditor.Panel
             vegetationPicker = new VegetationPicker();
 
             //Tooltips
-            toolTip1.SetToolTip(rbShovel, "Pala.\nAumenta la altura del terreno.\nShovel sound by adough1@freesound");
-            toolTip1.SetToolTip(rbSteamroller,
-                "Aplanadora.\nNivela el terreno\nSteamroller stock image by presterjohn1@deviantArt");
+            toolTip1.SetToolTip(rbShovel, "Aumenta la altura del terreno.\nShovel sound by adough1@freesound");
+            toolTip1.SetToolTip(rbSteamroller, "Nivela el terreno");
             toolTip1.SetToolTip(tbRadius, "Regula el tamaño del pincel");
             toolTip1.SetToolTip(tbIntensity, "Regula la intesidad del efecto del pincel");
-            toolTip1.SetToolTip(tbHardness,
-                "Regula el tamaño del radio interno.\nA medida que los vertices se alejan del radio interno, la intensidad disminuye.");
+            toolTip1.SetToolTip(tbHardness, "Regula el tamaño del radio interno.\nA medida que los vertices se alejan del radio interno, la intensidad disminuye.");
             toolTip1.SetToolTip(cbRounded, "Cuando se deselecciona, el pincel es cuadrado");
-            toolTip1.SetToolTip(cbInvert,
-                "Invierte el efecto del pincel.\n(La pala hunde, la aplanadora aumenta los desniveles)");
-            toolTip1.SetToolTip(bChangeFolder,
-                "La carpeta seleccionada debe contener carpetas con\nel mismo nombre que el -TgcScene.xml que llevan dentro.");
+            toolTip1.SetToolTip(cbInvert, "Invierte el efecto del pincel.\n(La pala hunde, la aplanadora aumenta los desniveles)");
+            toolTip1.SetToolTip(bChangeFolder, "La carpeta seleccionada debe contener carpetas con\nel mismo nombre que el -TgcScene.xml que llevan dentro.");
 
             //Camera
             terrainEditor.Camera.MovementSpeed = tbCameraMovementSpeed.Value;
