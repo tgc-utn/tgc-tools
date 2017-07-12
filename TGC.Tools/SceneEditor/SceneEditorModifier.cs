@@ -7,8 +7,6 @@ namespace TGC.Tools.SceneEditor
     /// </summary>
     public class SceneEditorModifier : TgcModifierPanel
     {
-        private TgcSceneEditor editor;
-
         public SceneEditorModifier(string varName, TgcSceneEditor editor)
             : base(varName)
         {

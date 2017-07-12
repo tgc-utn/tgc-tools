@@ -5,8 +5,6 @@ namespace TGC.Tools.RoomsEditor
 {
     public class RoomsEditorModifier : TgcModifierPanel
     {
-        private TgcRoomsEditor editor;
-
         public RoomsEditorModifier(string varName, TgcRoomsEditor editor)
             : base(varName)
         {

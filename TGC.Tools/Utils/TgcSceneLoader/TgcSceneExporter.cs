@@ -503,7 +503,6 @@ namespace TGC.Tools.Utils.TgcSceneLoader
         private void exportMaterialData(TgcMesh tgcMesh, MeshExport meshExport, TgcMeshData meshData)
         {
             //Exportar diffuseMap y material simple
-            var alphaBlendEnabled = false;
             if (tgcMesh.Materials.Length == 1)
             {
                 var materialData = new TgcMaterialData();

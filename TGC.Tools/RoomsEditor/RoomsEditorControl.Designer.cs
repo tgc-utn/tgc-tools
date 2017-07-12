@@ -71,6 +71,7 @@
             this.buttonEdit2dMap.TabIndex = 0;
             this.buttonEdit2dMap.Text = "Edit 2D map";
             this.buttonEdit2dMap.UseVisualStyleBackColor = true;
+            this.buttonEdit2dMap.Click += new System.EventHandler(this.buttonEdit2dMap_Click);
             // 
             // groupBoxProject
             // 
@@ -92,6 +93,7 @@
             this.buttonOpenMap.TabIndex = 1;
             this.buttonOpenMap.Text = "Open map";
             this.buttonOpenMap.UseVisualStyleBackColor = true;
+            this.buttonOpenMap.Click += new System.EventHandler(this.buttonOpenMap_Click);
             // 
             // buttonSaveMap
             // 
@@ -101,6 +103,7 @@
             this.buttonSaveMap.TabIndex = 0;
             this.buttonSaveMap.Text = "Save map";
             this.buttonSaveMap.UseVisualStyleBackColor = true;
+            this.buttonSaveMap.Click += new System.EventHandler(this.buttonSaveMap_Click);
             // 
             // groupBoxExport
             // 
@@ -122,6 +125,7 @@
             this.buttonCustomExport.TabIndex = 2;
             this.buttonCustomExport.Text = "Custom export";
             this.buttonCustomExport.UseVisualStyleBackColor = true;
+            this.buttonCustomExport.Click += new System.EventHandler(this.buttonCustomExport_Click);
             // 
             // buttonExportScene
             // 
@@ -131,6 +135,7 @@
             this.buttonExportScene.TabIndex = 1;
             this.buttonExportScene.Text = "Export scene";
             this.buttonExportScene.UseVisualStyleBackColor = true;
+            this.buttonExportScene.Click += new System.EventHandler(this.buttonExportScene_Click);
             // 
             // RoomsEditorControl
             // 

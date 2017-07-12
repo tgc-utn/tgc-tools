@@ -1211,7 +1211,6 @@ namespace TGC.Tools.Utils.TgcSkeletalAnimation
             {
                 case MeshRenderType.VERTEX_COLOR:
                     throw new NotImplementedException("Falta hacer");
-                    break;
 
                 case MeshRenderType.DIFFUSE_MAP:
 

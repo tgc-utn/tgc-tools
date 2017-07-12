@@ -43,22 +43,25 @@
             this.cameraSpeed = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.tabPageCreate = new System.Windows.Forms.TabPage();
+            this.groupBoxOpenFile = new System.Windows.Forms.GroupBox();
+            this.meshCreate = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.createPosZ = new System.Windows.Forms.TextBox();
+            this.createPosY = new System.Windows.Forms.TextBox();
+            this.createPosX = new System.Windows.Forms.TextBox();
+            this.amountToCreate = new System.Windows.Forms.NumericUpDown();
+            this.openFile = new System.Windows.Forms.Button();
+            this.fileName = new System.Windows.Forms.TextBox();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.tabPageModify = new System.Windows.Forms.TabPage();
-            this.tabPageTerrain = new System.Windows.Forms.TabPage();
-            this.groupBoxEditMeshGeneral = new System.Windows.Forms.GroupBox();
-            this.radioButtonSelectionMode = new System.Windows.Forms.RadioButton();
-            this.label15 = new System.Windows.Forms.Label();
-            this.meshName = new System.Windows.Forms.TextBox();
-            this.meshRemove = new System.Windows.Forms.Button();
-            this.groupBoxEditMeshPosition = new System.Windows.Forms.GroupBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.radioButtonTranslateMode = new System.Windows.Forms.RadioButton();
-            this.label3 = new System.Windows.Forms.Label();
-            this.meshPosY = new System.Windows.Forms.TextBox();
-            this.meshPosZ = new System.Windows.Forms.TextBox();
-            this.meshPosX = new System.Windows.Forms.TextBox();
+            this.groupBoxEditMeshUserInfo = new System.Windows.Forms.GroupBox();
+            this.userInfo = new System.Windows.Forms.TextBox();
+            this.groupBoxEditMeshScale = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.meshScaleY = new System.Windows.Forms.TextBox();
+            this.meshScaleZ = new System.Windows.Forms.TextBox();
+            this.meshScaleX = new System.Windows.Forms.TextBox();
             this.groupBoxEditMeshRotation = new System.Windows.Forms.GroupBox();
             this.buttonEditMeshRotateBoundingBox = new System.Windows.Forms.Button();
             this.trackBarRotationZ = new System.Windows.Forms.TrackBar();
@@ -70,23 +73,20 @@
             this.meshRotY = new System.Windows.Forms.TextBox();
             this.meshRotZ = new System.Windows.Forms.TextBox();
             this.meshRotX = new System.Windows.Forms.TextBox();
-            this.groupBoxEditMeshScale = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.meshScaleY = new System.Windows.Forms.TextBox();
-            this.meshScaleZ = new System.Windows.Forms.TextBox();
-            this.meshScaleX = new System.Windows.Forms.TextBox();
-            this.groupBoxEditMeshUserInfo = new System.Windows.Forms.GroupBox();
-            this.userInfo = new System.Windows.Forms.TextBox();
-            this.groupBoxOpenFile = new System.Windows.Forms.GroupBox();
-            this.meshCreate = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.createPosZ = new System.Windows.Forms.TextBox();
-            this.createPosY = new System.Windows.Forms.TextBox();
-            this.createPosX = new System.Windows.Forms.TextBox();
-            this.amountToCreate = new System.Windows.Forms.NumericUpDown();
-            this.openFile = new System.Windows.Forms.Button();
-            this.fileName = new System.Windows.Forms.TextBox();
+            this.groupBoxEditMeshPosition = new System.Windows.Forms.GroupBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.radioButtonTranslateMode = new System.Windows.Forms.RadioButton();
+            this.label3 = new System.Windows.Forms.Label();
+            this.meshPosY = new System.Windows.Forms.TextBox();
+            this.meshPosZ = new System.Windows.Forms.TextBox();
+            this.meshPosX = new System.Windows.Forms.TextBox();
+            this.groupBoxEditMeshGeneral = new System.Windows.Forms.GroupBox();
+            this.radioButtonSelectionMode = new System.Windows.Forms.RadioButton();
+            this.label15 = new System.Windows.Forms.Label();
+            this.meshName = new System.Windows.Forms.TextBox();
+            this.meshRemove = new System.Windows.Forms.Button();
+            this.tabPageTerrain = new System.Windows.Forms.TabPage();
             this.groupBoxTerrain = new System.Windows.Forms.GroupBox();
             this.terrainRemove = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
@@ -112,18 +112,18 @@
             this.groupBoxCamera.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraSpeed)).BeginInit();
             this.tabPageCreate.SuspendLayout();
+            this.groupBoxOpenFile.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.amountToCreate)).BeginInit();
             this.tabPageModify.SuspendLayout();
-            this.tabPageTerrain.SuspendLayout();
-            this.groupBoxEditMeshGeneral.SuspendLayout();
-            this.groupBoxEditMeshPosition.SuspendLayout();
+            this.groupBoxEditMeshUserInfo.SuspendLayout();
+            this.groupBoxEditMeshScale.SuspendLayout();
             this.groupBoxEditMeshRotation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRotationZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRotationY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRotationX)).BeginInit();
-            this.groupBoxEditMeshScale.SuspendLayout();
-            this.groupBoxEditMeshUserInfo.SuspendLayout();
-            this.groupBoxOpenFile.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.amountToCreate)).BeginInit();
+            this.groupBoxEditMeshPosition.SuspendLayout();
+            this.groupBoxEditMeshGeneral.SuspendLayout();
+            this.tabPageTerrain.SuspendLayout();
             this.groupBoxTerrain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.terrainYscale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.terrainXZscale)).BeginInit();
@@ -175,6 +175,7 @@
             this.buttonCustomExport.TabIndex = 10;
             this.buttonCustomExport.Text = "Custom export";
             this.buttonCustomExport.UseVisualStyleBackColor = true;
+            this.buttonCustomExport.Click += new System.EventHandler(this.buttonCustomExport_Click);
             // 
             // exportSceneButton
             // 
@@ -184,6 +185,7 @@
             this.exportSceneButton.TabIndex = 8;
             this.exportSceneButton.Text = "Export Scene";
             this.exportSceneButton.UseVisualStyleBackColor = true;
+            this.exportSceneButton.Click += new System.EventHandler(this.exportSceneButton_Click);
             // 
             // groupBoxMeshList
             // 
@@ -215,6 +217,7 @@
             this.dataGridMeshList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridMeshList.Size = new System.Drawing.Size(180, 324);
             this.dataGridMeshList.TabIndex = 0;
+            this.dataGridMeshList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridMeshList_RowEnter);
             // 
             // MeshColumnNumber
             // 
@@ -264,6 +267,7 @@
             this.radioButtonCameraMode.TabStop = true;
             this.radioButtonCameraMode.Text = "Camera Mode";
             this.radioButtonCameraMode.UseVisualStyleBackColor = true;
+            this.radioButtonCameraMode.CheckedChanged += new System.EventHandler(this.radioButtonCameraMode_CheckedChanged);
             // 
             // cameraSpeed
             // 
@@ -291,6 +295,7 @@
             0,
             0,
             0});
+            this.cameraSpeed.ValueChanged += new System.EventHandler(this.cameraSpeed_ValueChanged);
             // 
             // label13
             // 
@@ -312,352 +317,6 @@
             this.tabPageCreate.TabIndex = 0;
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
-            // 
-            // buttonHelp
-            // 
-            this.buttonHelp.Location = new System.Drawing.Point(32, 163);
-            this.buttonHelp.Name = "buttonHelp";
-            this.buttonHelp.Size = new System.Drawing.Size(45, 23);
-            this.buttonHelp.TabIndex = 6;
-            this.buttonHelp.Text = "Help";
-            this.buttonHelp.UseVisualStyleBackColor = true;
-            this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click_1);
-            // 
-            // tabPageModify
-            // 
-            this.tabPageModify.Controls.Add(this.groupBoxEditMeshUserInfo);
-            this.tabPageModify.Controls.Add(this.groupBoxEditMeshScale);
-            this.tabPageModify.Controls.Add(this.groupBoxEditMeshRotation);
-            this.tabPageModify.Controls.Add(this.groupBoxEditMeshPosition);
-            this.tabPageModify.Controls.Add(this.groupBoxEditMeshGeneral);
-            this.tabPageModify.Location = new System.Drawing.Point(4, 22);
-            this.tabPageModify.Name = "tabPageModify";
-            this.tabPageModify.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageModify.Size = new System.Drawing.Size(192, 774);
-            this.tabPageModify.TabIndex = 1;
-            this.tabPageModify.Text = "Modify";
-            this.tabPageModify.UseVisualStyleBackColor = true;
-            // 
-            // tabPageTerrain
-            // 
-            this.tabPageTerrain.Controls.Add(this.groupBoxTerrain);
-            this.tabPageTerrain.Location = new System.Drawing.Point(4, 22);
-            this.tabPageTerrain.Name = "tabPageTerrain";
-            this.tabPageTerrain.Size = new System.Drawing.Size(192, 774);
-            this.tabPageTerrain.TabIndex = 2;
-            this.tabPageTerrain.Text = "Terrain";
-            this.tabPageTerrain.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxEditMeshGeneral
-            // 
-            this.groupBoxEditMeshGeneral.Controls.Add(this.radioButtonSelectionMode);
-            this.groupBoxEditMeshGeneral.Controls.Add(this.label15);
-            this.groupBoxEditMeshGeneral.Controls.Add(this.meshName);
-            this.groupBoxEditMeshGeneral.Controls.Add(this.meshRemove);
-            this.groupBoxEditMeshGeneral.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxEditMeshGeneral.Location = new System.Drawing.Point(3, 3);
-            this.groupBoxEditMeshGeneral.Name = "groupBoxEditMeshGeneral";
-            this.groupBoxEditMeshGeneral.Size = new System.Drawing.Size(186, 117);
-            this.groupBoxEditMeshGeneral.TabIndex = 40;
-            this.groupBoxEditMeshGeneral.TabStop = false;
-            this.groupBoxEditMeshGeneral.Text = "General";
-            // 
-            // radioButtonSelectionMode
-            // 
-            this.radioButtonSelectionMode.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonSelectionMode.AutoSize = true;
-            this.radioButtonSelectionMode.Location = new System.Drawing.Point(7, 19);
-            this.radioButtonSelectionMode.Name = "radioButtonSelectionMode";
-            this.radioButtonSelectionMode.Size = new System.Drawing.Size(91, 23);
-            this.radioButtonSelectionMode.TabIndex = 11;
-            this.radioButtonSelectionMode.TabStop = true;
-            this.radioButtonSelectionMode.Text = "Selection Mode";
-            this.radioButtonSelectionMode.UseVisualStyleBackColor = true;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(8, 44);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(38, 13);
-            this.label15.TabIndex = 31;
-            this.label15.Text = "Name:";
-            // 
-            // meshName
-            // 
-            this.meshName.Location = new System.Drawing.Point(7, 60);
-            this.meshName.Name = "meshName";
-            this.meshName.Size = new System.Drawing.Size(91, 20);
-            this.meshName.TabIndex = 11;
-            // 
-            // meshRemove
-            // 
-            this.meshRemove.Location = new System.Drawing.Point(15, 85);
-            this.meshRemove.Name = "meshRemove";
-            this.meshRemove.Size = new System.Drawing.Size(71, 23);
-            this.meshRemove.TabIndex = 30;
-            this.meshRemove.Text = "Remove";
-            this.meshRemove.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxEditMeshPosition
-            // 
-            this.groupBoxEditMeshPosition.Controls.Add(this.label16);
-            this.groupBoxEditMeshPosition.Controls.Add(this.label4);
-            this.groupBoxEditMeshPosition.Controls.Add(this.radioButtonTranslateMode);
-            this.groupBoxEditMeshPosition.Controls.Add(this.label3);
-            this.groupBoxEditMeshPosition.Controls.Add(this.meshPosY);
-            this.groupBoxEditMeshPosition.Controls.Add(this.meshPosZ);
-            this.groupBoxEditMeshPosition.Controls.Add(this.meshPosX);
-            this.groupBoxEditMeshPosition.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxEditMeshPosition.Enabled = false;
-            this.groupBoxEditMeshPosition.Location = new System.Drawing.Point(3, 120);
-            this.groupBoxEditMeshPosition.Name = "groupBoxEditMeshPosition";
-            this.groupBoxEditMeshPosition.Size = new System.Drawing.Size(186, 129);
-            this.groupBoxEditMeshPosition.TabIndex = 41;
-            this.groupBoxEditMeshPosition.TabStop = false;
-            this.groupBoxEditMeshPosition.Text = "Position";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(4, 100);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(14, 13);
-            this.label16.TabIndex = 41;
-            this.label16.Text = "Z";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(4, 74);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(14, 13);
-            this.label4.TabIndex = 40;
-            this.label4.Text = "Y";
-            // 
-            // radioButtonTranslateMode
-            // 
-            this.radioButtonTranslateMode.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonTranslateMode.AutoSize = true;
-            this.radioButtonTranslateMode.Location = new System.Drawing.Point(5, 19);
-            this.radioButtonTranslateMode.Name = "radioButtonTranslateMode";
-            this.radioButtonTranslateMode.Size = new System.Drawing.Size(91, 23);
-            this.radioButtonTranslateMode.TabIndex = 39;
-            this.radioButtonTranslateMode.TabStop = true;
-            this.radioButtonTranslateMode.Text = "Translate Mode";
-            this.radioButtonTranslateMode.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 48);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(14, 13);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "X";
-            // 
-            // meshPosY
-            // 
-            this.meshPosY.Location = new System.Drawing.Point(24, 71);
-            this.meshPosY.Name = "meshPosY";
-            this.meshPosY.Size = new System.Drawing.Size(71, 20);
-            this.meshPosY.TabIndex = 8;
-            this.meshPosY.Text = "0";
-            // 
-            // meshPosZ
-            // 
-            this.meshPosZ.Location = new System.Drawing.Point(24, 97);
-            this.meshPosZ.Name = "meshPosZ";
-            this.meshPosZ.Size = new System.Drawing.Size(71, 20);
-            this.meshPosZ.TabIndex = 9;
-            this.meshPosZ.Text = "0";
-            // 
-            // meshPosX
-            // 
-            this.meshPosX.Location = new System.Drawing.Point(24, 45);
-            this.meshPosX.Name = "meshPosX";
-            this.meshPosX.Size = new System.Drawing.Size(73, 20);
-            this.meshPosX.TabIndex = 7;
-            this.meshPosX.Text = "0";
-            // 
-            // groupBoxEditMeshRotation
-            // 
-            this.groupBoxEditMeshRotation.Controls.Add(this.buttonEditMeshRotateBoundingBox);
-            this.groupBoxEditMeshRotation.Controls.Add(this.trackBarRotationZ);
-            this.groupBoxEditMeshRotation.Controls.Add(this.trackBarRotationY);
-            this.groupBoxEditMeshRotation.Controls.Add(this.label17);
-            this.groupBoxEditMeshRotation.Controls.Add(this.label11);
-            this.groupBoxEditMeshRotation.Controls.Add(this.trackBarRotationX);
-            this.groupBoxEditMeshRotation.Controls.Add(this.label5);
-            this.groupBoxEditMeshRotation.Controls.Add(this.meshRotY);
-            this.groupBoxEditMeshRotation.Controls.Add(this.meshRotZ);
-            this.groupBoxEditMeshRotation.Controls.Add(this.meshRotX);
-            this.groupBoxEditMeshRotation.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxEditMeshRotation.Location = new System.Drawing.Point(3, 249);
-            this.groupBoxEditMeshRotation.Name = "groupBoxEditMeshRotation";
-            this.groupBoxEditMeshRotation.Size = new System.Drawing.Size(186, 238);
-            this.groupBoxEditMeshRotation.TabIndex = 42;
-            this.groupBoxEditMeshRotation.TabStop = false;
-            this.groupBoxEditMeshRotation.Text = "Rotation";
-            // 
-            // buttonEditMeshRotateBoundingBox
-            // 
-            this.buttonEditMeshRotateBoundingBox.Location = new System.Drawing.Point(6, 187);
-            this.buttonEditMeshRotateBoundingBox.Name = "buttonEditMeshRotateBoundingBox";
-            this.buttonEditMeshRotateBoundingBox.Size = new System.Drawing.Size(92, 45);
-            this.buttonEditMeshRotateBoundingBox.TabIndex = 48;
-            this.buttonEditMeshRotateBoundingBox.Text = "Rotate BoundingBox";
-            this.buttonEditMeshRotateBoundingBox.UseVisualStyleBackColor = true;
-            // 
-            // trackBarRotationZ
-            // 
-            this.trackBarRotationZ.AutoSize = false;
-            this.trackBarRotationZ.Location = new System.Drawing.Point(4, 152);
-            this.trackBarRotationZ.Margin = new System.Windows.Forms.Padding(0);
-            this.trackBarRotationZ.Maximum = 360;
-            this.trackBarRotationZ.Name = "trackBarRotationZ";
-            this.trackBarRotationZ.Size = new System.Drawing.Size(100, 32);
-            this.trackBarRotationZ.TabIndex = 47;
-            this.trackBarRotationZ.TickFrequency = 45;
-            // 
-            // trackBarRotationY
-            // 
-            this.trackBarRotationY.AutoSize = false;
-            this.trackBarRotationY.Location = new System.Drawing.Point(2, 94);
-            this.trackBarRotationY.Margin = new System.Windows.Forms.Padding(0);
-            this.trackBarRotationY.Maximum = 360;
-            this.trackBarRotationY.Name = "trackBarRotationY";
-            this.trackBarRotationY.Size = new System.Drawing.Size(100, 32);
-            this.trackBarRotationY.TabIndex = 46;
-            this.trackBarRotationY.TickFrequency = 45;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(5, 132);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(14, 13);
-            this.label17.TabIndex = 45;
-            this.label17.Text = "Z";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(7, 74);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(14, 13);
-            this.label11.TabIndex = 44;
-            this.label11.Text = "Y";
-            // 
-            // trackBarRotationX
-            // 
-            this.trackBarRotationX.AutoSize = false;
-            this.trackBarRotationX.Location = new System.Drawing.Point(2, 36);
-            this.trackBarRotationX.Margin = new System.Windows.Forms.Padding(0);
-            this.trackBarRotationX.Maximum = 360;
-            this.trackBarRotationX.Name = "trackBarRotationX";
-            this.trackBarRotationX.Size = new System.Drawing.Size(100, 32);
-            this.trackBarRotationX.TabIndex = 43;
-            this.trackBarRotationX.TickFrequency = 45;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 18);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(14, 13);
-            this.label5.TabIndex = 42;
-            this.label5.Text = "X";
-            // 
-            // meshRotY
-            // 
-            this.meshRotY.Location = new System.Drawing.Point(27, 71);
-            this.meshRotY.Name = "meshRotY";
-            this.meshRotY.Size = new System.Drawing.Size(71, 20);
-            this.meshRotY.TabIndex = 32;
-            this.meshRotY.Text = "0";
-            // 
-            // meshRotZ
-            // 
-            this.meshRotZ.Location = new System.Drawing.Point(28, 129);
-            this.meshRotZ.Name = "meshRotZ";
-            this.meshRotZ.Size = new System.Drawing.Size(71, 20);
-            this.meshRotZ.TabIndex = 33;
-            this.meshRotZ.Text = "0";
-            // 
-            // meshRotX
-            // 
-            this.meshRotX.Location = new System.Drawing.Point(27, 15);
-            this.meshRotX.Name = "meshRotX";
-            this.meshRotX.Size = new System.Drawing.Size(71, 20);
-            this.meshRotX.TabIndex = 31;
-            this.meshRotX.Text = "0";
-            // 
-            // groupBoxEditMeshScale
-            // 
-            this.groupBoxEditMeshScale.Controls.Add(this.label14);
-            this.groupBoxEditMeshScale.Controls.Add(this.meshScaleY);
-            this.groupBoxEditMeshScale.Controls.Add(this.meshScaleZ);
-            this.groupBoxEditMeshScale.Controls.Add(this.meshScaleX);
-            this.groupBoxEditMeshScale.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxEditMeshScale.Location = new System.Drawing.Point(3, 487);
-            this.groupBoxEditMeshScale.Name = "groupBoxEditMeshScale";
-            this.groupBoxEditMeshScale.Size = new System.Drawing.Size(186, 69);
-            this.groupBoxEditMeshScale.TabIndex = 43;
-            this.groupBoxEditMeshScale.TabStop = false;
-            this.groupBoxEditMeshScale.Text = "Scale";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(5, 16);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(67, 13);
-            this.label14.TabIndex = 38;
-            this.label14.Text = "Scale (x,y,z):";
-            // 
-            // meshScaleY
-            // 
-            this.meshScaleY.Location = new System.Drawing.Point(39, 32);
-            this.meshScaleY.Name = "meshScaleY";
-            this.meshScaleY.Size = new System.Drawing.Size(30, 20);
-            this.meshScaleY.TabIndex = 36;
-            this.meshScaleY.Text = "1";
-            // 
-            // meshScaleZ
-            // 
-            this.meshScaleZ.Location = new System.Drawing.Point(72, 32);
-            this.meshScaleZ.Name = "meshScaleZ";
-            this.meshScaleZ.Size = new System.Drawing.Size(30, 20);
-            this.meshScaleZ.TabIndex = 37;
-            this.meshScaleZ.Text = "1";
-            // 
-            // meshScaleX
-            // 
-            this.meshScaleX.Location = new System.Drawing.Point(7, 32);
-            this.meshScaleX.Name = "meshScaleX";
-            this.meshScaleX.Size = new System.Drawing.Size(30, 20);
-            this.meshScaleX.TabIndex = 35;
-            this.meshScaleX.Text = "1";
-            // 
-            // groupBoxEditMeshUserInfo
-            // 
-            this.groupBoxEditMeshUserInfo.Controls.Add(this.userInfo);
-            this.groupBoxEditMeshUserInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxEditMeshUserInfo.Location = new System.Drawing.Point(3, 556);
-            this.groupBoxEditMeshUserInfo.Name = "groupBoxEditMeshUserInfo";
-            this.groupBoxEditMeshUserInfo.Size = new System.Drawing.Size(186, 139);
-            this.groupBoxEditMeshUserInfo.TabIndex = 44;
-            this.groupBoxEditMeshUserInfo.TabStop = false;
-            this.groupBoxEditMeshUserInfo.Text = "User-Info";
-            // 
-            // userInfo
-            // 
-            this.userInfo.Location = new System.Drawing.Point(6, 19);
-            this.userInfo.Multiline = true;
-            this.userInfo.Name = "userInfo";
-            this.userInfo.Size = new System.Drawing.Size(96, 114);
-            this.userInfo.TabIndex = 29;
             // 
             // groupBoxOpenFile
             // 
@@ -686,6 +345,7 @@
             this.meshCreate.TabIndex = 7;
             this.meshCreate.Text = "Create";
             this.meshCreate.UseVisualStyleBackColor = true;
+            this.meshCreate.Click += new System.EventHandler(this.meshCreate_Click);
             // 
             // label2
             // 
@@ -754,6 +414,7 @@
             this.openFile.TabIndex = 1;
             this.openFile.Text = "Open";
             this.openFile.UseVisualStyleBackColor = true;
+            this.openFile.Click += new System.EventHandler(this.openFile_Click);
             // 
             // fileName
             // 
@@ -762,6 +423,370 @@
             this.fileName.ReadOnly = true;
             this.fileName.Size = new System.Drawing.Size(90, 20);
             this.fileName.TabIndex = 0;
+            // 
+            // buttonHelp
+            // 
+            this.buttonHelp.Location = new System.Drawing.Point(32, 163);
+            this.buttonHelp.Name = "buttonHelp";
+            this.buttonHelp.Size = new System.Drawing.Size(45, 23);
+            this.buttonHelp.TabIndex = 6;
+            this.buttonHelp.Text = "Help";
+            this.buttonHelp.UseVisualStyleBackColor = true;
+            this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click_1);
+            // 
+            // tabPageModify
+            // 
+            this.tabPageModify.Controls.Add(this.groupBoxEditMeshUserInfo);
+            this.tabPageModify.Controls.Add(this.groupBoxEditMeshScale);
+            this.tabPageModify.Controls.Add(this.groupBoxEditMeshRotation);
+            this.tabPageModify.Controls.Add(this.groupBoxEditMeshPosition);
+            this.tabPageModify.Controls.Add(this.groupBoxEditMeshGeneral);
+            this.tabPageModify.Location = new System.Drawing.Point(4, 22);
+            this.tabPageModify.Name = "tabPageModify";
+            this.tabPageModify.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageModify.Size = new System.Drawing.Size(192, 774);
+            this.tabPageModify.TabIndex = 1;
+            this.tabPageModify.Text = "Modify";
+            this.tabPageModify.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxEditMeshUserInfo
+            // 
+            this.groupBoxEditMeshUserInfo.Controls.Add(this.userInfo);
+            this.groupBoxEditMeshUserInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxEditMeshUserInfo.Location = new System.Drawing.Point(3, 556);
+            this.groupBoxEditMeshUserInfo.Name = "groupBoxEditMeshUserInfo";
+            this.groupBoxEditMeshUserInfo.Size = new System.Drawing.Size(186, 139);
+            this.groupBoxEditMeshUserInfo.TabIndex = 44;
+            this.groupBoxEditMeshUserInfo.TabStop = false;
+            this.groupBoxEditMeshUserInfo.Text = "User-Info";
+            // 
+            // userInfo
+            // 
+            this.userInfo.Location = new System.Drawing.Point(6, 19);
+            this.userInfo.Multiline = true;
+            this.userInfo.Name = "userInfo";
+            this.userInfo.Size = new System.Drawing.Size(96, 114);
+            this.userInfo.TabIndex = 29;
+            this.userInfo.TextChanged += new System.EventHandler(this.userInfo_TextChanged);
+            // 
+            // groupBoxEditMeshScale
+            // 
+            this.groupBoxEditMeshScale.Controls.Add(this.label14);
+            this.groupBoxEditMeshScale.Controls.Add(this.meshScaleY);
+            this.groupBoxEditMeshScale.Controls.Add(this.meshScaleZ);
+            this.groupBoxEditMeshScale.Controls.Add(this.meshScaleX);
+            this.groupBoxEditMeshScale.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxEditMeshScale.Location = new System.Drawing.Point(3, 487);
+            this.groupBoxEditMeshScale.Name = "groupBoxEditMeshScale";
+            this.groupBoxEditMeshScale.Size = new System.Drawing.Size(186, 69);
+            this.groupBoxEditMeshScale.TabIndex = 43;
+            this.groupBoxEditMeshScale.TabStop = false;
+            this.groupBoxEditMeshScale.Text = "Scale";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(5, 16);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(67, 13);
+            this.label14.TabIndex = 38;
+            this.label14.Text = "Scale (x,y,z):";
+            // 
+            // meshScaleY
+            // 
+            this.meshScaleY.Location = new System.Drawing.Point(39, 32);
+            this.meshScaleY.Name = "meshScaleY";
+            this.meshScaleY.Size = new System.Drawing.Size(30, 20);
+            this.meshScaleY.TabIndex = 36;
+            this.meshScaleY.Text = "1";
+            this.meshScaleY.Leave += new System.EventHandler(this.meshScaleY_Leave);
+            // 
+            // meshScaleZ
+            // 
+            this.meshScaleZ.Location = new System.Drawing.Point(72, 32);
+            this.meshScaleZ.Name = "meshScaleZ";
+            this.meshScaleZ.Size = new System.Drawing.Size(30, 20);
+            this.meshScaleZ.TabIndex = 37;
+            this.meshScaleZ.Text = "1";
+            this.meshScaleZ.Leave += new System.EventHandler(this.meshScaleZ_Leave);
+            // 
+            // meshScaleX
+            // 
+            this.meshScaleX.Location = new System.Drawing.Point(7, 32);
+            this.meshScaleX.Name = "meshScaleX";
+            this.meshScaleX.Size = new System.Drawing.Size(30, 20);
+            this.meshScaleX.TabIndex = 35;
+            this.meshScaleX.Text = "1";
+            this.meshScaleX.Leave += new System.EventHandler(this.meshScaleX_Leave);
+            // 
+            // groupBoxEditMeshRotation
+            // 
+            this.groupBoxEditMeshRotation.Controls.Add(this.buttonEditMeshRotateBoundingBox);
+            this.groupBoxEditMeshRotation.Controls.Add(this.trackBarRotationZ);
+            this.groupBoxEditMeshRotation.Controls.Add(this.trackBarRotationY);
+            this.groupBoxEditMeshRotation.Controls.Add(this.label17);
+            this.groupBoxEditMeshRotation.Controls.Add(this.label11);
+            this.groupBoxEditMeshRotation.Controls.Add(this.trackBarRotationX);
+            this.groupBoxEditMeshRotation.Controls.Add(this.label5);
+            this.groupBoxEditMeshRotation.Controls.Add(this.meshRotY);
+            this.groupBoxEditMeshRotation.Controls.Add(this.meshRotZ);
+            this.groupBoxEditMeshRotation.Controls.Add(this.meshRotX);
+            this.groupBoxEditMeshRotation.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxEditMeshRotation.Location = new System.Drawing.Point(3, 249);
+            this.groupBoxEditMeshRotation.Name = "groupBoxEditMeshRotation";
+            this.groupBoxEditMeshRotation.Size = new System.Drawing.Size(186, 238);
+            this.groupBoxEditMeshRotation.TabIndex = 42;
+            this.groupBoxEditMeshRotation.TabStop = false;
+            this.groupBoxEditMeshRotation.Text = "Rotation";
+            // 
+            // buttonEditMeshRotateBoundingBox
+            // 
+            this.buttonEditMeshRotateBoundingBox.Location = new System.Drawing.Point(6, 187);
+            this.buttonEditMeshRotateBoundingBox.Name = "buttonEditMeshRotateBoundingBox";
+            this.buttonEditMeshRotateBoundingBox.Size = new System.Drawing.Size(92, 45);
+            this.buttonEditMeshRotateBoundingBox.TabIndex = 48;
+            this.buttonEditMeshRotateBoundingBox.Text = "Rotate BoundingBox";
+            this.buttonEditMeshRotateBoundingBox.UseVisualStyleBackColor = true;
+            this.buttonEditMeshRotateBoundingBox.Click += new System.EventHandler(this.buttonEditMeshRotateBoundingBox_Click);
+            // 
+            // trackBarRotationZ
+            // 
+            this.trackBarRotationZ.AutoSize = false;
+            this.trackBarRotationZ.Location = new System.Drawing.Point(4, 152);
+            this.trackBarRotationZ.Margin = new System.Windows.Forms.Padding(0);
+            this.trackBarRotationZ.Maximum = 360;
+            this.trackBarRotationZ.Name = "trackBarRotationZ";
+            this.trackBarRotationZ.Size = new System.Drawing.Size(100, 32);
+            this.trackBarRotationZ.TabIndex = 47;
+            this.trackBarRotationZ.TickFrequency = 45;
+            this.trackBarRotationZ.Scroll += new System.EventHandler(this.trackBarRotationZ_Scroll);
+            // 
+            // trackBarRotationY
+            // 
+            this.trackBarRotationY.AutoSize = false;
+            this.trackBarRotationY.Location = new System.Drawing.Point(2, 94);
+            this.trackBarRotationY.Margin = new System.Windows.Forms.Padding(0);
+            this.trackBarRotationY.Maximum = 360;
+            this.trackBarRotationY.Name = "trackBarRotationY";
+            this.trackBarRotationY.Size = new System.Drawing.Size(100, 32);
+            this.trackBarRotationY.TabIndex = 46;
+            this.trackBarRotationY.TickFrequency = 45;
+            this.trackBarRotationY.Scroll += new System.EventHandler(this.trackBarRotationY_Scroll);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(5, 132);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(14, 13);
+            this.label17.TabIndex = 45;
+            this.label17.Text = "Z";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(7, 74);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(14, 13);
+            this.label11.TabIndex = 44;
+            this.label11.Text = "Y";
+            // 
+            // trackBarRotationX
+            // 
+            this.trackBarRotationX.AutoSize = false;
+            this.trackBarRotationX.Location = new System.Drawing.Point(2, 36);
+            this.trackBarRotationX.Margin = new System.Windows.Forms.Padding(0);
+            this.trackBarRotationX.Maximum = 360;
+            this.trackBarRotationX.Name = "trackBarRotationX";
+            this.trackBarRotationX.Size = new System.Drawing.Size(100, 32);
+            this.trackBarRotationX.TabIndex = 43;
+            this.trackBarRotationX.TickFrequency = 45;
+            this.trackBarRotationX.ValueChanged += new System.EventHandler(this.trackBarRotationX_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 18);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(14, 13);
+            this.label5.TabIndex = 42;
+            this.label5.Text = "X";
+            // 
+            // meshRotY
+            // 
+            this.meshRotY.Location = new System.Drawing.Point(27, 71);
+            this.meshRotY.Name = "meshRotY";
+            this.meshRotY.Size = new System.Drawing.Size(71, 20);
+            this.meshRotY.TabIndex = 32;
+            this.meshRotY.Text = "0";
+            this.meshRotY.Leave += new System.EventHandler(this.meshRotY_Leave);
+            // 
+            // meshRotZ
+            // 
+            this.meshRotZ.Location = new System.Drawing.Point(28, 129);
+            this.meshRotZ.Name = "meshRotZ";
+            this.meshRotZ.Size = new System.Drawing.Size(71, 20);
+            this.meshRotZ.TabIndex = 33;
+            this.meshRotZ.Text = "0";
+            this.meshRotZ.Leave += new System.EventHandler(this.meshRotZ_Leave);
+            // 
+            // meshRotX
+            // 
+            this.meshRotX.Location = new System.Drawing.Point(27, 15);
+            this.meshRotX.Name = "meshRotX";
+            this.meshRotX.Size = new System.Drawing.Size(71, 20);
+            this.meshRotX.TabIndex = 31;
+            this.meshRotX.Text = "0";
+            this.meshRotX.Leave += new System.EventHandler(this.meshRotX_Leave);
+            // 
+            // groupBoxEditMeshPosition
+            // 
+            this.groupBoxEditMeshPosition.Controls.Add(this.label16);
+            this.groupBoxEditMeshPosition.Controls.Add(this.label4);
+            this.groupBoxEditMeshPosition.Controls.Add(this.radioButtonTranslateMode);
+            this.groupBoxEditMeshPosition.Controls.Add(this.label3);
+            this.groupBoxEditMeshPosition.Controls.Add(this.meshPosY);
+            this.groupBoxEditMeshPosition.Controls.Add(this.meshPosZ);
+            this.groupBoxEditMeshPosition.Controls.Add(this.meshPosX);
+            this.groupBoxEditMeshPosition.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxEditMeshPosition.Enabled = false;
+            this.groupBoxEditMeshPosition.Location = new System.Drawing.Point(3, 120);
+            this.groupBoxEditMeshPosition.Name = "groupBoxEditMeshPosition";
+            this.groupBoxEditMeshPosition.Size = new System.Drawing.Size(186, 129);
+            this.groupBoxEditMeshPosition.TabIndex = 41;
+            this.groupBoxEditMeshPosition.TabStop = false;
+            this.groupBoxEditMeshPosition.Text = "Position";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(4, 100);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(14, 13);
+            this.label16.TabIndex = 41;
+            this.label16.Text = "Z";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(4, 74);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(14, 13);
+            this.label4.TabIndex = 40;
+            this.label4.Text = "Y";
+            // 
+            // radioButtonTranslateMode
+            // 
+            this.radioButtonTranslateMode.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonTranslateMode.AutoSize = true;
+            this.radioButtonTranslateMode.Location = new System.Drawing.Point(5, 19);
+            this.radioButtonTranslateMode.Name = "radioButtonTranslateMode";
+            this.radioButtonTranslateMode.Size = new System.Drawing.Size(91, 23);
+            this.radioButtonTranslateMode.TabIndex = 39;
+            this.radioButtonTranslateMode.TabStop = true;
+            this.radioButtonTranslateMode.Text = "Translate Mode";
+            this.radioButtonTranslateMode.UseVisualStyleBackColor = true;
+            this.radioButtonTranslateMode.CheckedChanged += new System.EventHandler(this.radioButtonTranslateMode_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(4, 48);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(14, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "X";
+            // 
+            // meshPosY
+            // 
+            this.meshPosY.Location = new System.Drawing.Point(24, 71);
+            this.meshPosY.Name = "meshPosY";
+            this.meshPosY.Size = new System.Drawing.Size(71, 20);
+            this.meshPosY.TabIndex = 8;
+            this.meshPosY.Text = "0";
+            this.meshPosY.Leave += new System.EventHandler(this.meshPosZ_Leave);
+            // 
+            // meshPosZ
+            // 
+            this.meshPosZ.Location = new System.Drawing.Point(24, 97);
+            this.meshPosZ.Name = "meshPosZ";
+            this.meshPosZ.Size = new System.Drawing.Size(71, 20);
+            this.meshPosZ.TabIndex = 9;
+            this.meshPosZ.Text = "0";
+            this.meshPosZ.Leave += new System.EventHandler(this.meshPosZ_Leave);
+            // 
+            // meshPosX
+            // 
+            this.meshPosX.Location = new System.Drawing.Point(24, 45);
+            this.meshPosX.Name = "meshPosX";
+            this.meshPosX.Size = new System.Drawing.Size(73, 20);
+            this.meshPosX.TabIndex = 7;
+            this.meshPosX.Text = "0";
+            this.meshPosX.Leave += new System.EventHandler(this.meshPosX_Leave);
+            // 
+            // groupBoxEditMeshGeneral
+            // 
+            this.groupBoxEditMeshGeneral.Controls.Add(this.radioButtonSelectionMode);
+            this.groupBoxEditMeshGeneral.Controls.Add(this.label15);
+            this.groupBoxEditMeshGeneral.Controls.Add(this.meshName);
+            this.groupBoxEditMeshGeneral.Controls.Add(this.meshRemove);
+            this.groupBoxEditMeshGeneral.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxEditMeshGeneral.Location = new System.Drawing.Point(3, 3);
+            this.groupBoxEditMeshGeneral.Name = "groupBoxEditMeshGeneral";
+            this.groupBoxEditMeshGeneral.Size = new System.Drawing.Size(186, 117);
+            this.groupBoxEditMeshGeneral.TabIndex = 40;
+            this.groupBoxEditMeshGeneral.TabStop = false;
+            this.groupBoxEditMeshGeneral.Text = "General";
+            // 
+            // radioButtonSelectionMode
+            // 
+            this.radioButtonSelectionMode.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonSelectionMode.AutoSize = true;
+            this.radioButtonSelectionMode.Location = new System.Drawing.Point(7, 19);
+            this.radioButtonSelectionMode.Name = "radioButtonSelectionMode";
+            this.radioButtonSelectionMode.Size = new System.Drawing.Size(91, 23);
+            this.radioButtonSelectionMode.TabIndex = 11;
+            this.radioButtonSelectionMode.TabStop = true;
+            this.radioButtonSelectionMode.Text = "Selection Mode";
+            this.radioButtonSelectionMode.UseVisualStyleBackColor = true;
+            this.radioButtonSelectionMode.CheckedChanged += new System.EventHandler(this.radioButtonSelectionMode_CheckedChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(8, 44);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(38, 13);
+            this.label15.TabIndex = 31;
+            this.label15.Text = "Name:";
+            // 
+            // meshName
+            // 
+            this.meshName.Location = new System.Drawing.Point(7, 60);
+            this.meshName.Name = "meshName";
+            this.meshName.Size = new System.Drawing.Size(91, 20);
+            this.meshName.TabIndex = 11;
+            this.meshName.Leave += new System.EventHandler(this.meshName_Leave);
+            // 
+            // meshRemove
+            // 
+            this.meshRemove.Location = new System.Drawing.Point(15, 85);
+            this.meshRemove.Name = "meshRemove";
+            this.meshRemove.Size = new System.Drawing.Size(71, 23);
+            this.meshRemove.TabIndex = 30;
+            this.meshRemove.Text = "Remove";
+            this.meshRemove.UseVisualStyleBackColor = true;
+            this.meshRemove.Click += new System.EventHandler(this.meshCreate_Click);
+            // 
+            // tabPageTerrain
+            // 
+            this.tabPageTerrain.Controls.Add(this.groupBoxTerrain);
+            this.tabPageTerrain.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTerrain.Name = "tabPageTerrain";
+            this.tabPageTerrain.Size = new System.Drawing.Size(192, 774);
+            this.tabPageTerrain.TabIndex = 2;
+            this.tabPageTerrain.Text = "Terrain";
+            this.tabPageTerrain.UseVisualStyleBackColor = true;
             // 
             // groupBoxTerrain
             // 
@@ -791,17 +816,18 @@
             // 
             // terrainRemove
             // 
-            this.terrainRemove.Location = new System.Drawing.Point(46, 148);
+            this.terrainRemove.Location = new System.Drawing.Point(55, 155);
             this.terrainRemove.Name = "terrainRemove";
             this.terrainRemove.Size = new System.Drawing.Size(55, 21);
             this.terrainRemove.TabIndex = 40;
             this.terrainRemove.Text = "Remove";
             this.terrainRemove.UseVisualStyleBackColor = true;
+            this.terrainRemove.Click += new System.EventHandler(this.terrainRemove_Click);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(1, 172);
+            this.label12.Location = new System.Drawing.Point(1, 179);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(41, 13);
             this.label12.TabIndex = 38;
@@ -809,7 +835,7 @@
             // 
             // terrainCenterY
             // 
-            this.terrainCenterY.Location = new System.Drawing.Point(35, 189);
+            this.terrainCenterY.Location = new System.Drawing.Point(42, 196);
             this.terrainCenterY.Name = "terrainCenterY";
             this.terrainCenterY.Size = new System.Drawing.Size(30, 20);
             this.terrainCenterY.TabIndex = 36;
@@ -817,15 +843,15 @@
             // 
             // terrainTexture
             // 
-            this.terrainTexture.Location = new System.Drawing.Point(2, 80);
+            this.terrainTexture.Location = new System.Drawing.Point(2, 87);
             this.terrainTexture.Name = "terrainTexture";
             this.terrainTexture.ReadOnly = true;
-            this.terrainTexture.Size = new System.Drawing.Size(90, 20);
+            this.terrainTexture.Size = new System.Drawing.Size(108, 20);
             this.terrainTexture.TabIndex = 39;
             // 
             // terrainCenterZ
             // 
-            this.terrainCenterZ.Location = new System.Drawing.Point(68, 189);
+            this.terrainCenterZ.Location = new System.Drawing.Point(80, 196);
             this.terrainCenterZ.Name = "terrainCenterZ";
             this.terrainCenterZ.Size = new System.Drawing.Size(30, 20);
             this.terrainCenterZ.TabIndex = 37;
@@ -836,12 +862,12 @@
             this.heighmap.Location = new System.Drawing.Point(3, 36);
             this.heighmap.Name = "heighmap";
             this.heighmap.ReadOnly = true;
-            this.heighmap.Size = new System.Drawing.Size(90, 20);
+            this.heighmap.Size = new System.Drawing.Size(107, 20);
             this.heighmap.TabIndex = 38;
             // 
             // terrainCenterX
             // 
-            this.terrainCenterX.Location = new System.Drawing.Point(3, 189);
+            this.terrainCenterX.Location = new System.Drawing.Point(3, 196);
             this.terrainCenterX.Name = "terrainCenterX";
             this.terrainCenterX.Size = new System.Drawing.Size(30, 20);
             this.terrainCenterX.TabIndex = 35;
@@ -849,12 +875,13 @@
             // 
             // terrainCreate
             // 
-            this.terrainCreate.Location = new System.Drawing.Point(0, 148);
+            this.terrainCreate.Location = new System.Drawing.Point(0, 155);
             this.terrainCreate.Name = "terrainCreate";
-            this.terrainCreate.Size = new System.Drawing.Size(47, 21);
+            this.terrainCreate.Size = new System.Drawing.Size(52, 21);
             this.terrainCreate.TabIndex = 37;
             this.terrainCreate.Text = "Create";
             this.terrainCreate.UseVisualStyleBackColor = true;
+            this.terrainCreate.Click += new System.EventHandler(this.terrainCreate_Click);
             // 
             // terrainYscale
             // 
@@ -864,9 +891,9 @@
             0,
             0,
             65536});
-            this.terrainYscale.Location = new System.Drawing.Point(57, 126);
+            this.terrainYscale.Location = new System.Drawing.Point(57, 133);
             this.terrainYscale.Name = "terrainYscale";
-            this.terrainYscale.Size = new System.Drawing.Size(36, 20);
+            this.terrainYscale.Size = new System.Drawing.Size(53, 20);
             this.terrainYscale.TabIndex = 36;
             this.terrainYscale.Value = new decimal(new int[] {
             13,
@@ -877,7 +904,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(3, 129);
+            this.label10.Location = new System.Drawing.Point(3, 136);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(42, 13);
             this.label10.TabIndex = 35;
@@ -886,9 +913,9 @@
             // terrainXZscale
             // 
             this.terrainXZscale.DecimalPlaces = 2;
-            this.terrainXZscale.Location = new System.Drawing.Point(58, 104);
+            this.terrainXZscale.Location = new System.Drawing.Point(58, 111);
             this.terrainXZscale.Name = "terrainXZscale";
-            this.terrainXZscale.Size = new System.Drawing.Size(36, 20);
+            this.terrainXZscale.Size = new System.Drawing.Size(52, 20);
             this.terrainXZscale.TabIndex = 34;
             this.terrainXZscale.Value = new decimal(new int[] {
             20,
@@ -899,7 +926,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 107);
+            this.label9.Location = new System.Drawing.Point(3, 114);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(49, 13);
             this.label9.TabIndex = 33;
@@ -908,7 +935,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(9, 60);
+            this.label8.Location = new System.Drawing.Point(9, 67);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(43, 13);
             this.label8.TabIndex = 32;
@@ -916,12 +943,13 @@
             // 
             // openTerrainTexture
             // 
-            this.openTerrainTexture.Location = new System.Drawing.Point(63, 56);
+            this.openTerrainTexture.Location = new System.Drawing.Point(81, 62);
             this.openTerrainTexture.Name = "openTerrainTexture";
             this.openTerrainTexture.Size = new System.Drawing.Size(29, 23);
             this.openTerrainTexture.TabIndex = 31;
             this.openTerrainTexture.Text = "T";
             this.openTerrainTexture.UseVisualStyleBackColor = true;
+            this.openTerrainTexture.Click += new System.EventHandler(this.openTerrainTexture_Click);
             // 
             // label7
             // 
@@ -934,12 +962,13 @@
             // 
             // openHeightmap
             // 
-            this.openHeightmap.Location = new System.Drawing.Point(63, 14);
+            this.openHeightmap.Location = new System.Drawing.Point(81, 12);
             this.openHeightmap.Name = "openHeightmap";
             this.openHeightmap.Size = new System.Drawing.Size(29, 23);
             this.openHeightmap.TabIndex = 0;
             this.openHeightmap.Text = "H";
             this.openHeightmap.UseVisualStyleBackColor = true;
+            this.openHeightmap.Click += new System.EventHandler(this.openHeightmap_Click);
             // 
             // SceneEditorControl
             // 
@@ -957,24 +986,24 @@
             this.groupBoxCamera.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraSpeed)).EndInit();
             this.tabPageCreate.ResumeLayout(false);
+            this.groupBoxOpenFile.ResumeLayout(false);
+            this.groupBoxOpenFile.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.amountToCreate)).EndInit();
             this.tabPageModify.ResumeLayout(false);
-            this.tabPageTerrain.ResumeLayout(false);
-            this.groupBoxEditMeshGeneral.ResumeLayout(false);
-            this.groupBoxEditMeshGeneral.PerformLayout();
-            this.groupBoxEditMeshPosition.ResumeLayout(false);
-            this.groupBoxEditMeshPosition.PerformLayout();
+            this.groupBoxEditMeshUserInfo.ResumeLayout(false);
+            this.groupBoxEditMeshUserInfo.PerformLayout();
+            this.groupBoxEditMeshScale.ResumeLayout(false);
+            this.groupBoxEditMeshScale.PerformLayout();
             this.groupBoxEditMeshRotation.ResumeLayout(false);
             this.groupBoxEditMeshRotation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRotationZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRotationY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRotationX)).EndInit();
-            this.groupBoxEditMeshScale.ResumeLayout(false);
-            this.groupBoxEditMeshScale.PerformLayout();
-            this.groupBoxEditMeshUserInfo.ResumeLayout(false);
-            this.groupBoxEditMeshUserInfo.PerformLayout();
-            this.groupBoxOpenFile.ResumeLayout(false);
-            this.groupBoxOpenFile.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.amountToCreate)).EndInit();
+            this.groupBoxEditMeshPosition.ResumeLayout(false);
+            this.groupBoxEditMeshPosition.PerformLayout();
+            this.groupBoxEditMeshGeneral.ResumeLayout(false);
+            this.groupBoxEditMeshGeneral.PerformLayout();
+            this.tabPageTerrain.ResumeLayout(false);
             this.groupBoxTerrain.ResumeLayout(false);
             this.groupBoxTerrain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.terrainYscale)).EndInit();
