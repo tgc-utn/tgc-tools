@@ -8,5 +8,8 @@
     <Setting Name="ShadersDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)">Shaders\</Value>
     </Setting>
+    <Setting Name="MediaLink" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://drive.google.com/open?id=0B8iAMXTVXrJeOGpIbWhUbjJPaE0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

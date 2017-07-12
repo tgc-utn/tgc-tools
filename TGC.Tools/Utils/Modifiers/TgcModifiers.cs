@@ -10,15 +10,11 @@ namespace TGC.Tools.Utils.Modifiers
     {
         private readonly Dictionary<string, TgcModifierPanel> modifiers;
         private readonly Panel modifiersPanel;
-        private readonly Panel spacePanel;
 
         public TgcModifiers(Panel modifiersPanel)
         {
             this.modifiersPanel = modifiersPanel;
             modifiers = new Dictionary<string, TgcModifierPanel>();
-
-            spacePanel = new Panel();
-            spacePanel.Size = new Size(10, 100);
         }
 
         public object this[string varName]
@@ -34,9 +30,8 @@ namespace TGC.Tools.Utils.Modifiers
             }
 
             modifiers.Add(modifier.VarName, modifier);
+            modifier.MainPanel.Dock = DockStyle.Fill;
             modifiersPanel.Controls.Add(modifier.MainPanel);
-
-            modifiersPanel.Controls.Add(spacePanel);
         }
 
         public object getValue(string varName)

@@ -163,47 +163,51 @@
             this.terrainEditorSoolStripButton});
             this.toolStrip.Location = new System.Drawing.Point(0, 24);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(784, 25);
+            this.toolStrip.Size = new System.Drawing.Size(784, 29);
             this.toolStrip.TabIndex = 1;
             this.toolStrip.Text = "toolStrip1";
             // 
             // meshCreatorToolStripButton
             // 
             this.meshCreatorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.meshCreatorToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("meshCreatorToolStripButton.Image")));
+            this.meshCreatorToolStripButton.Image = global::TGC.Tools.Properties.Resources.mesh_creator;
+            this.meshCreatorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.meshCreatorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.meshCreatorToolStripButton.Name = "meshCreatorToolStripButton";
-            this.meshCreatorToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.meshCreatorToolStripButton.Size = new System.Drawing.Size(26, 26);
             this.meshCreatorToolStripButton.Text = "Mesh creator";
             this.meshCreatorToolStripButton.Click += new System.EventHandler(this.meshCreatorToolStripButton_Click);
             // 
             // roomEditorToolStripButton
             // 
             this.roomEditorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.roomEditorToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("roomEditorToolStripButton.Image")));
+            this.roomEditorToolStripButton.Image = global::TGC.Tools.Properties.Resources.room_editor;
+            this.roomEditorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.roomEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.roomEditorToolStripButton.Name = "roomEditorToolStripButton";
-            this.roomEditorToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.roomEditorToolStripButton.Size = new System.Drawing.Size(26, 26);
             this.roomEditorToolStripButton.Text = "Room editor";
             this.roomEditorToolStripButton.Click += new System.EventHandler(this.roomEditorToolStripButton_Click);
             // 
             // sceneEditorToolStripButton
             // 
             this.sceneEditorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.sceneEditorToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("sceneEditorToolStripButton.Image")));
+            this.sceneEditorToolStripButton.Image = global::TGC.Tools.Properties.Resources.scene_editor;
+            this.sceneEditorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.sceneEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.sceneEditorToolStripButton.Name = "sceneEditorToolStripButton";
-            this.sceneEditorToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.sceneEditorToolStripButton.Size = new System.Drawing.Size(26, 26);
             this.sceneEditorToolStripButton.Text = "Scene editor";
             this.sceneEditorToolStripButton.Click += new System.EventHandler(this.sceneEditorToolStripButton_Click);
             // 
             // terrainEditorSoolStripButton
             // 
             this.terrainEditorSoolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.terrainEditorSoolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("terrainEditorSoolStripButton.Image")));
+            this.terrainEditorSoolStripButton.Image = global::TGC.Tools.Properties.Resources.terrain_editor;
+            this.terrainEditorSoolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.terrainEditorSoolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.terrainEditorSoolStripButton.Name = "terrainEditorSoolStripButton";
-            this.terrainEditorSoolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.terrainEditorSoolStripButton.Size = new System.Drawing.Size(26, 26);
             this.terrainEditorSoolStripButton.Text = "Terrain editor";
             this.terrainEditorSoolStripButton.Click += new System.EventHandler(this.terrainEditorSoolStripButton_Click);
             // 
@@ -236,7 +240,7 @@
             this.groupBoxModifiers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxModifiers.Location = new System.Drawing.Point(0, 0);
             this.groupBoxModifiers.Name = "groupBoxModifiers";
-            this.groupBoxModifiers.Size = new System.Drawing.Size(178, 490);
+            this.groupBoxModifiers.Size = new System.Drawing.Size(178, 486);
             this.groupBoxModifiers.TabIndex = 0;
             this.groupBoxModifiers.TabStop = false;
             this.groupBoxModifiers.Text = "Modifiers";
@@ -249,7 +253,7 @@
             this.flowLayoutPanelModifiers.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelModifiers.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelModifiers.Name = "flowLayoutPanelModifiers";
-            this.flowLayoutPanelModifiers.Size = new System.Drawing.Size(172, 471);
+            this.flowLayoutPanelModifiers.Size = new System.Drawing.Size(172, 467);
             this.flowLayoutPanelModifiers.TabIndex = 0;
             this.flowLayoutPanelModifiers.WrapContents = false;
             // 
@@ -259,14 +263,14 @@
             this.panel3d.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3d.Location = new System.Drawing.Point(0, 0);
             this.panel3d.Name = "panel3d";
-            this.panel3d.Size = new System.Drawing.Size(602, 490);
+            this.panel3d.Size = new System.Drawing.Size(602, 486);
             this.panel3d.TabIndex = 5;
             // 
             // splitContainerPrincipal
             // 
             this.splitContainerPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerPrincipal.IsSplitterFixed = true;
-            this.splitContainerPrincipal.Location = new System.Drawing.Point(0, 49);
+            this.splitContainerPrincipal.Location = new System.Drawing.Point(0, 53);
             this.splitContainerPrincipal.Name = "splitContainerPrincipal";
             // 
             // splitContainerPrincipal.Panel1
@@ -276,11 +280,11 @@
             // splitContainerPrincipal.Panel2
             // 
             this.splitContainerPrincipal.Panel2.Controls.Add(this.groupBoxModifiers);
-            this.splitContainerPrincipal.Size = new System.Drawing.Size(784, 490);
+            this.splitContainerPrincipal.Size = new System.Drawing.Size(784, 486);
             this.splitContainerPrincipal.SplitterDistance = 602;
             this.splitContainerPrincipal.TabIndex = 6;
             // 
-            // MainForm
+            // ToolsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -293,7 +297,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(800, 600);
-            this.Name = "MainForm";
+            this.Name = "ToolsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);

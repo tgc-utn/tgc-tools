@@ -9,7 +9,7 @@ namespace TGC.Tools.TerrainEditor.Instances
     {
         protected static InstancesManager instance;
 
-        private static string location = Settings.Default.MediaDirectory + "MeshCreator\\Meshes\\Vegetation\\";
+        private static string location = Settings.Default.MediaDirectory + "MeshCreator\\Meshes\\Vegetacion\\";
 
         protected Dictionary<string, TgcMesh> meshes = new Dictionary<string, TgcMesh>();
 

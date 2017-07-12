@@ -8,6 +8,8 @@ using TGC.Tools.Model;
 using TGC.Tools.RoomsEditor;
 using TGC.Tools.SceneEditor;
 using TGC.Tools.TerrainEditor;
+using System.IO;
+using TGC.Tools.Properties;
 
 namespace TGC.Tools.Forms
 {
@@ -40,6 +42,8 @@ namespace TGC.Tools.Forms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            CheckMediaFolder();
+
             //Show the App before we init
             Show();
             panel3d.Focus();
@@ -86,7 +90,7 @@ namespace TGC.Tools.Forms
         /// </summary>
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            shutDown();
+            e.Cancel = CloseAplication();
         }
 
         /// <summary>
@@ -220,7 +224,7 @@ namespace TGC.Tools.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error en init() de Scene Editor \n " + ex.Message, ProductName, 
+                    MessageBox.Show("Error en init() de Scene Editor \n " + ex.Message, ProductName,
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -239,7 +243,7 @@ namespace TGC.Tools.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error en init() de Terrain Editor \n" + ex.Message, ProductName, 
+                    MessageBox.Show("Error en init() de Terrain Editor \n" + ex.Message, ProductName,
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -247,18 +251,48 @@ namespace TGC.Tools.Forms
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("¿Seguro que desea cerrar la aplicación?", "Confirmación",
-                MessageBoxButtons.YesNo);
-
-            if (result.Equals(DialogResult.Yes))
-            {
-                Close();
-            }
+            Close();
         }
 
         private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AboutForm().ShowDialog();
+        }
+
+        private void CheckMediaFolder()
+        {
+            //Verificamos la carpeta Media
+            var pathMedia = Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory;
+
+            if (!Directory.Exists(pathMedia))
+            {
+                //modelo.DownloadMediaFolder();
+                Process.Start(Settings.Default.MediaLink);
+                Process.Start(Environment.CurrentDirectory);
+                MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine +
+                                Environment.NewLine +
+                                "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
+
+                //Fuerzo el cierre de la aplicacion.
+                Environment.Exit(0);
+            }
+        }
+
+        public bool CloseAplication()
+        {
+            var result = MessageBox.Show("¿Esta seguro que desea cerrar la aplicación?", Text, MessageBoxButtons.YesNo);
+
+            if (result == DialogResult.Yes)
+            {
+                if (ApplicationRunning)
+                {
+                    this.shutDown();
+                }
+
+                return false;
+            }
+
+            return true;
         }
     }
 }

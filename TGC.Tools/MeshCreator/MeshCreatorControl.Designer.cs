@@ -183,7 +183,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(210, 1000);
+            this.tabControl.Size = new System.Drawing.Size(247, 682);
             this.tabControl.TabIndex = 0;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -195,7 +195,7 @@
             this.tabPageGeneral.Controls.Add(this.buttonHelp);
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneral.Name = "tabPageGeneral";
-            this.tabPageGeneral.Size = new System.Drawing.Size(202, 974);
+            this.tabPageGeneral.Size = new System.Drawing.Size(239, 656);
             this.tabPageGeneral.TabIndex = 2;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
@@ -503,7 +503,7 @@
             this.tabPageCreate.Location = new System.Drawing.Point(4, 22);
             this.tabPageCreate.Name = "tabPageCreate";
             this.tabPageCreate.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCreate.Size = new System.Drawing.Size(242, 974);
+            this.tabPageCreate.Size = new System.Drawing.Size(239, 656);
             this.tabPageCreate.TabIndex = 0;
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
@@ -629,7 +629,7 @@
             this.tabPageModify.Location = new System.Drawing.Point(4, 22);
             this.tabPageModify.Name = "tabPageModify";
             this.tabPageModify.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageModify.Size = new System.Drawing.Size(242, 974);
+            this.tabPageModify.Size = new System.Drawing.Size(239, 656);
             this.tabPageModify.TabIndex = 1;
             this.tabPageModify.Text = "Modify";
             this.tabPageModify.UseVisualStyleBackColor = true;
@@ -1271,7 +1271,7 @@
             this.tabPageEditablePoly.Location = new System.Drawing.Point(4, 22);
             this.tabPageEditablePoly.Name = "tabPageEditablePoly";
             this.tabPageEditablePoly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageEditablePoly.Size = new System.Drawing.Size(242, 974);
+            this.tabPageEditablePoly.Size = new System.Drawing.Size(239, 656);
             this.tabPageEditablePoly.TabIndex = 3;
             this.tabPageEditablePoly.Text = "EditablePoly";
             this.tabPageEditablePoly.UseVisualStyleBackColor = true;
@@ -1483,13 +1483,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.tabControl);
-            this.MaximumSize = new System.Drawing.Size(400, 2000);
-            this.MinimumSize = new System.Drawing.Size(210, 1000);
+            this.MinimumSize = new System.Drawing.Size(210, 600);
             this.Name = "MeshCreatorControl";
-            this.Size = new System.Drawing.Size(210, 1000);
+            this.Size = new System.Drawing.Size(247, 682);
             this.tabControl.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);

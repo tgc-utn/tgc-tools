@@ -143,7 +143,7 @@
             this.Controls.Add(this.groupBoxExport);
             this.Controls.Add(this.groupBoxMapView);
             this.Name = "RoomsEditorControl";
-            this.Size = new System.Drawing.Size(106, 552);
+            this.Size = new System.Drawing.Size(110, 300);
             this.groupBoxMapView.ResumeLayout(false);
             this.groupBoxExport.ResumeLayout(false);
             this.groupBoxProject.ResumeLayout(false);

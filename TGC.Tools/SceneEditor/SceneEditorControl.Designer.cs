@@ -744,10 +744,11 @@
             this.tabControl.Controls.Add(this.tabPageCreate);
             this.tabControl.Controls.Add(this.tabPageModify);
             this.tabControl.Controls.Add(this.tabPageTerrain);
-            this.tabControl.Location = new System.Drawing.Point(0, 3);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(122, 918);
+            this.tabControl.Size = new System.Drawing.Size(200, 800);
             this.tabControl.TabIndex = 6;
             // 
             // tabPageGeneral
@@ -781,7 +782,7 @@
             this.tabPageCreate.Location = new System.Drawing.Point(4, 22);
             this.tabPageCreate.Name = "tabPageCreate";
             this.tabPageCreate.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCreate.Size = new System.Drawing.Size(114, 892);
+            this.tabPageCreate.Size = new System.Drawing.Size(192, 970);
             this.tabPageCreate.TabIndex = 0;
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
@@ -806,7 +807,7 @@
             this.tabPageModify.Location = new System.Drawing.Point(4, 22);
             this.tabPageModify.Name = "tabPageModify";
             this.tabPageModify.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageModify.Size = new System.Drawing.Size(114, 892);
+            this.tabPageModify.Size = new System.Drawing.Size(192, 774);
             this.tabPageModify.TabIndex = 1;
             this.tabPageModify.Text = "Modify";
             this.tabPageModify.UseVisualStyleBackColor = true;
@@ -953,7 +954,7 @@
             this.tabPageTerrain.Controls.Add(this.groupBoxTerrain);
             this.tabPageTerrain.Location = new System.Drawing.Point(4, 22);
             this.tabPageTerrain.Name = "tabPageTerrain";
-            this.tabPageTerrain.Size = new System.Drawing.Size(114, 892);
+            this.tabPageTerrain.Size = new System.Drawing.Size(192, 970);
             this.tabPageTerrain.TabIndex = 2;
             this.tabPageTerrain.Text = "Terrain";
             this.tabPageTerrain.UseVisualStyleBackColor = true;
@@ -964,7 +965,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl);
             this.Name = "SceneEditorControl";
-            this.Size = new System.Drawing.Size(122, 996);
+            this.Size = new System.Drawing.Size(200, 800);
             this.groupBoxOpenFile.ResumeLayout(false);
             this.groupBoxOpenFile.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.amountToCreate)).EndInit();

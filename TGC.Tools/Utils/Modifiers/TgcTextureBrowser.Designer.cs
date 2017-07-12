@@ -91,10 +91,10 @@
             // pictureBoxUpDir
             // 
             this.pictureBoxUpDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxUpDir.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxUpDir.Image")));
+            this.pictureBoxUpDir.Image = global::TGC.Tools.Properties.Resources.go_up;
             this.pictureBoxUpDir.Location = new System.Drawing.Point(12, 1);
             this.pictureBoxUpDir.Name = "pictureBoxUpDir";
-            this.pictureBoxUpDir.Size = new System.Drawing.Size(35, 35);
+            this.pictureBoxUpDir.Size = new System.Drawing.Size(34, 34);
             this.pictureBoxUpDir.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBoxUpDir.TabIndex = 4;
             this.pictureBoxUpDir.TabStop = false;
@@ -103,7 +103,7 @@
             // pictureBoxHomeDir
             // 
             this.pictureBoxHomeDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxHomeDir.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxHomeDir.Image")));
+            this.pictureBoxHomeDir.Image = global::TGC.Tools.Properties.Resources.go_home;
             this.pictureBoxHomeDir.Location = new System.Drawing.Point(53, 1);
             this.pictureBoxHomeDir.Name = "pictureBoxHomeDir";
             this.pictureBoxHomeDir.Size = new System.Drawing.Size(34, 34);

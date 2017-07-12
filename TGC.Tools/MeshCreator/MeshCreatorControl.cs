@@ -72,7 +72,7 @@ namespace TGC.Tools.MeshCreator
             primitiveNameCounter = 0;
             CurrentGizmo = null;
             MediaPath = Settings.Default.MediaDirectory + "MeshCreator\\";
-            defaultTexturePath = MediaPath + "Textures\\Wood\\cajaMadera1.jpg";
+            defaultTexturePath = MediaPath + "Textures\\Madera\\cajaMadera1.jpg";
             checkBoxShowObjectsBoundingBox.Checked = true;
             PopupOpened = false;
             fpsCameraEnabled = false;
