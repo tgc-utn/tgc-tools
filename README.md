@@ -1,16 +1,15 @@
-MeshCreator
-===========
+# MeshCreator
 
 Simple 3D scene editor created with C# and DirectX 9
 
-##Features
+## Features
 - You can create a new 3D scene with simple tools
 - Ideal tool for a developer (without much knowleadge of 3D modelling) to assembly existing models and create a 3D scene
 - You can save your scene and use it later
 - Scenes are stored in a custom XML format (easy to read and convert to any another format)
-- You can load your scene with TgcViewer engine: https://github.com/tgc-utn/tgc-viewer
+- You can load your scene with [TGC.Viewer](https://github.com/tgc-utn/tgc-viewer) engine.
 
-##Modeling tools
+## Modeling tools
 - Create simple geometry: cube, sphere, planes
 - Import existing meshes and scenes
 - Move, scale and rotate
@@ -24,13 +23,13 @@ Simple 3D scene editor created with C# and DirectX 9
 - Edit textures at a triangle level
 - Remove individual vertices, edges and triangles from a mesh (only remove, you cannot add new geometry... for now)
 
-##Installation
-- Install .NET 4.5.2: https://www.microsoft.com/es-ES/download/details.aspx?id=42643
-- Install DirectX end-user: http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=6812
-- Download tgc-tools
+## Installation
+- Install [.NET Framework](https://www.microsoft.com/net/download/framework) 4.6.1.
+- Install [DirectX](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=6812) end-user.
+- Download [TGC.Tools](https://github.com/tgc-utn/tgc-tools/releases).
 - Execute TGC.Tools.exe
 
-##Usage
+## Usage
 - Controls are as much as possible similar to 3Ds MAX
 - Select objects: left click on object. You can also create a selection rectangle with left click.
 - Pan view: with the mouse middle button
@@ -53,8 +52,8 @@ Simple 3D scene editor created with C# and DirectX 9
 - Camera left view: L
 - Group objects: G
 
-##How to extend app
-The editor currently works with an XML custom format (used by TgcViewer engine).
+## How to extend app
+The editor currently works with an XML custom format (used by [TGC.Viewer](https://github.com/tgc-utn/tgc-viewer) engine).
 It shouldn't be so difficult to change that in order to support another format.
-- Mesh importing is done in class: TgcViewer/TgcViewer/Utils/TgcSceneLoader/TgcSceneParser.cs
-- Mesh exporting is done in class: TgcViewer/TgcViewer/Utils/TgcSceneLoader/TgcSceneExporter.cs
+- Mesh importing is done in class: [TgcSceneParser.cs](/TGC.Tools/Utils/TgcSceneLoader/TgcSceneParser.cs)
+- Mesh exporting is done in class: [TgcSceneExporter.cs](/TGC.Tools/Utils/TgcSceneLoader/TgcSceneExporter.cs)
