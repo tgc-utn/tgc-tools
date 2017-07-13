@@ -40,15 +40,15 @@
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeTgcViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.meshCreatorToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.roomEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.sceneEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.terrainEditorSoolStripButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusCurrentExample = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusPosition = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel3d = new System.Windows.Forms.Panel();
             this.splitContainerPrincipal = new System.Windows.Forms.SplitContainer();
+            this.meshCreatorToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.roomEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.sceneEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.terrainEditorSoolStripButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -79,8 +79,9 @@
             // 
             // salirToolStripMenuItem
             // 
+            this.salirToolStripMenuItem.Image = global::TGC.Tools.Properties.Resources.application_exit;
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.salirToolStripMenuItem.Text = "Salir";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -98,6 +99,7 @@
             // wireframeToolStripMenuItem
             // 
             this.wireframeToolStripMenuItem.CheckOnClick = true;
+            this.wireframeToolStripMenuItem.Image = global::TGC.Tools.Properties.Resources.wireframe;
             this.wireframeToolStripMenuItem.Name = "wireframeToolStripMenuItem";
             this.wireframeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.W)));
             this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
@@ -109,6 +111,7 @@
             this.contadorFPSToolStripMenuItem.Checked = true;
             this.contadorFPSToolStripMenuItem.CheckOnClick = true;
             this.contadorFPSToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.contadorFPSToolStripMenuItem.Image = global::TGC.Tools.Properties.Resources.utilities_system_monitor;
             this.contadorFPSToolStripMenuItem.Name = "contadorFPSToolStripMenuItem";
             this.contadorFPSToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.contadorFPSToolStripMenuItem.Text = "Contador FPS";
@@ -119,6 +122,7 @@
             this.ejesCartesianosToolStripMenuItem.Checked = true;
             this.ejesCartesianosToolStripMenuItem.CheckOnClick = true;
             this.ejesCartesianosToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ejesCartesianosToolStripMenuItem.Image = global::TGC.Tools.Properties.Resources.axis;
             this.ejesCartesianosToolStripMenuItem.Name = "ejesCartesianosToolStripMenuItem";
             this.ejesCartesianosToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.ejesCartesianosToolStripMenuItem.Text = "Ejes cartesianos";
@@ -129,6 +133,7 @@
             this.mostrarPosicionDeCamaraToolStripMenuItem.Checked = true;
             this.mostrarPosicionDeCamaraToolStripMenuItem.CheckOnClick = true;
             this.mostrarPosicionDeCamaraToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mostrarPosicionDeCamaraToolStripMenuItem.Image = global::TGC.Tools.Properties.Resources.camera;
             this.mostrarPosicionDeCamaraToolStripMenuItem.Name = "mostrarPosicionDeCamaraToolStripMenuItem";
             this.mostrarPosicionDeCamaraToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.P)));
             this.mostrarPosicionDeCamaraToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
@@ -145,6 +150,7 @@
             // 
             // acercaDeTgcViewerToolStripMenuItem
             // 
+            this.acercaDeTgcViewerToolStripMenuItem.Image = global::TGC.Tools.Properties.Resources.help_about;
             this.acercaDeTgcViewerToolStripMenuItem.Name = "acercaDeTgcViewerToolStripMenuItem";
             this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.acercaDeTgcViewerToolStripMenuItem.Text = "Acerca de TGC Tools";
@@ -162,50 +168,6 @@
             this.toolStrip.Size = new System.Drawing.Size(784, 29);
             this.toolStrip.TabIndex = 1;
             this.toolStrip.Text = "toolStrip1";
-            // 
-            // meshCreatorToolStripButton
-            // 
-            this.meshCreatorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.meshCreatorToolStripButton.Image = global::TGC.Tools.Properties.Resources.mesh_creator;
-            this.meshCreatorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.meshCreatorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.meshCreatorToolStripButton.Name = "meshCreatorToolStripButton";
-            this.meshCreatorToolStripButton.Size = new System.Drawing.Size(26, 26);
-            this.meshCreatorToolStripButton.Text = "Mesh creator";
-            this.meshCreatorToolStripButton.Click += new System.EventHandler(this.meshCreatorToolStripButton_Click);
-            // 
-            // roomEditorToolStripButton
-            // 
-            this.roomEditorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.roomEditorToolStripButton.Image = global::TGC.Tools.Properties.Resources.room_editor;
-            this.roomEditorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.roomEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.roomEditorToolStripButton.Name = "roomEditorToolStripButton";
-            this.roomEditorToolStripButton.Size = new System.Drawing.Size(26, 26);
-            this.roomEditorToolStripButton.Text = "Room editor";
-            this.roomEditorToolStripButton.Click += new System.EventHandler(this.roomEditorToolStripButton_Click);
-            // 
-            // sceneEditorToolStripButton
-            // 
-            this.sceneEditorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.sceneEditorToolStripButton.Image = global::TGC.Tools.Properties.Resources.scene_editor;
-            this.sceneEditorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.sceneEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.sceneEditorToolStripButton.Name = "sceneEditorToolStripButton";
-            this.sceneEditorToolStripButton.Size = new System.Drawing.Size(26, 26);
-            this.sceneEditorToolStripButton.Text = "Scene editor";
-            this.sceneEditorToolStripButton.Click += new System.EventHandler(this.sceneEditorToolStripButton_Click);
-            // 
-            // terrainEditorSoolStripButton
-            // 
-            this.terrainEditorSoolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.terrainEditorSoolStripButton.Image = global::TGC.Tools.Properties.Resources.terrain_editor;
-            this.terrainEditorSoolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.terrainEditorSoolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.terrainEditorSoolStripButton.Name = "terrainEditorSoolStripButton";
-            this.terrainEditorSoolStripButton.Size = new System.Drawing.Size(26, 26);
-            this.terrainEditorSoolStripButton.Text = "Terrain editor";
-            this.terrainEditorSoolStripButton.Click += new System.EventHandler(this.terrainEditorSoolStripButton_Click);
             // 
             // statusStrip
             // 
@@ -252,6 +214,50 @@
             this.splitContainerPrincipal.Size = new System.Drawing.Size(784, 486);
             this.splitContainerPrincipal.SplitterDistance = 602;
             this.splitContainerPrincipal.TabIndex = 6;
+            // 
+            // meshCreatorToolStripButton
+            // 
+            this.meshCreatorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.meshCreatorToolStripButton.Image = global::TGC.Tools.Properties.Resources.mesh_creator;
+            this.meshCreatorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.meshCreatorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.meshCreatorToolStripButton.Name = "meshCreatorToolStripButton";
+            this.meshCreatorToolStripButton.Size = new System.Drawing.Size(26, 26);
+            this.meshCreatorToolStripButton.Text = "Mesh creator";
+            this.meshCreatorToolStripButton.Click += new System.EventHandler(this.meshCreatorToolStripButton_Click);
+            // 
+            // roomEditorToolStripButton
+            // 
+            this.roomEditorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.roomEditorToolStripButton.Image = global::TGC.Tools.Properties.Resources.room_editor;
+            this.roomEditorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.roomEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.roomEditorToolStripButton.Name = "roomEditorToolStripButton";
+            this.roomEditorToolStripButton.Size = new System.Drawing.Size(26, 26);
+            this.roomEditorToolStripButton.Text = "Room editor";
+            this.roomEditorToolStripButton.Click += new System.EventHandler(this.roomEditorToolStripButton_Click);
+            // 
+            // sceneEditorToolStripButton
+            // 
+            this.sceneEditorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.sceneEditorToolStripButton.Image = global::TGC.Tools.Properties.Resources.scene_editor;
+            this.sceneEditorToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.sceneEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.sceneEditorToolStripButton.Name = "sceneEditorToolStripButton";
+            this.sceneEditorToolStripButton.Size = new System.Drawing.Size(26, 26);
+            this.sceneEditorToolStripButton.Text = "Scene editor";
+            this.sceneEditorToolStripButton.Click += new System.EventHandler(this.sceneEditorToolStripButton_Click);
+            // 
+            // terrainEditorSoolStripButton
+            // 
+            this.terrainEditorSoolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.terrainEditorSoolStripButton.Image = global::TGC.Tools.Properties.Resources.terrain_editor;
+            this.terrainEditorSoolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.terrainEditorSoolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.terrainEditorSoolStripButton.Name = "terrainEditorSoolStripButton";
+            this.terrainEditorSoolStripButton.Size = new System.Drawing.Size(26, 26);
+            this.terrainEditorSoolStripButton.Text = "Terrain editor";
+            this.terrainEditorSoolStripButton.Click += new System.EventHandler(this.terrainEditorSoolStripButton_Click);
             // 
             // ToolsForm
             // 

@@ -403,6 +403,12 @@
     <None Include="Resources\go-home.png" />
     <None Include="Resources\go-up.png" />
     <None Include="Resources\applications-development.png" />
+    <None Include="Resources\application-exit.png" />
+    <None Include="Resources\axis.png" />
+    <None Include="Resources\camera.png" />
+    <None Include="Resources\help-about.png" />
+    <None Include="Resources\wireframe.png" />
+    <None Include="Resources\utilities-system-monitor.png" />
     <Content Include="Shaders\TgcKeyFrameMeshShader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

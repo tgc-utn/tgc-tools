@@ -121,11 +121,23 @@
   <data name="applications_development" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\applications-development.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="application_exit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\application-exit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="axis" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\axis.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="camera" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\camera.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="go_home" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\go-home.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="go_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\go-up.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="help_about" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\help-about.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="mesh_creator" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mesh-creator.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -141,5 +153,11 @@
   </data>
   <data name="terrain_editor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\terrain-editor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="utilities_system_monitor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\utilities-system-monitor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wireframe" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\wireframe.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

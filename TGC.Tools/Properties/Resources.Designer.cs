@@ -63,9 +63,39 @@ namespace TGC.Tools.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap application_exit {
+            get {
+                object obj = ResourceManager.GetObject("application_exit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap applications_development {
             get {
                 object obj = ResourceManager.GetObject("applications_development", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap axis {
+            get {
+                object obj = ResourceManager.GetObject("axis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap camera {
+            get {
+                object obj = ResourceManager.GetObject("camera", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -86,6 +116,16 @@ namespace TGC.Tools.Properties {
         public static System.Drawing.Bitmap go_up {
             get {
                 object obj = ResourceManager.GetObject("go_up", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap help_about {
+            get {
+                object obj = ResourceManager.GetObject("help_about", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -136,6 +176,26 @@ namespace TGC.Tools.Properties {
         public static System.Drawing.Bitmap terrain_editor {
             get {
                 object obj = ResourceManager.GetObject("terrain_editor", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap utilities_system_monitor {
+            get {
+                object obj = ResourceManager.GetObject("utilities_system_monitor", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap wireframe {
+            get {
+                object obj = ResourceManager.GetObject("wireframe", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
