@@ -289,21 +289,17 @@
     <Compile Include="TerrainEditor\SmartTerrain.cs" />
     <Compile Include="TerrainEditor\TerrainEditor.cs" />
     <Compile Include="TerrainEditor\TerrainFPSCamera.cs" />
-    <Compile Include="Utils\2D\TgcAnimatedSprite.cs" />
     <Compile Include="Utils\2D\TgcSprite.cs" />
     <Compile Include="Utils\2D\TgcDrawer2D.cs" />
     <Compile Include="Utils\2D\TgcText2d.cs" />
     <Compile Include="Utils\Input\TgcThirdPersonCamera.cs" />
     <Compile Include="Utils\Input\TgcCamera.cs" />
-    <Compile Include="Utils\Input\TgcSpringThirdPersonCamera.cs" />
     <Compile Include="Utils\Modifiers\TgcMeshBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Utils\Modifiers\TgcMeshBrowser.Designer.cs">
       <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Modifiers\TgcButtonModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcEnumModifier.cs" />
     <Compile Include="Utils\Modifiers\TgcTextureBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -345,15 +341,6 @@
     <Compile Include="Utils\Input\TgcFpsCamera.cs" />
     <Compile Include="Utils\Input\TgcD3dInput.cs" />
     <Compile Include="Utils\Input\TgcRotationalCamera.cs" />
-    <Compile Include="Utils\Modifiers\TgcVertex2fModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcVertex3fModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcTextureModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcFileModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcBooleanModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcColorModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcIntervalModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcFloatModifier.cs" />
-    <Compile Include="Utils\Modifiers\TgcIntModifier.cs" />
     <Compile Include="Utils\Modifiers\TgcModifierPanel.cs" />
     <Compile Include="Utils\Modifiers\TgcModifiers.cs" />
     <Compile Include="Utils\TgcAxisLines.cs" />

@@ -47,17 +47,13 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusCurrentExample = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusPosition = new System.Windows.Forms.ToolStripStatusLabel();
-            this.groupBoxModifiers = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanelModifiers = new System.Windows.Forms.FlowLayoutPanel();
             this.panel3d = new System.Windows.Forms.Panel();
             this.splitContainerPrincipal = new System.Windows.Forms.SplitContainer();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
-            this.groupBoxModifiers.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerPrincipal)).BeginInit();
             this.splitContainerPrincipal.Panel1.SuspendLayout();
-            this.splitContainerPrincipal.Panel2.SuspendLayout();
             this.splitContainerPrincipal.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -233,30 +229,6 @@
             this.toolStripStatusPosition.Name = "toolStripStatusPosition";
             this.toolStripStatusPosition.Size = new System.Drawing.Size(0, 17);
             // 
-            // groupBoxModifiers
-            // 
-            this.groupBoxModifiers.BackColor = System.Drawing.SystemColors.Control;
-            this.groupBoxModifiers.Controls.Add(this.flowLayoutPanelModifiers);
-            this.groupBoxModifiers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxModifiers.Location = new System.Drawing.Point(0, 0);
-            this.groupBoxModifiers.Name = "groupBoxModifiers";
-            this.groupBoxModifiers.Size = new System.Drawing.Size(178, 486);
-            this.groupBoxModifiers.TabIndex = 0;
-            this.groupBoxModifiers.TabStop = false;
-            this.groupBoxModifiers.Text = "Modifiers";
-            // 
-            // flowLayoutPanelModifiers
-            // 
-            this.flowLayoutPanelModifiers.AutoScroll = true;
-            this.flowLayoutPanelModifiers.AutoSize = true;
-            this.flowLayoutPanelModifiers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanelModifiers.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanelModifiers.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanelModifiers.Name = "flowLayoutPanelModifiers";
-            this.flowLayoutPanelModifiers.Size = new System.Drawing.Size(172, 467);
-            this.flowLayoutPanelModifiers.TabIndex = 0;
-            this.flowLayoutPanelModifiers.WrapContents = false;
-            // 
             // panel3d
             // 
             this.panel3d.BackColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -269,17 +241,14 @@
             // splitContainerPrincipal
             // 
             this.splitContainerPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerPrincipal.IsSplitterFixed = true;
             this.splitContainerPrincipal.Location = new System.Drawing.Point(0, 53);
             this.splitContainerPrincipal.Name = "splitContainerPrincipal";
             // 
             // splitContainerPrincipal.Panel1
             // 
             this.splitContainerPrincipal.Panel1.Controls.Add(this.panel3d);
-            // 
-            // splitContainerPrincipal.Panel2
-            // 
-            this.splitContainerPrincipal.Panel2.Controls.Add(this.groupBoxModifiers);
+            this.splitContainerPrincipal.Panel1MinSize = 500;
+            this.splitContainerPrincipal.Panel2MinSize = 100;
             this.splitContainerPrincipal.Size = new System.Drawing.Size(784, 486);
             this.splitContainerPrincipal.SplitterDistance = 602;
             this.splitContainerPrincipal.TabIndex = 6;
@@ -308,10 +277,7 @@
             this.toolStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            this.groupBoxModifiers.ResumeLayout(false);
-            this.groupBoxModifiers.PerformLayout();
             this.splitContainerPrincipal.Panel1.ResumeLayout(false);
-            this.splitContainerPrincipal.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerPrincipal)).EndInit();
             this.splitContainerPrincipal.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -338,8 +304,6 @@
         private System.Windows.Forms.ToolStripButton roomEditorToolStripButton;
         private System.Windows.Forms.ToolStripButton sceneEditorToolStripButton;
         private System.Windows.Forms.ToolStripButton terrainEditorSoolStripButton;
-        private System.Windows.Forms.GroupBox groupBoxModifiers;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelModifiers;
         private System.Windows.Forms.Panel panel3d;
         private System.Windows.Forms.SplitContainer splitContainerPrincipal;
         private System.Windows.Forms.ToolStripMenuItem salirToolStripMenuItem;

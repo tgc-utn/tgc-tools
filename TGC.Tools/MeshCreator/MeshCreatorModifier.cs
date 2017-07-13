@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using TGC.Tools.Utils.Modifiers;
 
 namespace TGC.Tools.MeshCreator
@@ -11,6 +12,7 @@ namespace TGC.Tools.MeshCreator
             : base(varName)
         {
             Control = new MeshCreatorControl(creator);
+            Control.Dock = DockStyle.Fill;
             contentPanel.Controls.Add(Control);
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TGC.Tools.Utils.Modifiers;
 
 namespace TGC.Tools.RoomsEditor
@@ -9,6 +10,7 @@ namespace TGC.Tools.RoomsEditor
             : base(varName)
         {
             EditorControl = new RoomsEditorControl(editor);
+            EditorControl.Dock = DockStyle.Fill;
             contentPanel.Controls.Add(EditorControl);
         }
 

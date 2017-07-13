@@ -46,6 +46,7 @@ namespace TGC.Tools.Forms
 
             //Show the App before we init
             Show();
+            this.splitContainerPrincipal.SplitterDistance = this.Size.Width - 300;
             panel3d.Focus();
 
             ApplicationRunning = true;
@@ -77,8 +78,7 @@ namespace TGC.Tools.Forms
         private void shutDown()
         {
             ApplicationRunning = false;
-            //GuiController.Instance.shutDown();
-            //Application.Exit();
+            GuiController.Instance.shutDown();
 
             //Matar proceso principal a la fuerza
             var currentProcess = Process.GetCurrentProcess();
@@ -116,7 +116,7 @@ namespace TGC.Tools.Forms
         /// <returns></returns>
         internal Panel getModifiersPanel()
         {
-            return flowLayoutPanelModifiers;
+            return splitContainerPrincipal.Panel2;
         }
 
         private void wireframeToolStripMenuItem_Click(object sender, EventArgs e)

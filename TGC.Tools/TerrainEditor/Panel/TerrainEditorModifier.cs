@@ -1,4 +1,5 @@
-﻿using TGC.Tools.Utils.Modifiers;
+﻿using System.Windows.Forms;
+using TGC.Tools.Utils.Modifiers;
 
 namespace TGC.Tools.TerrainEditor.Panel
 {
@@ -8,6 +9,7 @@ namespace TGC.Tools.TerrainEditor.Panel
             : base(varName)
         {
             Control = new TerrainEditorControl(creator);
+            Control.Dock = DockStyle.Fill;
             contentPanel.Controls.Add(Control);
         }
 

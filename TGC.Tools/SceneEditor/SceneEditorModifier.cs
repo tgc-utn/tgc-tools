@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using TGC.Tools.Utils.Modifiers;
 
 namespace TGC.Tools.SceneEditor
@@ -11,6 +12,7 @@ namespace TGC.Tools.SceneEditor
             : base(varName)
         {
             EditorControl = new SceneEditorControl(editor);
+            EditorControl.Dock = DockStyle.Fill;
             contentPanel.Controls.Add(EditorControl);
         }
 

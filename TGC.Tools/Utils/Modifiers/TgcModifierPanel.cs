@@ -10,43 +10,15 @@ namespace TGC.Tools.Utils.Modifiers
     /// </summary>
     public abstract class TgcModifierPanel
     {
-        protected FlowLayoutPanel contentPanel;
-        protected FlowLayoutPanel mainPanel;
+        protected Panel contentPanel;
+        protected Panel mainPanel;
 
-        protected Button showHideButton;
         protected Label title;
-        protected FlowLayoutPanel titleBar;
+        protected Panel titleBar;
 
         public TgcModifierPanel(string varName)
         {
             VarName = varName;
-
-            mainPanel = new FlowLayoutPanel();
-            mainPanel.Margin = new Padding(3);
-            mainPanel.AutoSize = true;
-            mainPanel.Dock = DockStyle.Fill;
-            mainPanel.FlowDirection = FlowDirection.TopDown;
-            mainPanel.BorderStyle = BorderStyle.Fixed3D;
-
-            titleBar = new FlowLayoutPanel();
-            titleBar.Margin = new Padding(2);
-            titleBar.AutoSize = true;
-            titleBar.Dock = DockStyle.Top;
-            titleBar.FlowDirection = FlowDirection.LeftToRight;
-            titleBar.Name = "titleBar";
-            titleBar.BackColor = SystemColors.ButtonShadow;
-            titleBar.BorderStyle = BorderStyle.FixedSingle;
-
-            showHideButton = new Button();
-            showHideButton.Margin = new Padding(0);
-            showHideButton.Click += showHideButton_click;
-            showHideButton.AutoSize = false;
-            showHideButton.Size = new Size(15, 15);
-            showHideButton.Text = "-";
-            showHideButton.FlatStyle = FlatStyle.System;
-            showHideButton.Name = "showHideButton";
-            showHideButton.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            titleBar.Controls.Add(showHideButton);
 
             title = new Label();
             title.AutoSize = true;
@@ -54,23 +26,38 @@ namespace TGC.Tools.Utils.Modifiers
             title.TextAlign = ContentAlignment.MiddleLeft;
             title.Name = "title";
             title.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+
+            titleBar = new Panel();
+            titleBar.Padding = new Padding(3);
+            titleBar.AutoSize = true;
+            titleBar.Dock = DockStyle.Top;
+            titleBar.Name = "titleBar";
+            titleBar.BackColor = SystemColors.ButtonShadow;
+            titleBar.BorderStyle = BorderStyle.FixedSingle;
+
             titleBar.Controls.Add(title);
 
-            contentPanel = new FlowLayoutPanel();
-            contentPanel.Margin = new Padding(0);
+            contentPanel = new Panel();
+            contentPanel.Padding = new Padding(3);
             contentPanel.AutoSize = true;
-            contentPanel.FlowDirection = FlowDirection.TopDown;
+            contentPanel.Dock = DockStyle.Fill;
             contentPanel.Name = "contentPanel";
-            contentPanel.Dock = DockStyle.Top;
 
-            mainPanel.Controls.Add(titleBar);
+            mainPanel = new Panel();
+            mainPanel.Padding = new Padding(3);
+            mainPanel.AutoSize = true;
+            mainPanel.Dock = DockStyle.Fill;
+            mainPanel.BorderStyle = BorderStyle.FixedSingle;
+
+            
             mainPanel.Controls.Add(contentPanel);
+            mainPanel.Controls.Add(titleBar);
         }
 
         /// <summary>
         ///     Control gráfico principal del Modifier
         /// </summary>
-        public FlowLayoutPanel MainPanel
+        public Panel MainPanel
         {
             get { return mainPanel; }
         }
@@ -79,13 +66,6 @@ namespace TGC.Tools.Utils.Modifiers
         ///     Nombre de la variable del Modifier
         /// </summary>
         public string VarName { get; }
-
-        private void showHideButton_click(object sender, EventArgs e)
-        {
-            contentPanel.Visible = !contentPanel.Visible;
-            showHideButton.Text = contentPanel.Visible ? "-" : "+";
-            GuiController.Instance.focus3dPanel();
-        }
 
         /// <summary>
         ///     Devuelve el valor del variable del modificador.
