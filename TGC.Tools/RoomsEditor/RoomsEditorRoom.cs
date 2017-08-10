@@ -19,12 +19,12 @@ namespace TGC.Tools.RoomsEditor
 
             //crear paredes
             Walls = new RoomsEditorWall[6];
-            Walls[0] = new RoomsEditorWall(this, "Roof");
-            Walls[1] = new RoomsEditorWall(this, "Floor");
-            Walls[2] = new RoomsEditorWall(this, "East");
-            Walls[3] = new RoomsEditorWall(this, "West");
-            Walls[4] = new RoomsEditorWall(this, "North");
-            Walls[5] = new RoomsEditorWall(this, "South");
+            Walls[0] = new RoomsEditorWall(this, "Roof", RoomsEditorWall.Types.Roof);
+            Walls[1] = new RoomsEditorWall(this, "Floor", RoomsEditorWall.Types.Floor);
+            Walls[2] = new RoomsEditorWall(this, "East", RoomsEditorWall.Types.East);
+            Walls[3] = new RoomsEditorWall(this, "West", RoomsEditorWall.Types.West);
+            Walls[4] = new RoomsEditorWall(this, "North", RoomsEditorWall.Types.North);
+            Walls[5] = new RoomsEditorWall(this, "South", RoomsEditorWall.Types.South);
 
             //Valores default
             Height = 100;

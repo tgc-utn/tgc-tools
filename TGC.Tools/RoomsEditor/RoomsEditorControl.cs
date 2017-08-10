@@ -263,12 +263,7 @@ namespace TGC.Tools.RoomsEditor
             {
                 foreach (var wall in room.Walls)
                 {
-                    var wallSegId = 0;
-                    foreach (var wall3d in wall.WallSegments)
-                    {
-                        scene.Meshes.Add(wall3d.toMesh(room.Name + "-" + wall.Name + "-" + wallSegId));
-                        wallSegId++;
-                    }
+                    scene.Meshes.AddRange(wall.ToMeshes());
                 }
             }
 

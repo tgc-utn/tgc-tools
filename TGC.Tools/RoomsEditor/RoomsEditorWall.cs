@@ -1,4 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.DirectX;
 using TGC.Tools.Model;
 using TGC.Tools.Utils.TgcGeometry;
 using TGC.Tools.Utils.TgcSceneLoader;
@@ -11,10 +14,25 @@ namespace TGC.Tools.RoomsEditor
     public class RoomsEditorWall
     {
         private RoomsEditorRoom room;
+        private Types type;
+        
+        /// <summary>
+        /// Que tipo de pared es en un room
+        /// </summary>
+        public enum Types
+        {
+            Roof,
+            Floor,
+            East,
+            West,
+            North,
+            South
+        }
 
-        public RoomsEditorWall(RoomsEditorRoom room, string name)
+        public RoomsEditorWall(RoomsEditorRoom room, string name, Types type)
         {
             this.room = room;
+            this.type = type;
             Name = name;
             WallSegments = new List<TgcPlaneWall>();
             IntersectingRooms = new List<RoomsEditorRoom>();
@@ -25,7 +43,31 @@ namespace TGC.Tools.RoomsEditor
             AutoAdjustUv = true;
             UTile = 1f;
             VTile = 1f;
+
+            switch (type)
+            {
+                case Types.Roof:
+                    Normal = new Vector3(0, -1, 0);
+                    break;
+                case Types.Floor:
+                    Normal = new Vector3(0, 1, 0);
+                    break;
+                case Types.East:
+                    Normal = new Vector3(-1, 0, 0);
+                    break;
+                case Types.West:
+                    Normal = new Vector3(1, 0, 0);
+                    break;
+                case Types.North:
+                    Normal = new Vector3(0, 0, -1);
+                    break;
+                case Types.South:
+                    Normal = new Vector3(0, 0, 1);
+                    break;
+            }
         }
+
+        public Vector3 Normal { get; private set; }
 
         /// <summary>
         ///     Segmentos 3d de pared
@@ -78,5 +120,14 @@ namespace TGC.Tools.RoomsEditor
                 wall3d.render();
             }
         }
+
+        public IEnumerable<TgcMesh> ToMeshes()
+        {
+            return this.WallSegments.Select((wall, ind) =>
+            {
+                wall.Normal = this.Normal;
+                return wall.toMesh(room.Name + "-" + this.Name + "-" + ind.ToString());
+            }); 
+        } 
     }
 }
