@@ -1,8 +1,11 @@
-﻿using Microsoft.DirectX;
+﻿using TGC.Core.BoundingVolumes;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Primitives
 {
@@ -11,16 +14,16 @@ namespace TGC.Tools.MeshCreator.Primitives
     /// </summary>
     public class SpherePrimitive : EditorPrimitive
     {
-        private readonly TgcBoundingBox bb;
-        private Vector3 initSelectionPoint;
-        private TgcSphere mesh;
+        private readonly TgcBoundingAxisAlignBox bb;
+        private TGCVector3 initSelectionPoint;
+        private TGCSphere mesh;
         private float originalRadius;
         private float scale = 1;
 
-        public SpherePrimitive(MeshCreatorControl control)
+        public SpherePrimitive(MeshCreatorModifier control)
             : base(control)
         {
-            bb = new TgcBoundingBox();
+            bb = new TgcBoundingAxisAlignBox();
             Name = "Sphere_" + PRIMITIVE_COUNT++;
         }
 
@@ -29,7 +32,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             get { return mesh.BoundingSphere; }
         }*/
 
-        public override TgcBoundingBox BoundingBox
+        public override TgcBoundingAxisAlignBox BoundingBox
         {
             get { return bb; }
         }
@@ -40,7 +43,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             set { mesh.AlphaBlendEnable = value; }
         }
 
-        public override Vector2 TextureOffset
+        public override TGCVector2 TextureOffset
         {
             get { return mesh.UVOffset; }
             set
@@ -50,7 +53,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override Vector2 TextureTiling
+        public override TGCVector2 TextureTiling
         {
             get { return mesh.UVTiling; }
             set
@@ -60,7 +63,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override Vector3 Position
+        public override TGCVector3 Position
         {
             get { return mesh.Position; }
             set
@@ -70,7 +73,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override Vector3 Rotation
+        public override TGCVector3 Rotation
         {
             get { return mesh.Rotation; }
         }
@@ -78,9 +81,9 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     Configurar tamaño del sphere
         /// </summary>
-        public override Vector3 Scale
+        public override TGCVector3 Scale
         {
-            get { return new Vector3(scale, scale, scale); }
+            get { return new TGCVector3(scale, scale, scale); }
             set
             {
                 if (scale != value.X)
@@ -105,12 +108,12 @@ namespace TGC.Tools.MeshCreator.Primitives
 
         public override void render()
         {
-            mesh.render();
+            mesh.Render();
         }
 
         public override void dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
         }
 
         public override void setSelected(bool selected)
@@ -124,13 +127,13 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     Iniciar la creacion
         /// </summary>
-        public override void initCreation(Vector3 gridPoint)
+        public override void initCreation(TGCVector3 gridPoint)
         {
             initSelectionPoint = gridPoint;
 
             //Crear caja inicial
             var sphereTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
-            mesh = new TgcSphere();
+            mesh = new TGCSphere();
 
             mesh.setTexture(sphereTexture);
             // mesh.BoundingSphere.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
@@ -143,7 +146,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// </summary>
         public override void doCreation()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = ToolsModel.Instance.Input;
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -161,7 +164,7 @@ namespace TGC.Tools.MeshCreator.Primitives
                 originalRadius = mesh.Radius;
                 updateBB();
                 //Dejar cargado para que se pueda crear un nuevo sphere
-                Control.CurrentState = MeshCreatorControl.State.CreatePrimitiveSelected;
+                Control.CurrentState = MeshCreatorModifier.State.CreatePrimitiveSelected;
                 Control.CreatingPrimitive = new SpherePrimitive(Control);
 
                 //Agregar sphere a la lista de modelos
@@ -174,16 +177,16 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override void move(Vector3 move)
+        public override void move(TGCVector3 move)
         {
-            mesh.move(move);
+            mesh.Move(move);
             updateBB();
         }
 
         private void updateBB()
         {
-            var r = new Vector3(mesh.Radius, mesh.Radius, mesh.Radius);
-            bb.setExtremes(Vector3.Subtract(mesh.Position, r), Vector3.Add(mesh.Position, r));
+            var r = new TGCVector3(mesh.Radius, mesh.Radius, mesh.Radius);
+            bb.setExtremes(TGCVector3.Subtract(mesh.Position, r), TGCVector3.Add(mesh.Position, r));
         }
 
         public override void setTexture(TgcTexture texture, int slot)
@@ -196,13 +199,13 @@ namespace TGC.Tools.MeshCreator.Primitives
             return mesh.Texture;
         }
 
-        public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
+        public override void setRotationFromPivot(TGCVector3 rotation, TGCVector3 pivot)
         {
             mesh.Rotation = rotation;
             var translation = pivot - mesh.Position;
-            var m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
-                    Matrix.Translation(translation);
-            mesh.move(new Vector3(m.M41, m.M42, m.M43));
+            var m = TGCMatrix.Translation(-translation) * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
+                    TGCMatrix.Translation(translation);
+            mesh.Move(new TGCVector3(m.M41, m.M42, m.M43));
         }
 
         public override TgcMesh createMeshToExport()
@@ -228,7 +231,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         {
             var m = mesh.toMesh(Name);
             bb.setExtremes(m.BoundingBox.PMin, m.BoundingBox.PMax);
-            m.dispose();
+            m.Dispose();
         }
     }
 }

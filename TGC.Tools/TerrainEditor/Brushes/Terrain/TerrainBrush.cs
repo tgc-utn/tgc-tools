@@ -1,33 +1,33 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
+using TGC.Core.Sound;
+using TGC.Core.Text;
 using TGC.Tools.Model;
 using TGC.Tools.Properties;
-using TGC.Tools.Utils._2D;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.Sound;
-using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 {
     public abstract class TerrainBrush : ITerrainEditorBrush
     {
         private static TgcStaticSound sound;
-        protected TgcBox bBrush;
+        protected TGCBox bBrush;
 
         protected SmartTerrain terrain;
-        protected TgcText2d text;
+        protected TgcText2D text;
 
         public TerrainBrush()
         {
             SoundEnabled = true;
-            text = new TgcText2d();
-            text.Align = TgcText2d.TextAlign.RIGHT;
+            text = new TgcText2D();
+            text.Align = TgcText2D.TextAlign.RIGHT;
             text.changeFont(new Font("Arial", 12, FontStyle.Bold));
 
-            bBrush = TgcBox.fromSize(new Vector3(10, 100, 10));
+            bBrush = TGCBox.fromSize(new TGCVector3(10, 100, 10));
             sound = new TgcStaticSound();
-            sound.loadSound(Settings.Default.MediaDirectory + "Sound\\tierra.wav");
+            sound.loadSound(Settings.Default.MediaDirectory + "Sound\\tierra.wav", ToolsModel.Instance.DirectSound.DsDevice);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 
         public virtual bool editTerrain()
         {
-            var speed = GuiController.Instance.ElapsedTime * getSpeedAdjustment();
+            var speed = ToolsModel.Instance.ElapsedTime * getSpeedAdjustment();
             if (Invert) speed *= -1;
 
             var radius = Radius / terrain.ScaleXZ;
@@ -61,7 +61,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
             var radius2 = FastMath.Pow2(radius);
             var innerRadius2 = FastMath.Pow2(innerRadius);
 
-            Vector2 coords;
+            TGCVector2 coords;
             var heightmapData = terrain.HeightmapData;
             var changed = false;
 
@@ -139,7 +139,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 
                 float y;
                 terrain.interpoledHeight(bBrush.Position.X, bBrush.Position.Z, out y);
-                bBrush.Position = new Vector3(bBrush.Position.X, y + 50, bBrush.Position.Z);
+                bBrush.Position = new TGCVector3(bBrush.Position.X, y + 50, bBrush.Position.Z);
             }
             return changed;
         }
@@ -185,15 +185,15 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
         /// <summary>
         ///     Posicion del pincel
         /// </summary>
-        private Vector3 position;
+        private TGCVector3 position;
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return position; }
             set
             {
                 position = value;
-                bBrush.Position = value + new Vector3(0, 50, 0);
+                bBrush.Position = value + new TGCVector3(0, 50, 0);
             }
         }
 
@@ -234,7 +234,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 
         public bool mouseMove(TgcTerrainEditor editor)
         {
-            Vector3 pos;
+            TGCVector3 pos;
             Enabled = editor.mousePositionInTerrain(out pos);
             Position = pos;
             return false;
@@ -252,10 +252,10 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
             var changes = false;
             if (Enabled)
             {
-                if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                if (ToolsModel.Instance.Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                 {
                     reproduceSound();
-                    var invert = GuiController.Instance.D3dInput.keyDown(Key.LeftAlt);
+                    var invert = ToolsModel.Instance.Input.keyDown(Key.LeftAlt);
 
                     var oldInvert = Invert;
                     Invert ^= invert;
@@ -286,7 +286,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
             if (Enabled)
             {
                 configureTerrainEffect(editor.Terrain);
-                bBrush.render();
+                bBrush.Render();
             }
             renderText();
             editor.doRender();
@@ -296,9 +296,9 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 
         public void dispose()
         {
-            bBrush.dispose();
+            bBrush.Dispose();
             sound.dispose();
-            text.dispose();
+            text.Dispose();
         }
 
         #endregion TerrainEditorBrush

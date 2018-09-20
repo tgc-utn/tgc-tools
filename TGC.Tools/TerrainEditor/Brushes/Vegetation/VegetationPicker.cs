@@ -1,13 +1,13 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Core.Collision;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Sound;
+using TGC.Core.Text;
 using TGC.Tools.Model;
 using TGC.Tools.Properties;
-using TGC.Tools.Utils._2D;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.Sound;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
 {
@@ -21,48 +21,48 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
         }
 
         protected Font font;
-        protected TgcText2d label;
-        private Vector3 rotationAxis = new Vector3(0, 1, 0);
-        private Vector3 scaleAxis = new Vector3(1, 1, 1);
+        protected TgcText2D label;
+        private TGCVector3 rotationAxis = new TGCVector3(0, 1, 0);
+        private TGCVector3 scaleAxis = new TGCVector3(1, 1, 1);
         private readonly TgcStaticSound sound;
 
         public VegetationPicker()
         {
-            label = new TgcText2d();
+            label = new TgcText2D();
             label.Color = Color.Yellow;
-            label.Align = TgcText2d.TextAlign.LEFT;
+            label.Align = TgcText2D.TextAlign.LEFT;
             font = new Font("Arial", 12, FontStyle.Bold);
             label.changeFont(font);
 
             Rotation = RotationAxis.Y;
             SoundEnabled = true;
             sound = new TgcStaticSound();
-            sound.loadSound(Settings.Default.MediaDirectory + "Sound\\pisada arena dcha.wav", -2000);
+            sound.loadSound(Settings.Default.MediaDirectory + "Sound\\pisada arena dcha.wav", -2000, ToolsModel.Instance.DirectSound.DsDevice);
         }
 
         protected TgcMesh Mesh { get; set; }
 
         public bool Enabled { get; set; }
-        public Vector3 Position { get; set; }
+        public TGCVector3 Position { get; set; }
         public RotationAxis Rotation { get; set; }
 
-        public Vector3 ScaleAxis
+        public TGCVector3 ScaleAxis
         {
             get { return scaleAxis; }
-            set { scaleAxis = Vector3.Normalize(value); }
+            set { scaleAxis = TGCVector3.Normalize(value); }
         }
 
         public bool SoundEnabled { get; set; }
 
         private TgcMesh pickVegetation(TgcTerrainEditor editor)
         {
-            var ray = new TgcPickingRay();
+            var ray = new TgcPickingRay(ToolsModel.Instance.Input);
             ray.updateRay();
             float minT = -1;
             TgcMesh closerMesh = null;
             foreach (var v in editor.Vegetation)
             {
-                Vector3 q;
+                TGCVector3 q;
                 if (TgcCollisionUtils.intersectRayAABB(ray.Ray, v.BoundingBox, out q))
                 {
                     float t = 0;
@@ -88,21 +88,21 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
 
         private void updateMeshScaleAndRotation()
         {
-            if (GuiController.Instance.D3dInput.keyDown(Key.J))
+            if (ToolsModel.Instance.Input.keyDown(Key.J))
             {
-                rotate(FastMath.ToRad(60 * GuiController.Instance.ElapsedTime));
+                rotate(FastMath.ToRad(60 * ToolsModel.Instance.ElapsedTime));
             }
-            else if (GuiController.Instance.D3dInput.keyDown(Key.L))
+            else if (ToolsModel.Instance.Input.keyDown(Key.L))
             {
-                rotate(FastMath.ToRad(-60 * GuiController.Instance.ElapsedTime));
+                rotate(FastMath.ToRad(-60 * ToolsModel.Instance.ElapsedTime));
             }
-            else if (GuiController.Instance.D3dInput.keyDown(Key.I))
+            else if (ToolsModel.Instance.Input.keyDown(Key.I))
             {
-                Mesh.Scale += ScaleAxis * 1.5f * GuiController.Instance.ElapsedTime;
+                Mesh.Scale += ScaleAxis * 1.5f * ToolsModel.Instance.ElapsedTime;
             }
-            else if (GuiController.Instance.D3dInput.keyDown(Key.K))
+            else if (ToolsModel.Instance.Input.keyDown(Key.K))
             {
-                Mesh.Scale -= ScaleAxis * 1.5f * GuiController.Instance.ElapsedTime;
+                Mesh.Scale -= ScaleAxis * 1.5f * ToolsModel.Instance.ElapsedTime;
             }
         }
 
@@ -112,18 +112,18 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
             {
                 case RotationAxis.X:
                     // mesh.rotateX(p);
-                    Mesh.Rotation = new Vector3((Mesh.Rotation.X + p) % FastMath.TWO_PI, Mesh.Rotation.Y, Mesh.Rotation.Z);
+                    Mesh.Rotation = new TGCVector3((Mesh.Rotation.X + p) % FastMath.TWO_PI, Mesh.Rotation.Y, Mesh.Rotation.Z);
 
                     break;
 
                 case RotationAxis.Y:
                     //mesh.rotateY(p);
-                    Mesh.Rotation = new Vector3(Mesh.Rotation.X, (Mesh.Rotation.Y + p) % FastMath.TWO_PI, Mesh.Rotation.Z);
+                    Mesh.Rotation = new TGCVector3(Mesh.Rotation.X, (Mesh.Rotation.Y + p) % FastMath.TWO_PI, Mesh.Rotation.Z);
                     break;
 
                 case RotationAxis.Z:
                     //mesh.rotateZ(p);
-                    Mesh.Rotation = new Vector3(Mesh.Rotation.X, Mesh.Rotation.Y, (Mesh.Rotation.Z + p) % FastMath.TWO_PI);
+                    Mesh.Rotation = new TGCVector3(Mesh.Rotation.X, Mesh.Rotation.Y, (Mesh.Rotation.Z + p) % FastMath.TWO_PI);
                     break;
             }
         }
@@ -144,8 +144,8 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
         {
             if (Mesh != null)
             {
-                Mesh.render();
-                Mesh.BoundingBox.render();
+                Mesh.Render();
+                Mesh.BoundingBox.Render();
                 label.render();
             }
         }
@@ -154,7 +154,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
         {
             if (Mesh != null)
             {
-                Mesh.dispose();
+                Mesh.Dispose();
                 Mesh = null;
             }
         }
@@ -163,7 +163,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
 
         public virtual bool mouseMove(TgcTerrainEditor editor)
         {
-            Vector3 pos;
+            TGCVector3 pos;
             Enabled = true;
             if (Mesh != null)
             {
@@ -184,14 +184,14 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
             label.Text = string.Format("\"{0}\"( {1} ; {2} ; {3} )", Mesh.Name, Mesh.Position.X, Mesh.Position.Y,
                 Mesh.Position.Z);
             SizeF nameSize;
-            using (var g = GuiController.Instance.Panel3d.CreateGraphics())
+            using (var g = ToolsModel.Instance.Panel3d.CreateGraphics())
             {
                 nameSize = g.MeasureString(label.Text, font);
             }
 
             label.Size = nameSize.ToSize();
-            label.Position = new Point((int)(GuiController.Instance.D3dInput.Xpos - nameSize.Width / 2),
-                (int)(GuiController.Instance.D3dInput.Ypos + nameSize.Height + 5));
+            label.Position = new Point((int)(ToolsModel.Instance.Input.Xpos - nameSize.Width / 2),
+                (int)(ToolsModel.Instance.Input.Ypos + nameSize.Height + 5));
         }
 
         public bool mouseLeave(TgcTerrainEditor editor)
@@ -207,7 +207,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
             {
                 if (Mesh != null) updateMeshScaleAndRotation();
 
-                if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                if (ToolsModel.Instance.Input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                 {
                     if (Mesh != null)
                     {
@@ -225,12 +225,12 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
                     }
                 }
 
-                if (GuiController.Instance.D3dInput.keyPressed(Key.Delete))
+                if (ToolsModel.Instance.Input.keyPressed(Key.Delete))
                 {
                     removeFloatingVegetation();
                 }
 
-                if (GuiController.Instance.D3dInput.keyPressed(Key.Z))
+                if (ToolsModel.Instance.Input.keyPressed(Key.Z))
                 {
                     if (editor.HasVegetation)
                     {
@@ -252,7 +252,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
         public void dispose()
         {
             removeFloatingVegetation();
-            label.dispose();
+            label.Dispose();
             sound.dispose();
         }
 

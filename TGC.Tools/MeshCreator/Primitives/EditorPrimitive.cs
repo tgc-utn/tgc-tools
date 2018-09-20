@@ -1,7 +1,9 @@
-﻿using Microsoft.DirectX;
-using System.Collections.Generic;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
+﻿using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Primitives
 {
@@ -16,7 +18,7 @@ namespace TGC.Tools.MeshCreator.Primitives
 
         protected bool visible;
 
-        public EditorPrimitive(MeshCreatorControl control)
+        public EditorPrimitive(MeshCreatorModifier control)
         {
             Control = control;
             selected = false;
@@ -57,12 +59,12 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     BoundingBox
         /// </summary>
-        public abstract TgcBoundingBox BoundingBox { get; }
+        public abstract TgcBoundingAxisAlignBox BoundingBox { get; }
 
         /// <summary>
         ///     Control
         /// </summary>
-        public MeshCreatorControl Control { get; }
+        public MeshCreatorModifier Control { get; }
 
         /// <summary>
         ///     Indica si esta visible
@@ -81,27 +83,27 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     Offset de la textura del objeto
         /// </summary>
-        public abstract Vector2 TextureOffset { get; set; }
+        public abstract TGCVector2 TextureOffset { get; set; }
 
         /// <summary>
         ///     Tiling de la textura del objeto
         /// </summary>
-        public abstract Vector2 TextureTiling { get; set; }
+        public abstract TGCVector2 TextureTiling { get; set; }
 
         /// <summary>
         ///     Posicion del objeto
         /// </summary>
-        public abstract Vector3 Position { get; set; }
+        public abstract TGCVector3 Position { get; set; }
 
         /// <summary>
         ///     Rotacion del objeto
         /// </summary>
-        public abstract Vector3 Rotation { get; }
+        public abstract TGCVector3 Rotation { get; }
 
         /// <summary>
         ///     Escala del objeto. Viene de la forma (1, 1, 1)
         /// </summary>
-        public abstract Vector3 Scale { get; set; }
+        public abstract TGCVector3 Scale { get; set; }
 
         /// <summary>
         ///     Selecciona o deselecciona el objeto
@@ -121,7 +123,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     Iniciar creacion de primitiva
         /// </summary>
-        public abstract void initCreation(Vector3 gridPoint);
+        public abstract void initCreation(TGCVector3 gridPoint);
 
         /// <summary>
         ///     Ejecutar la creacion de la primitiva
@@ -131,7 +133,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     Mover objeto
         /// </summary>
-        public abstract void move(Vector3 move);
+        public abstract void move(TGCVector3 move);
 
         /// <summary>
         ///     Cambiar textura del objeto
@@ -146,7 +148,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     Aplicar rotacion absoluta del objeto respecto de un pivote
         /// </summary>
-        public abstract void setRotationFromPivot(Vector3 rotation, Vector3 pivot);
+        public abstract void setRotationFromPivot(TGCVector3 rotation, TGCVector3 pivot);
 
         /// <summary>
         ///     Crear un TgcMesh para exportar la escena

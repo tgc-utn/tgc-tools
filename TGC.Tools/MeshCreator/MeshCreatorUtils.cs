@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.MeshCreator
 {
@@ -20,15 +21,15 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Distancia entre un punto y la camara
         /// </summary>
-        public static float distanceFromCameraToPoint(MeshCreatorCamera camera, Vector3 p)
+        public static float distanceFromCameraToPoint(MeshCreatorCamera camera, TGCVector3 p)
         {
-            return Vector3.Length(camera.getPosition() - p);
+            return TGCVector3.Length(camera.getPosition() - p);
         }
 
         /// <summary>
         ///     Distancia entre un objeto y la camara
         /// </summary>
-        public static float distanceFromCameraToObject(MeshCreatorCamera camera, TgcBoundingBox aabb)
+        public static float distanceFromCameraToObject(MeshCreatorCamera camera, TgcBoundingAxisAlignBox aabb)
         {
             return distanceFromCameraToPoint(camera, aabb.calculateBoxCenter());
         }
@@ -37,7 +38,7 @@ namespace TGC.Tools.MeshCreator
         ///     Velocidad de incremento de altura en Y con el mouse, segun la distancia
         ///     del objeto a la camara
         /// </summary>
-        public static float getMouseIncrementHeightSpeed(MeshCreatorCamera camera, TgcBoundingBox aabb, float heightY)
+        public static float getMouseIncrementHeightSpeed(MeshCreatorCamera camera, TgcBoundingAxisAlignBox aabb, float heightY)
         {
             var dist = distanceFromCameraToObject(camera, aabb);
             return heightY * dist / 500;
@@ -47,7 +48,7 @@ namespace TGC.Tools.MeshCreator
         ///     Velocidad de incremento XY con el mouse, segun la distancia
         ///     del objeto a la camara
         /// </summary>
-        public static Vector2 getMouseIncrementXYSpeed(MeshCreatorCamera camera, TgcBoundingBox aabb, Vector2 mouseMove)
+        public static TGCVector2 getMouseIncrementXYSpeed(MeshCreatorCamera camera, TgcBoundingAxisAlignBox aabb, TGCVector2 mouseMove)
         {
             var dist = distanceFromCameraToObject(camera, aabb);
             mouseMove.Multiply(dist / 500);
@@ -57,7 +58,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Velocidad de incremento del mouse cuando traslada un objeto, segun la distancia del objeto a la camara
         /// </summary>
-        public static float getMouseTranslateIncrementSpeed(MeshCreatorCamera camera, TgcBoundingBox aabb,
+        public static float getMouseTranslateIncrementSpeed(MeshCreatorCamera camera, TgcBoundingAxisAlignBox aabb,
             float movement)
         {
             var dist = distanceFromCameraToObject(camera, aabb);
@@ -67,7 +68,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Velocidad de incremento del mouse cuando escala un objeto, segun la distancia del objeto a la camara
         /// </summary>
-        public static float getMouseScaleIncrementSpeed(MeshCreatorCamera camera, TgcBoundingBox aabb, float scaling)
+        public static float getMouseScaleIncrementSpeed(MeshCreatorCamera camera, TgcBoundingAxisAlignBox aabb, float scaling)
         {
             var dist = distanceFromCameraToObject(camera, aabb);
             return scaling * dist / 1000;
@@ -76,7 +77,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Incremento de tamaño de los ejes del Gizmo de traslacion segun la distancia de un punto a la camara
         /// </summary>
-        public static float getTranslateGizmoSizeIncrement(MeshCreatorCamera camera, Vector3 p)
+        public static float getTranslateGizmoSizeIncrement(MeshCreatorCamera camera, TGCVector3 p)
         {
             return distanceFromCameraToPoint(camera, p) / 500;
         }
@@ -84,7 +85,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Velocidad de de zoom de la rueda del mouse segun la distancia de un punto a la camara
         /// </summary>
-        public static float getMouseZoomSpeed(MeshCreatorCamera camera, Vector3 p)
+        public static float getMouseZoomSpeed(MeshCreatorCamera camera, TGCVector3 p)
         {
             var dist = distanceFromCameraToPoint(camera, p);
             if (dist < 100)
@@ -110,10 +111,10 @@ namespace TGC.Tools.MeshCreator
         /// <param name="box3d">BoundingBox 3D</param>
         /// <param name="box2D">Rectangulo 2D proyectado</param>
         /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
-        public static bool projectBoundingBox(TgcBoundingBox box3d, out Rectangle box2D)
+        public static bool projectBoundingBox(TgcBoundingAxisAlignBox box3d, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
             var viewport = d3dDevice.Viewport;
             var view = d3dDevice.Transform.View;
             var proj = d3dDevice.Transform.Projection;
@@ -125,17 +126,17 @@ namespace TGC.Tools.MeshCreator
             //Proyectar los 8 puntos, sin dividir aun por W
             var corners = box3d.computeCorners();
             var m = view * proj;
-            var projVertices = new Vector3[corners.Length];
+            var projVertices = new TGCVector3[corners.Length];
             for (var i = 0; i < corners.Length; i++)
             {
-                var pOut = Vector3.Transform(corners[i], m);
+                var pOut = TGCVector3.Transform(corners[i], TGCMatrix.FromMatrix(m));
                 if (pOut.W < 0) return false;
                 projVertices[i] = toScreenSpace(pOut, width, height);
             }
 
             //Buscar los puntos extremos
-            var min = new Vector2(float.MaxValue, float.MaxValue);
-            var max = new Vector2(float.MinValue, float.MinValue);
+            var min = new TGCVector2(float.MaxValue, float.MaxValue);
+            var max = new TGCVector2(float.MinValue, float.MinValue);
             var minDepth = float.MaxValue;
             foreach (var v in projVertices)
             {
@@ -181,7 +182,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Pasa un punto a screen-space
         /// </summary>
-        public static Vector3 toScreenSpace(Vector4 p, int width, int height)
+        public static TGCVector3 toScreenSpace(Vector4 p, int width, int height)
         {
             //divido por w, (lo paso al proj. space)
             p.X = p.X / p.W;
@@ -192,26 +193,26 @@ namespace TGC.Tools.MeshCreator
             p.X = (int)(0.5f + (p.X + 1) * 0.5f * width);
             p.Y = (int)(0.5f + (1 - p.Y) * 0.5f * height);
 
-            return new Vector3(p.X, p.Y, p.Z);
+            return new TGCVector3(p.X, p.Y, p.Z);
         }
 
         /// <summary>
         ///     Proyecta a pantalla el punto minimo y maximo de un BoundingBox y genera un vector 2D normalizado
         /// </summary>
-        public static Vector2 projectAABBScreenVec(TgcBoundingBox aabb)
+        public static TGCVector2 projectAABBScreenVec(TgcBoundingAxisAlignBox aabb)
         {
-            var device = GuiController.Instance.D3dDevice;
+            var device = ToolsModel.Instance.D3dDevice;
             var viewport = device.Viewport;
             var world = device.Transform.World;
             var view = device.Transform.View;
             var proj = device.Transform.Projection;
 
             //Proyectar punto minimo y maximo del AABB
-            var minProj = Vector3.Project(aabb.PMin, viewport, proj, view, world);
-            var maxProj = Vector3.Project(aabb.PMax, viewport, proj, view, world);
+            var minProj = TGCVector3.Project(aabb.PMin, viewport, TGCMatrix.FromMatrix(proj), TGCMatrix.FromMatrix(view), TGCMatrix.FromMatrix(world));
+            var maxProj = TGCVector3.Project(aabb.PMax, viewport, TGCMatrix.FromMatrix(proj), TGCMatrix.FromMatrix(view), TGCMatrix.FromMatrix(world));
 
             //Armar vector 2D
-            var vec2D = new Vector2(maxProj.X - minProj.X, maxProj.Y - minProj.Y);
+            var vec2D = new TGCVector2(maxProj.X - minProj.X, maxProj.Y - minProj.Y);
             vec2D.Normalize();
             return vec2D;
         }
@@ -222,10 +223,10 @@ namespace TGC.Tools.MeshCreator
         /// <param name="box3d">Punto 3D</param>
         /// <param name="box2D">Rectangulo 2D proyectado</param>
         /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
-        public static bool projectPoint(Vector3 p, out Rectangle box2D)
+        public static bool projectPoint(TGCVector3 p, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
             var viewport = d3dDevice.Viewport;
             var view = d3dDevice.Transform.View;
             var proj = d3dDevice.Transform.Projection;
@@ -235,11 +236,11 @@ namespace TGC.Tools.MeshCreator
 
             //Proyectar
             box2D = new Rectangle();
-            var pOut = Vector3.Transform(p, m);
+            var pOut = TGCVector3.Transform(TGCVector3.FromVector3(p), TGCMatrix.FromMatrix(m));
             if (pOut.W < 0) return false;
             var projVertex = toScreenSpace(pOut, width, height);
-            var min = new Vector2(projVertex.X, projVertex.Y);
-            var max = min + new Vector2(1, 1);
+            var min = new TGCVector2(projVertex.X, projVertex.Y);
+            var max = min + new TGCVector2(1, 1);
 
             //Clamp
             if (min.X < 0f) min.X = 0f;
@@ -264,10 +265,10 @@ namespace TGC.Tools.MeshCreator
         /// <param name="b">Fin del segmento</param>
         /// <param name="box2D">Rectangulo 2D proyectado</param>
         /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
-        public static bool projectSegmentToScreenRect(Vector3 a, Vector3 b, out Rectangle box2D)
+        public static bool projectSegmentToScreenRect(TGCVector3 a, TGCVector3 b, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
             var viewport = d3dDevice.Viewport;
             var view = d3dDevice.Transform.View;
             var proj = d3dDevice.Transform.Projection;
@@ -277,14 +278,14 @@ namespace TGC.Tools.MeshCreator
 
             //Proyectar
             box2D = new Rectangle();
-            var aOut = Vector3.Transform(a, m);
+            var aOut = TGCVector3.Transform(a, TGCMatrix.FromMatrix(m));
             if (aOut.W < 0) return false;
-            var bOut = Vector3.Transform(b, m);
+            var bOut = TGCVector3.Transform(b, TGCMatrix.FromMatrix(m));
             if (bOut.W < 0) return false;
             var aProjVertex = toScreenSpace(aOut, width, height);
             var bProjVertex = toScreenSpace(bOut, width, height);
-            var min = new Vector2(FastMath.Min(aProjVertex.X, bProjVertex.X), FastMath.Min(aProjVertex.Y, bProjVertex.Y));
-            var max = new Vector2(FastMath.Max(aProjVertex.X, bProjVertex.X), FastMath.Max(aProjVertex.Y, bProjVertex.Y));
+            var min = new TGCVector2(FastMath.Min(aProjVertex.X, bProjVertex.X), FastMath.Min(aProjVertex.Y, bProjVertex.Y));
+            var max = new TGCVector2(FastMath.Max(aProjVertex.X, bProjVertex.X), FastMath.Max(aProjVertex.Y, bProjVertex.Y));
 
             //Clamp
             if (min.X < 0f) min.X = 0f;
@@ -308,10 +309,10 @@ namespace TGC.Tools.MeshCreator
         /// <param name="vertices">Vertices del poligono</param>
         /// <param name="box2D">Rectangulo 2D proyectado</param>
         /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
-        public static bool projectPolygon(Vector3[] vertices, out Rectangle box2D)
+        public static bool projectPolygon(TGCVector3[] vertices, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
             var viewport = d3dDevice.Viewport;
             var view = d3dDevice.Transform.View;
             var proj = d3dDevice.Transform.Projection;
@@ -322,17 +323,17 @@ namespace TGC.Tools.MeshCreator
 
             //Proyectar todos los puntos, sin dividir aun por W
             var m = view * proj;
-            var projVertices = new Vector3[vertices.Length];
+            var projVertices = new TGCVector3[vertices.Length];
             for (var i = 0; i < vertices.Length; i++)
             {
-                var pOut = Vector3.Transform(vertices[i], m);
+                var pOut = TGCVector3.Transform(vertices[i], TGCMatrix.FromMatrix(m));
                 if (pOut.W < 0) return false;
                 projVertices[i] = toScreenSpace(pOut, width, height);
             }
 
             //Buscar los puntos extremos
-            var min = new Vector2(float.MaxValue, float.MaxValue);
-            var max = new Vector2(float.MinValue, float.MinValue);
+            var min = new TGCVector2(float.MaxValue, float.MaxValue);
+            var max = new TGCVector2(float.MinValue, float.MinValue);
             var minDepth = float.MaxValue;
             foreach (var v in projVertices)
             {
@@ -379,7 +380,7 @@ namespace TGC.Tools.MeshCreator
         ///     Calcular BoundingBox de todos los objetos seleccionados.
         ///     Devuelve null si no hay ningun objeto seleccionado
         /// </summary>
-        public static TgcBoundingBox getSelectionBoundingBox(List<EditorPrimitive> selectionList)
+        public static TgcBoundingAxisAlignBox getSelectionBoundingBox(List<EditorPrimitive> selectionList)
         {
             //Hay un solo objeto seleccionado
             if (selectionList.Count == 1)
@@ -392,12 +393,12 @@ namespace TGC.Tools.MeshCreator
             if (selectionList.Count > 1)
             {
                 //Crear AABB que une a todos los objetos
-                var auxBoundingBoxList = new List<TgcBoundingBox>();
+                var auxBoundingBoxList = new List<TgcBoundingAxisAlignBox>();
                 foreach (var p in selectionList)
                 {
                     auxBoundingBoxList.Add(p.BoundingBox);
                 }
-                return TgcBoundingBox.computeFromBoundingBoxes(auxBoundingBoxList);
+                return TgcBoundingAxisAlignBox.computeFromBoundingBoxes(auxBoundingBoxList);
             }
 
             return null;

@@ -1,4 +1,4 @@
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Core.SceneLoader;
 
 namespace TGC.Tools.SceneEditor
 {

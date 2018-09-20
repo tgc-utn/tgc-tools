@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TGC - Leone Pictures")]
 [assembly: AssemblyProduct("TGC.Tools")]
-[assembly: AssemblyCopyright("© Leone Pictures 2009, © TGC 2016")]
+[assembly: AssemblyCopyright("© Leone Pictures 2009, © TGC 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

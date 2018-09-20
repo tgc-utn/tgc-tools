@@ -1,20 +1,20 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using TGC.Core.Collision;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Text;
 using TGC.Tools.Example;
 using TGC.Tools.Model;
 using TGC.Tools.TerrainEditor.Brushes;
 using TGC.Tools.TerrainEditor.Instances;
-using TGC.Tools.TerrainEditor.Panel;
-using TGC.Tools.Utils._2D;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Tools.UserControls;
 using Font = System.Drawing.Font;
 
 namespace TGC.Tools.TerrainEditor
@@ -27,62 +27,53 @@ namespace TGC.Tools.TerrainEditor
     ///     y luego exportarlos para ser usados en otro ejemplo.
     ///     Autor: Daniela Kazarian
     /// </summary>
-    public class TgcTerrainEditor : TgcExample
+    public class TgcTerrainEditor : TGCExampleTools
     {
+        private TerrainEditorModifier Modifier { get; set; }
         public bool RenderBoundingBoxes { get; set; }
 
-        public override string getCategory()
+        public TgcTerrainEditor(string mediaDir, string shadersDir, Panel modifiersPanel) : base(mediaDir, shadersDir, modifiersPanel)
         {
-            return "Utils";
+            Category = "Utils";
+            Name = "TerrainEditor";
+            Description = @"Terrain editor.
+                            Camara: Desplazamiento: W A S D Ctrl Space, Para rotar mantener presionado el boton derecho.
+                            Ocultar vegetacion: V
+                            Cambiar modo de picking: P
+                            Modo primera persona: F (Rotacion con boton izquierdo)
+                            Mostar AABBs: B";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "TerrainEditor";
-        }
+            //Crear Modifier especial para este editor
+            Modifier = AddTerrainEditorModifier(this);
 
-        public override string getDescription()
-        {
-            return @"Terrain editor.
-Camara:
-    Desplazamiento: W A S D Ctrl Space
-    Para rotar mantener presionado el boton derecho.
-Ocultar vegetacion: V
-Cambiar modo de picking: P
-Modo primera persona: F (Rotacion con boton izquierdo)
-Mostar AABBs: B";
-        }
-
-        public override void init()
-        {
             Camera = new TerrainFpsCamera();
             Terrain = new SmartTerrain();
             brush = new DummyBrush();
             Vegetation = new List<TgcMesh>();
-            modifierPanel = new TerrainEditorModifier("Panel", this);
 
-            GuiController.Instance.Modifiers.add(modifierPanel);
-
-            pickingRay = new TgcPickingRay();
+            pickingRay = new TgcPickingRay(Input);
             ShowVegetation = true;
             mouseMove = Panel3d_MouseMove;
             mouseLeave = Panel3d_MouseLeave;
             noBrush = new DummyBrush();
-            GuiController.Instance.Panel3d.MouseMove += mouseMove;
-            GuiController.Instance.Panel3d.MouseLeave += mouseLeave;
+            ToolsModel.Instance.Panel3d.MouseMove += mouseMove;
+            ToolsModel.Instance.Panel3d.MouseLeave += mouseLeave;
 
             //Configurar FPS Camara
             Camera.Enable = true;
             Camera.RotateMouseButton = cameraRotationButton;
-            Camera.setCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f), new Vector3(164.9481f, 35.3185f, -61.5394f));
+            Camera.setCamera(new TGCVector3(-722.6171f, 495.0046f, -31.2611f), new TGCVector3(164.9481f, 35.3185f, -61.5394f));
 
-            labelFPS = new TgcText2d();
+            labelFPS = new TgcText2D();
             labelFPS.Text = "Press F to go back to edition mode";
             labelFPS.changeFont(new Font("Arial", 12, FontStyle.Bold));
             labelFPS.Color = Color.Red;
-            labelFPS.Align = TgcText2d.TextAlign.RIGHT;
+            labelFPS.Align = TgcText2D.TextAlign.RIGHT;
 
-            labelVegetationHidden = new TgcText2d();
+            labelVegetationHidden = new TgcText2D();
             labelVegetationHidden.Text = "Press V to show vegetation";
             labelVegetationHidden.changeFont(new Font("Arial", 12, FontStyle.Bold));
             labelVegetationHidden.Color = Color.GreenYellow;
@@ -104,12 +95,12 @@ Mostar AABBs: B";
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public bool mousePositionInTerrain(out Vector3 position)
+        public bool mousePositionInTerrain(out TGCVector3 position)
         {
             pickingRay.updateRay();
 
-            if (PlanePicking)
-                return Terrain.intersectRayPlane(pickingRay.Ray, out position);
+            if (planePicking)
+                return Terrain.intersectRayTGCPlane(pickingRay.Ray, out position);
             return Terrain.intersectRay(pickingRay.Ray, out position);
         }
 
@@ -137,7 +128,7 @@ Mostar AABBs: B";
         /// <param name="scaleY"></param>
         public void loadHeightmap(string path, float scaleXZ, float scaleY)
         {
-            Terrain.loadHeightmap(path, scaleXZ, scaleY, new Vector3(0, 0, 0));
+            Terrain.loadHeightmap(path, scaleXZ, scaleY, new TGCVector3(0, 0, 0));
             clearVegetation();
         }
 
@@ -151,7 +142,7 @@ Mostar AABBs: B";
         /// <param name="scaleY"></param>
         public void loadPlainHeightmap(int width, int length, int level, float scaleXZ, float scaleY)
         {
-            Terrain.loadPlainHeightmap(width, length, level, scaleXZ, scaleY, new Vector3(0, 0, 0));
+            Terrain.loadPlainHeightmap(width, length, level, scaleXZ, scaleY, new TGCVector3(0, 0, 0));
             clearVegetation();
         }
 
@@ -179,15 +170,15 @@ Mostar AABBs: B";
             bitmap.Dispose();
         }
 
-        public override void close()
+        public override void Dispose()
         {
             Terrain.dispose();
             clearVegetation();
-            modifierPanel.dispose();
-            labelFPS.dispose();
-            labelVegetationHidden.dispose();
-            GuiController.Instance.Panel3d.MouseMove -= mouseMove;
-            GuiController.Instance.Panel3d.MouseLeave -= mouseLeave;
+            Modifier.dispose();
+            labelFPS.Dispose();
+            labelVegetationHidden.Dispose();
+            ToolsModel.Instance.Panel3d.MouseMove -= mouseMove;
+            ToolsModel.Instance.Panel3d.MouseLeave -= mouseLeave;
         }
 
         #region Fields
@@ -196,7 +187,6 @@ Mostar AABBs: B";
         private ITerrainEditorBrush brush;
         private bool showVegetation;
         private bool mustUpdateVegetationPosition;
-        private TerrainEditorModifier modifierPanel;
         private DummyBrush noBrush;
         private float previousSpeed;
         private readonly TgcD3dInput.MouseButtons cameraRotationButton = TgcD3dInput.MouseButtons.BUTTON_RIGHT;
@@ -204,8 +194,8 @@ Mostar AABBs: B";
         private MouseEventHandler mouseMove;
         private EventHandler mouseLeave;
         private SmartTerrain terrain;
-        private TgcText2d labelFPS;
-        private TgcText2d labelVegetationHidden;
+        private TgcText2D labelFPS;
+        private TgcText2D labelVegetationHidden;
 
         #endregion Fields
 
@@ -302,22 +292,26 @@ Mostar AABBs: B";
 
         #endregion Properties
 
+        public override void Update()
+        {
+            PreUpdate();
+            PostUpdate();
+        }
+
         #region Render
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            if (GuiController.Instance.D3dInput.keyPressed(Key.V))
+            if (Input.keyPressed(Key.V))
                 ShowVegetation ^= true;
 
-            if (GuiController.Instance.D3dInput.keyPressed(Key.P))
-                PlanePicking ^= true;
+            if (Input.keyPressed(Key.P))
+                planePicking ^= true;
 
-            if (GuiController.Instance.D3dInput.keyPressed(Key.F))
+            if (Input.keyPressed(Key.F))
                 FpsModeEnable ^= true;
 
-            if (GuiController.Instance.D3dInput.keyPressed(Key.B))
+            if (Input.keyPressed(Key.B))
                 RenderBoundingBoxes ^= true;
 
             if (FpsModeEnable) labelFPS.render();
@@ -341,8 +335,8 @@ Mostar AABBs: B";
         {
             foreach (var v in Vegetation)
             {
-                v.render();
-                if (RenderBoundingBoxes) v.BoundingBox.render();
+                v.Render();
+                if (RenderBoundingBoxes) v.BoundingBox.Render();
             }
         }
 
@@ -381,8 +375,8 @@ Mostar AABBs: B";
         {
             foreach (var v in Vegetation)
             {
-                v.Scale = new Vector3(v.Scale.X * scaleRatioXZ, v.Scale.Y * scaleRatioXZ, v.Scale.Z * scaleRatioXZ);
-                v.Position = Vector3.TransformCoordinate(v.Position, Matrix.Scaling(scaleRatioXZ, 1, scaleRatioXZ));
+                v.Scale = new TGCVector3(v.Scale.X * scaleRatioXZ, v.Scale.Y * scaleRatioXZ, v.Scale.Z * scaleRatioXZ);
+                v.Position = TGCVector3.TransformCoordinate(v.Position, TGCMatrix.Scaling(scaleRatioXZ, 1, scaleRatioXZ));
             }
         }
 
@@ -424,7 +418,7 @@ Mostar AABBs: B";
         }
 
         /// <summary>
-        ///     Remueve el mesh, no le hace dispose.
+        ///     Remueve el mesh, no le hace Dispose.
         /// </summary>
         /// <param name="v"></param>
         public void removeVegetation(TgcMesh v)

@@ -1,9 +1,8 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using TGC.Core.Mathematica;
+using TGC.Core.Shaders;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Shaders;
-using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.MeshCreator.EditablePoly
 {
@@ -13,7 +12,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
     public class TrianglesBatchRenderer
     {
         private const int BATCH_SIZE = 1200;
-        private readonly Vector3 BOX_LINE_ORIGINAL_DIR = new Vector3(0, 1, 0);
+        private readonly TGCVector3 BOX_LINE_ORIGINAL_DIR = new TGCVector3(0, 1, 0);
         private readonly CustomVertex.PositionColored[] vertices;
         private int idx;
 
@@ -46,7 +45,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Agregar triangulo al batch
         /// </summary>
-        public void addTriangle(Vector3 a, Vector3 b, Vector3 c, Color color)
+        public void addTriangle(TGCVector3 a, TGCVector3 b, TGCVector3 c, Color color)
         {
             var cInt = color.ToArgb();
             addTriangle(
@@ -68,15 +67,15 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var texturesManager = GuiController.Instance.TexturesManager;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var texturesManager = ToolsModel.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            var effect = GuiController.Instance.Shaders.VariosShader;
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            var effect = ToolsModel.Instance.Shaders.VariosShader;
+            ToolsModel.Instance.Shaders.setShaderMatrixIdentity(effect);
+            d3dDevice.VertexDeclaration = ToolsModel.Instance.Shaders.VdecPositionColored;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
 
             //Alpha blend on
@@ -110,7 +109,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Add new BoxLine mesh
         /// </summary>
-        public void addBoxLine(Vector3 pStart, Vector3 pEnd, float thickness, Color color)
+        public void addBoxLine(TGCVector3 pStart, TGCVector3 pEnd, float thickness, Color color)
         {
             const int vertexCount = 36;
             checkAndFlush(vertexCount);
@@ -119,10 +118,10 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             var c = color.ToArgb();
 
             //Crear caja en vertical en Y con longitud igual al módulo de la recta.
-            var lineVec = Vector3.Subtract(pEnd, pStart);
+            var lineVec = TGCVector3.Subtract(pEnd, pStart);
             var lineLength = lineVec.Length();
-            var min = new Vector3(-thickness, 0, -thickness);
-            var max = new Vector3(thickness, lineLength, thickness);
+            var min = new TGCVector3(-thickness, 0, -thickness);
+            var max = new TGCVector3(thickness, lineLength, thickness);
 
             //Vértices de la caja con forma de linea
             // Front face
@@ -199,15 +198,15 @@ namespace TGC.Tools.MeshCreator.EditablePoly
 
             //Obtener matriz de rotacion respecto del vector de la linea
             lineVec.Normalize();
-            var angle = FastMath.Acos(Vector3.Dot(BOX_LINE_ORIGINAL_DIR, lineVec));
-            var axisRotation = Vector3.Cross(BOX_LINE_ORIGINAL_DIR, lineVec);
+            var angle = FastMath.Acos(TGCVector3.Dot(BOX_LINE_ORIGINAL_DIR, lineVec));
+            var axisRotation = TGCVector3.Cross(BOX_LINE_ORIGINAL_DIR, lineVec);
             axisRotation.Normalize();
-            var t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(pStart);
+            var t = TGCMatrix.RotationAxis(axisRotation, angle) * TGCMatrix.Translation(pStart);
 
             //Transformar todos los puntos
             for (var i = initIdx; i < initIdx + vertexCount; i++)
             {
-                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
+                vertices[i].Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vertices[i].Position), t);
             }
         }
 

@@ -1,8 +1,8 @@
 using System;
 using System.Windows.Forms;
+using TGC.Core.Textures;
+using TGC.Tools.Forms;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Modifiers;
-using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.RoomsEditor
 {
@@ -19,7 +19,7 @@ namespace TGC.Tools.RoomsEditor
             InitializeComponent();
 
             this.mapView = mapView;
-            textureBrowser = new TgcTextureBrowser();
+            textureBrowser = new TgcTextureBrowser(ToolsModel.Instance.Media);
             textureBrowser.CurrentDir = mapView.defaultTextureDir;
 
             //Cargar imagenes default
@@ -80,7 +80,7 @@ namespace TGC.Tools.RoomsEditor
             {
                 wall.Texture.dispose();
             }
-            wall.Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice, image.ImageLocation);
+            wall.Texture = TgcTexture.createTexture(ToolsModel.Instance.D3dDevice, image.ImageLocation);
             wall.AutoAdjustUv = autoUv.Checked;
             wall.UTile = (float)uTile.Value;
             wall.VTile = (float)vTile.Value;

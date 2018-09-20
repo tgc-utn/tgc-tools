@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using TGC.Tools.MeshCreator.Primitives;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator
 {
     public partial class ObjectBrowser : Form
     {
-        private readonly MeshCreatorControl control;
+        private readonly MeshCreatorModifier control;
         private readonly InputMessageBox inputBox;
         private readonly ObjectBrowserSelectLayer selectLayerDialog;
 
-        public ObjectBrowser(MeshCreatorControl control)
+        public ObjectBrowser(MeshCreatorModifier control)
         {
             InitializeComponent();
             this.control = control;
@@ -103,7 +104,7 @@ namespace TGC.Tools.MeshCreator
         {
             control.PopupOpened = false;
 
-            //Evitar hacer dispose del formulario, solo ocultarlo
+            //Evitar hacer Dispose del formulario, solo ocultarlo
             e.Cancel = true;
             Parent = null;
             Hide();
@@ -180,7 +181,7 @@ namespace TGC.Tools.MeshCreator
             control.CurrentGizmo = null;
 
             //Pasar a modo seleccion
-            control.CurrentState = MeshCreatorControl.State.SelectObject;
+            control.CurrentState = MeshCreatorModifier.State.SelectObject;
         }
 
         /// <summary>

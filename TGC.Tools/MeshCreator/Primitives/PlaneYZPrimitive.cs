@@ -1,8 +1,11 @@
-﻿using Microsoft.DirectX;
+﻿using TGC.Core.BoundingVolumes;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Primitives
 {
@@ -12,18 +15,18 @@ namespace TGC.Tools.MeshCreator.Primitives
     public class PlaneYZPrimitive : EditorPrimitive
     {
         private float creatingInitMouseY;
-        private Vector3 initSelectionPoint;
-        private TgcPlaneWall mesh;
-        private Vector3 originalSize;
+        private TGCVector3 initSelectionPoint;
+        private TgcPlane mesh;
+        private TGCVector3 originalSize;
 
-        public PlaneYZPrimitive(MeshCreatorControl control)
+        public PlaneYZPrimitive(MeshCreatorModifier control)
             : base(control)
         {
-            Name = "Plane_" + PRIMITIVE_COUNT++;
+            Name = "TGCPlane_" + PRIMITIVE_COUNT++;
             ModifyCaps.ChangeRotation = false;
         }
 
-        public override TgcBoundingBox BoundingBox
+        public override TgcBoundingAxisAlignBox BoundingBox
         {
             get { return mesh.BoundingBox; }
         }
@@ -34,7 +37,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             set { mesh.AlphaBlendEnable = value; }
         }
 
-        public override Vector2 TextureOffset
+        public override TGCVector2 TextureOffset
         {
             get { return mesh.UVOffset; }
             set
@@ -44,9 +47,9 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override Vector2 TextureTiling
+        public override TGCVector2 TextureTiling
         {
-            get { return new Vector2(mesh.UTile, mesh.VTile); }
+            get { return new TGCVector2(mesh.UTile, mesh.VTile); }
             set
             {
                 mesh.UTile = value.X;
@@ -55,7 +58,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override Vector3 Position
+        public override TGCVector3 Position
         {
             get { return mesh.Origin; }
             set
@@ -65,17 +68,17 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override Vector3 Rotation
+        public override TGCVector3 Rotation
         {
-            get { return Vector3.Empty; }
+            get { return TGCVector3.Empty; }
         }
 
-        public override Vector3 Scale
+        public override TGCVector3 Scale
         {
-            get { return TgcVectorUtils.div(mesh.Size, originalSize); }
+            get { return TGCVector3.Div(mesh.Size, originalSize); }
             set
             {
-                var newSize = TgcVectorUtils.mul(originalSize, value);
+                var newSize = TGCVector3.Mul(originalSize, value);
                 mesh.Size = newSize;
                 mesh.updateValues();
             }
@@ -83,12 +86,12 @@ namespace TGC.Tools.MeshCreator.Primitives
 
         public override void render()
         {
-            mesh.render();
+            mesh.Render();
         }
 
         public override void dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
         }
 
         public override void setSelected(bool selected)
@@ -101,15 +104,15 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     Iniciar la creacion
         /// </summary>
-        public override void initCreation(Vector3 gridPoint)
+        public override void initCreation(TGCVector3 gridPoint)
         {
             initSelectionPoint = gridPoint;
-            creatingInitMouseY = GuiController.Instance.D3dInput.Ypos;
+            creatingInitMouseY = ToolsModel.Instance.Input.Ypos;
 
             //Crear plano inicial
-            var planeTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
-            mesh = new TgcPlaneWall(initSelectionPoint, new Vector3(0, 0, 0), TgcPlaneWall.Orientations.YZplane,
-                planeTexture);
+            var TGCPlaneTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
+            mesh = new TgcPlane(initSelectionPoint, new TGCVector3(0, 0, 0), TgcPlane.Orientations.YZplane,
+                TGCPlaneTexture);
             mesh.AutoAdjustUv = false;
             mesh.UTile = 1;
             mesh.VTile = 1;
@@ -122,7 +125,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// </summary>
         public override void doCreation()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = ToolsModel.Instance.Input;
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -133,12 +136,12 @@ namespace TGC.Tools.MeshCreator.Primitives
 
                 //Determinar posicion Z segun la colision con el grid
                 var collisionPoint = Control.Grid.getPicking();
-                var extensionPoint = new Vector3(initSelectionPoint.X, initSelectionPoint.Y + adjustedHeightY,
+                var extensionPoint = new TGCVector3(initSelectionPoint.X, initSelectionPoint.Y + adjustedHeightY,
                     collisionPoint.Z);
 
                 //Obtener maximo y minimo
-                var min = Vector3.Minimize(initSelectionPoint, extensionPoint);
-                var max = Vector3.Maximize(initSelectionPoint, extensionPoint);
+                var min = TGCVector3.Minimize(initSelectionPoint, extensionPoint);
+                var max = TGCVector3.Maximize(initSelectionPoint, extensionPoint);
                 min.X = initSelectionPoint.X;
                 max.X = initSelectionPoint.X + 1;
 
@@ -157,7 +160,7 @@ namespace TGC.Tools.MeshCreator.Primitives
                     originalSize = mesh.Size;
 
                     //Dejar cargado para que se pueda crear un nuevo plano
-                    Control.CurrentState = MeshCreatorControl.State.CreatePrimitiveSelected;
+                    Control.CurrentState = MeshCreatorModifier.State.CreatePrimitiveSelected;
                     Control.CreatingPrimitive = new PlaneYZPrimitive(Control);
 
                     //Agregar plano a la lista de modelos
@@ -171,14 +174,14 @@ namespace TGC.Tools.MeshCreator.Primitives
                 //Sino, descartar
                 else
                 {
-                    Control.CurrentState = MeshCreatorControl.State.CreatePrimitiveSelected;
-                    mesh.dispose();
+                    Control.CurrentState = MeshCreatorModifier.State.CreatePrimitiveSelected;
+                    mesh.Dispose();
                     mesh = null;
                 }
             }
         }
 
-        public override void move(Vector3 move)
+        public override void move(TGCVector3 move)
         {
             mesh.Origin += move;
             mesh.updateValues();
@@ -194,7 +197,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             return mesh.Texture;
         }
 
-        public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
+        public override void setRotationFromPivot(TGCVector3 rotation, TGCVector3 pivot)
         {
             //NO SOPORTADO ACTUALMENTE
         }
@@ -221,7 +224,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         {
             var m = mesh.toMesh(Name);
             mesh.BoundingBox.setExtremes(m.BoundingBox.PMin, m.BoundingBox.PMax);
-            m.dispose();
+            m.Dispose();
         }
     }
 }

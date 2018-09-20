@@ -19,7 +19,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -36,6 +36,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,7 +61,18 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BulletSharp, Version=0.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BulletSharp.0.10\lib\net40-client\BulletSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
@@ -87,17 +100,31 @@
     </Reference>
     <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TGC.Core, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TGC.Core.2.3.3\lib\net471\TGC.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Example\TgcExample.cs" />
+    <Compile Include="Camara\TgcFpsCamera.cs" />
+    <Compile Include="Camara\TgcRotationalCamera.cs" />
+    <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />
+    <Compile Include="Camara\TgcThirdPersonCamera.cs" />
+    <Compile Include="Example\TGCExampleTools.cs" />
     <Compile Include="Forms\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\AboutForm.designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionForm.Designer.cs">
+      <DependentUpon>OptionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ToolsForm.cs">
       <SubType>Form</SubType>
@@ -126,13 +153,12 @@
       <DependentUpon>InputMessageBox.cs</DependentUpon>
     </Compile>
     <Compile Include="MeshCreator\MeshCreatorCamera.cs" />
-    <Compile Include="MeshCreator\MeshCreatorControl.cs">
+    <Compile Include="UserControls\MeshCreatorModifier.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MeshCreator\MeshCreatorControl.Designer.cs">
-      <DependentUpon>MeshCreatorControl.cs</DependentUpon>
+    <Compile Include="UserControls\MeshCreatorModifier.Designer.cs">
+      <DependentUpon>MeshCreatorModifier.cs</DependentUpon>
     </Compile>
-    <Compile Include="MeshCreator\MeshCreatorModifier.cs" />
     <Compile Include="MeshCreator\MeshCreatorUtils.cs" />
     <Compile Include="MeshCreator\ObjectBrowser.cs">
       <SubType>Form</SubType>
@@ -156,7 +182,7 @@
     <Compile Include="MeshCreator\SelectionRectangle.cs" />
     <Compile Include="MeshCreator\SelectionRectangleMesh.cs" />
     <Compile Include="MeshCreator\TgcMeshCreator.cs" />
-    <Compile Include="Model\GuiController.cs" />
+    <Compile Include="Model\ToolsModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\AboutForm.resx">
@@ -169,8 +195,8 @@
     <EmbeddedResource Include="MeshCreator\InputMessageBox.resx">
       <DependentUpon>InputMessageBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MeshCreator\MeshCreatorControl.resx">
-      <DependentUpon>MeshCreatorControl.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\MeshCreatorModifier.resx">
+      <DependentUpon>MeshCreatorModifier.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MeshCreator\ObjectBrowser.resx">
@@ -184,8 +210,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="RoomsEditor\RoomsEditorControl.resx">
-      <DependentUpon>RoomsEditorControl.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\RoomsEditorModifier.resx">
+      <DependentUpon>RoomsEditorModifier.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RoomsEditor\RoomsEditorHelpWindow.resx">
       <DependentUpon>RoomsEditorHelpWindow.cs</DependentUpon>
@@ -196,29 +222,27 @@
     <EmbeddedResource Include="RoomsEditor\RoomsEditorTexturesEdit.resx">
       <DependentUpon>RoomsEditorTexturesEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SceneEditor\SceneEditorControl.resx">
-      <DependentUpon>SceneEditorControl.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\SceneEditorModifier.resx">
+      <DependentUpon>SceneEditorModifier.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SceneEditor\SceneEditorHelpWindow.resx">
       <DependentUpon>SceneEditorHelpWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TerrainEditor\Panel\TerrainEditorControl.resx">
-      <DependentUpon>TerrainEditorControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Utils\Modifiers\TgcMeshBrowser.resx">
-      <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Utils\Modifiers\TgcTextureBrowser.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\TerrainEditorModifier.resx">
+      <DependentUpon>TerrainEditorModifier.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="App.config" />
+    <EmbeddedResource Include="Forms\TgcMeshBrowser.resx">
+      <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TgcTextureBrowser.resx">
+      <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -228,11 +252,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorControl.cs">
+    <Compile Include="UserControls\RoomsEditorModifier.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorControl.Designer.cs">
-      <DependentUpon>RoomsEditorControl.cs</DependentUpon>
+    <Compile Include="UserControls\RoomsEditorModifier.Designer.cs">
+      <DependentUpon>RoomsEditorModifier.cs</DependentUpon>
     </Compile>
     <Compile Include="RoomsEditor\RoomsEditorHelpWindow.cs">
       <SubType>Form</SubType>
@@ -246,7 +270,6 @@
     <Compile Include="RoomsEditor\RoomsEditorMapView.Designer.cs">
       <DependentUpon>RoomsEditorMapView.cs</DependentUpon>
     </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorModifier.cs" />
     <Compile Include="RoomsEditor\RoomsEditorRoom.cs" />
     <Compile Include="RoomsEditor\RoomsEditorTexturesEdit.cs">
       <SubType>Form</SubType>
@@ -256,11 +279,11 @@
     </Compile>
     <Compile Include="RoomsEditor\RoomsEditorWall.cs" />
     <Compile Include="RoomsEditor\TgcRoomsEditor.cs" />
-    <Compile Include="SceneEditor\SceneEditorControl.cs">
+    <Compile Include="UserControls\SceneEditorModifier.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SceneEditor\SceneEditorControl.Designer.cs">
-      <DependentUpon>SceneEditorControl.cs</DependentUpon>
+    <Compile Include="UserControls\SceneEditorModifier.Designer.cs">
+      <DependentUpon>SceneEditorModifier.cs</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\SceneEditorHelpWindow.cs">
       <SubType>Form</SubType>
@@ -269,7 +292,6 @@
       <DependentUpon>SceneEditorHelpWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\SceneEditorMeshObject.cs" />
-    <Compile Include="SceneEditor\SceneEditorModifier.cs" />
     <Compile Include="SceneEditor\SceneEditorTranslateGizmo.cs" />
     <Compile Include="SceneEditor\TgcSceneEditor.cs" />
     <Compile Include="TerrainEditor\Brushes\ITerrainEditorBrush.cs" />
@@ -279,160 +301,51 @@
     <Compile Include="TerrainEditor\Brushes\Vegetation\VegetationBrush.cs" />
     <Compile Include="TerrainEditor\Brushes\Vegetation\VegetationPicker.cs" />
     <Compile Include="TerrainEditor\Instances\InstanceManager.cs" />
-    <Compile Include="TerrainEditor\Panel\TerrainEditorControl.cs">
+    <Compile Include="UserControls\TerrainEditorModifier.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TerrainEditor\Panel\TerrainEditorControl.Designer.cs">
-      <DependentUpon>TerrainEditorControl.cs</DependentUpon>
+    <Compile Include="UserControls\TerrainEditorModifier.Designer.cs">
+      <DependentUpon>TerrainEditorModifier.cs</DependentUpon>
     </Compile>
-    <Compile Include="TerrainEditor\Panel\TerrainEditorModifier.cs" />
     <Compile Include="TerrainEditor\SmartTerrain.cs" />
     <Compile Include="TerrainEditor\TerrainEditor.cs" />
     <Compile Include="TerrainEditor\TerrainFPSCamera.cs" />
-    <Compile Include="Utils\2D\TgcSprite.cs" />
-    <Compile Include="Utils\2D\TgcDrawer2D.cs" />
-    <Compile Include="Utils\2D\TgcText2d.cs" />
-    <Compile Include="Utils\Input\TgcThirdPersonCamera.cs" />
-    <Compile Include="Utils\Input\TgcCamera.cs" />
-    <Compile Include="Utils\Modifiers\TgcMeshBrowser.cs">
+    <Compile Include="Forms\TgcMeshBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Utils\Modifiers\TgcMeshBrowser.Designer.cs">
+    <Compile Include="Forms\TgcMeshBrowser.Designer.cs">
       <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Modifiers\TgcTextureBrowser.cs">
+    <Compile Include="Forms\TgcTextureBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Utils\Modifiers\TgcTextureBrowser.Designer.cs">
+    <Compile Include="Forms\TgcTextureBrowser.Designer.cs">
       <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingCell.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingCellData.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingConnection.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingData.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingLoader.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingManager.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingParser.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingPortal.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingPortalData.cs" />
-    <Compile Include="Utils\Shaders\TgcPostProcessingUtils.cs" />
-    <Compile Include="Utils\Shaders\TgcScreenQuad.cs" />
-    <Compile Include="Utils\Shaders\TgcShaders.cs" />
-    <Compile Include="Utils\Sound\Tgc3dSound.cs" />
-    <Compile Include="Utils\Sound\TgcMp3Player.cs" />
-    <Compile Include="Utils\Sound\TgcDirectSound.cs" />
-    <Compile Include="Utils\Sound\TgcStaticSound.cs" />
-    <Compile Include="Utils\Terrain\TgcSkyBox.cs" />
-    <Compile Include="Utils\Terrain\TgcSimpleTerrain.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBoundingCylinder.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcCylinder.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcElipsoid.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcEditableLand.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcFixedYBoundingCylinder.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcObb.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcQuad.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcConvexPolygon.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcConvexPolyhedron.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcDebugBox.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcArrow.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBoxLine.cs" />
-    <Compile Include="Utils\TgcGeometry\FastMath.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBoundingBox.cs" />
-    <Compile Include="Utils\Input\TgcFpsCamera.cs" />
-    <Compile Include="Utils\Input\TgcD3dInput.cs" />
-    <Compile Include="Utils\Input\TgcRotationalCamera.cs" />
-    <Compile Include="Utils\Modifiers\TgcModifierPanel.cs" />
-    <Compile Include="Utils\Modifiers\TgcModifiers.cs" />
-    <Compile Include="Utils\TgcAxisLines.cs" />
-    <Compile Include="Utils\TgcD3dDevice.cs" />
-    <Compile Include="Utils\HighResolutionTimer.cs" />
-    <Compile Include="Utils\TgcDrawText.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBoundingSphere.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBox.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcCollisionUtils.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcFrustum.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcLine.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcPickingRay.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcPlaneWall.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcRay.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcSphere.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcTriangle.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcTriangleArray.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcVectorUtils.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameAnimation.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameAnimationData.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameFrameData.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameLoader.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameMesh.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameMeshData.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameParser.cs" />
-    <Compile Include="Utils\TgcSceneLoader\ITransformObject.cs" />
-    <Compile Include="Utils\TgcSceneLoader\IRenderObject.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcMaterialData.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcMesh.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcMeshData.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcParserUtils.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcScene.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcSceneData.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcSceneExporter.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcSceneLoader.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcSceneParser.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcTexture.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimation.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationFrame.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalBoneAttach.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalLoader.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationBoneData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationBoneFrameData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalBone.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalMeshData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalParser.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalBoneData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalVertexWeight.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalMesh.cs" />
-    <Compile Include="Utils\Ui\ValidationUtils.cs" />
+    <Compile Include="Utils\ValidationUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="IconoTgc.ico" />
     <None Include="Resources\robotgc.png" />
-    <None Include="Resources\mesh-creator.png" />
-    <None Include="Resources\room-editor.png" />
-    <None Include="Resources\scene-editor.png" />
-    <None Include="Resources\terrain-editor.png" />
-    <None Include="Resources\go-home.png" />
-    <None Include="Resources\go-up.png" />
-    <None Include="Resources\applications-development.png" />
-    <None Include="Resources\application-exit.png" />
-    <None Include="Resources\axis.png" />
-    <None Include="Resources\camera.png" />
-    <None Include="Resources\help-about.png" />
-    <None Include="Resources\wireframe.png" />
-    <None Include="Resources\utilities-system-monitor.png" />
-    <Content Include="Shaders\TgcKeyFrameMeshShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\TgcMeshPhongShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\TgcMeshPointLightShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\TgcMeshShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\TgcMeshSpotLightShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\TgcSkeletalMeshPointLightShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\TgcSkeletalMeshShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\Varios.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Include="Resources\16x16\application-exit.png" />
+    <None Include="Resources\16x16\edit-clear-all.png" />
+    <None Include="Resources\16x16\help-about.png" />
+    <None Include="Resources\16x16\ICON_MANIPUL.png" />
+    <None Include="Resources\16x16\ICON_WIRE.png" />
+    <None Include="Resources\16x16\preferences-desktop.png" />
+    <None Include="Resources\16x16\view-fullscreen.png" />
+    <None Include="Resources\32x32\folder.png" />
+    <None Include="Resources\32x32\go-home.png" />
+    <None Include="Resources\32x32\go-up.png" />
+    <None Include="Resources\512x512\folder.png" />
+    <None Include="Resources\512x512\image-x-generic.png" />
+    <None Include="Resources\16x16\ICON_CAMERA_DATA.png" />
+    <None Include="Resources\16x16\ICON_TIME.png" />
+    <None Include="Resources\32x32\ICON_GROUP.png" />
+    <None Include="Resources\32x32\ICON_MOD_BUILD.png" />
+    <None Include="Resources\32x32\ICON_MOD_MIRROR.png" />
+    <None Include="Resources\32x32\ICON_RNDCURVE.png" />
+    <None Include="Resources\32x32\applications-development.png" />
     <Content Include="Shaders\EditableTerrain.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -456,6 +369,13 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\BulletSharp.0.10\build\net40-client\BulletSharp.targets" Condition="Exists('..\packages\BulletSharp.0.10\build\net40-client\BulletSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\BulletSharp.0.10\build\net40-client\BulletSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BulletSharp.0.10\build\net40-client\BulletSharp.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

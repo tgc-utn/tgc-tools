@@ -1,9 +1,11 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
+using TGC.Core.Mathematica;
+using TGC.Core.Shaders;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Shaders;
-using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator
 {
@@ -18,28 +20,28 @@ namespace TGC.Tools.MeshCreator
         private const float GRID_RADIUS = 100f;
         private const float LINE_SEPARATION = 20f;
 
-        private readonly MeshCreatorControl control;
-        private readonly TgcBoundingBox pickingXYAabb;
+        private readonly MeshCreatorModifier control;
+        private readonly TgcBoundingAxisAlignBox pickingXYAabb;
 
-        private readonly TgcBoundingBox pickingXZAabb;
-        private readonly TgcBoundingBox pickingYZAabb;
+        private readonly TgcBoundingAxisAlignBox pickingXZAabb;
+        private readonly TgcBoundingAxisAlignBox pickingYZAabb;
         private CustomVertex.PositionColored[] vertices;
 
-        public Grid(MeshCreatorControl control)
+        public Grid(MeshCreatorModifier control)
         {
             this.control = control;
 
             //El bounding box del piso es bien grande para hacer colisiones
-            BoundingBox = new TgcBoundingBox(new Vector3(-BIG_VAL, -SMALL_VAL, -BIG_VAL),
-                new Vector3(BIG_VAL, 0, BIG_VAL));
+            BoundingBox = new TgcBoundingAxisAlignBox(new TGCVector3(-BIG_VAL, -SMALL_VAL, -BIG_VAL),
+                new TGCVector3(BIG_VAL, 0, BIG_VAL));
 
             //Planos para colision de picking
-            pickingXZAabb = new TgcBoundingBox(new Vector3(-BIG_VAL, -SMALL_VAL, -BIG_VAL),
-                new Vector3(BIG_VAL, 0, BIG_VAL));
-            pickingXYAabb = new TgcBoundingBox(new Vector3(-BIG_VAL, -BIG_VAL, -SMALL_VAL),
-                new Vector3(BIG_VAL, BIG_VAL, 0));
-            pickingYZAabb = new TgcBoundingBox(new Vector3(-SMALL_VAL, -BIG_VAL, -BIG_VAL),
-                new Vector3(0, BIG_VAL, BIG_VAL));
+            pickingXZAabb = new TgcBoundingAxisAlignBox(new TGCVector3(-BIG_VAL, -SMALL_VAL, -BIG_VAL),
+                new TGCVector3(BIG_VAL, 0, BIG_VAL));
+            pickingXYAabb = new TgcBoundingAxisAlignBox(new TGCVector3(-BIG_VAL, -BIG_VAL, -SMALL_VAL),
+                new TGCVector3(BIG_VAL, BIG_VAL, 0));
+            pickingYZAabb = new TgcBoundingAxisAlignBox(new TGCVector3(-SMALL_VAL, -BIG_VAL, -BIG_VAL),
+                new TGCVector3(0, BIG_VAL, BIG_VAL));
 
             vertices = new CustomVertex.PositionColored[12 * 2 * 2];
             var color = Color.FromArgb(76, 76, 76).ToArgb();
@@ -67,20 +69,20 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     BoundingBox
         /// </summary>
-        public TgcBoundingBox BoundingBox { get; }
+        public TgcBoundingAxisAlignBox BoundingBox { get; }
 
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var texturesManager = GuiController.Instance.TexturesManager;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var texturesManager = ToolsModel.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            var effect = GuiController.Instance.Shaders.VariosShader;
+            var effect = ToolsModel.Instance.Shaders.VariosShader;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            ToolsModel.Instance.Shaders.setShaderMatrixIdentity(effect);
+            d3dDevice.VertexDeclaration = ToolsModel.Instance.Shaders.VdecPositionColored;
 
             //Render con shader
             effect.Begin(0);
@@ -92,36 +94,36 @@ namespace TGC.Tools.MeshCreator
 
         public void dispose()
         {
-            BoundingBox.dispose();
+            BoundingBox.Dispose();
             vertices = null;
         }
 
         /// <summary>
         ///     Picking al grid
         /// </summary>
-        public Vector3 getPicking()
+        public TGCVector3 getPicking()
         {
             control.PickingRay.updateRay();
-            Vector3 collisionPoint;
+            TGCVector3 collisionPoint;
             if (TgcCollisionUtils.intersectRayAABB(control.PickingRay.Ray, BoundingBox, out collisionPoint))
             {
                 return collisionPoint;
             }
 
-            return new Vector3(0, 0, 0);
+            return new TGCVector3(0, 0, 0);
             //throw new Exception("Sin colision con Grid");
         }
 
         /// <summary>
         ///     Picking con plano XZ ubicado en el centro del objeto
         /// </summary>
-        public Vector3 getPickingXZ(TgcRay ray, Vector3 objCenter)
+        public TGCVector3 getPickingXZ(TgcRay ray, TGCVector3 objCenter)
         {
             //Mover aabb en Y al centro del mesh
             pickingXZAabb.setExtremes(
-                new Vector3(pickingXZAabb.PMin.X, objCenter.Y - SMALL_VAL, pickingXZAabb.PMin.Z),
-                new Vector3(pickingXZAabb.PMax.X, objCenter.Y, pickingXZAabb.PMax.Z));
-            Vector3 q;
+                new TGCVector3(pickingXZAabb.PMin.X, objCenter.Y - SMALL_VAL, pickingXZAabb.PMin.Z),
+                new TGCVector3(pickingXZAabb.PMax.X, objCenter.Y, pickingXZAabb.PMax.Z));
+            TGCVector3 q;
             var r = TgcCollisionUtils.intersectRayAABB(ray, pickingXZAabb, out q);
             if (r)
                 return clampPickingResult(q);
@@ -131,13 +133,13 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Picking con plano XY ubicado en el centro del objeto
         /// </summary>
-        public Vector3 getPickingXY(TgcRay ray, Vector3 objCenter)
+        public TGCVector3 getPickingXY(TgcRay ray, TGCVector3 objCenter)
         {
             //Mover aabb en Y al centro del mesh
             pickingXYAabb.setExtremes(
-                new Vector3(pickingXYAabb.PMin.X, pickingXYAabb.PMin.Y, objCenter.Z - SMALL_VAL),
-                new Vector3(pickingXYAabb.PMax.X, pickingXYAabb.PMax.Y, objCenter.Z));
-            Vector3 q;
+                new TGCVector3(pickingXYAabb.PMin.X, pickingXYAabb.PMin.Y, objCenter.Z - SMALL_VAL),
+                new TGCVector3(pickingXYAabb.PMax.X, pickingXYAabb.PMax.Y, objCenter.Z));
+            TGCVector3 q;
             var r = TgcCollisionUtils.intersectRayAABB(ray, pickingXYAabb, out q);
             if (r)
                 return clampPickingResult(q);
@@ -147,13 +149,13 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Picking con plano YZ ubicado en el centro del objeto
         /// </summary>
-        public Vector3 getPickingYZ(TgcRay ray, Vector3 objCenter)
+        public TGCVector3 getPickingYZ(TgcRay ray, TGCVector3 objCenter)
         {
             //Mover aabb en Y al centro del mesh
             pickingYZAabb.setExtremes(
-                new Vector3(objCenter.X - SMALL_VAL, pickingYZAabb.PMin.Y, pickingYZAabb.PMin.Z),
-                new Vector3(objCenter.X, pickingYZAabb.PMax.Y, pickingYZAabb.PMax.Z));
-            Vector3 q;
+                new TGCVector3(objCenter.X - SMALL_VAL, pickingYZAabb.PMin.Y, pickingYZAabb.PMin.Z),
+                new TGCVector3(objCenter.X, pickingYZAabb.PMax.Y, pickingYZAabb.PMax.Z));
+            TGCVector3 q;
             var r = TgcCollisionUtils.intersectRayAABB(ray, pickingYZAabb, out q);
             if (r)
                 return clampPickingResult(q);
@@ -163,26 +165,26 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Picking con los planos XZ e XY ubicados en el centro del objeto
         /// </summary>
-        public Vector3 getPickingX(TgcRay ray, Vector3 objCenter)
+        public TGCVector3 getPickingX(TgcRay ray, TGCVector3 objCenter)
         {
             //Mover ambos planos hacia el centro del objeto
             pickingXZAabb.setExtremes(
-                new Vector3(pickingXZAabb.PMin.X, objCenter.Y - SMALL_VAL, pickingXZAabb.PMin.Z),
-                new Vector3(pickingXZAabb.PMax.X, objCenter.Y, pickingXZAabb.PMax.Z));
+                new TGCVector3(pickingXZAabb.PMin.X, objCenter.Y - SMALL_VAL, pickingXZAabb.PMin.Z),
+                new TGCVector3(pickingXZAabb.PMax.X, objCenter.Y, pickingXZAabb.PMax.Z));
             pickingXYAabb.setExtremes(
-                new Vector3(pickingXYAabb.PMin.X, pickingXYAabb.PMin.Y, objCenter.Z - SMALL_VAL),
-                new Vector3(pickingXYAabb.PMax.X, pickingXYAabb.PMax.Y, objCenter.Z));
+                new TGCVector3(pickingXYAabb.PMin.X, pickingXYAabb.PMin.Y, objCenter.Z - SMALL_VAL),
+                new TGCVector3(pickingXYAabb.PMax.X, pickingXYAabb.PMax.Y, objCenter.Z));
 
-            Vector3 q1, q2;
+            TGCVector3 q1, q2;
             bool r1, r2;
             r1 = TgcCollisionUtils.intersectRayAABB(ray, pickingXZAabb, out q1);
             r2 = TgcCollisionUtils.intersectRayAABB(ray, pickingXYAabb, out q2);
 
             if (r1 && r2)
             {
-                var objPos = new Vector2(objCenter.Y, objCenter.Z);
-                var diff1 = Vector2.Length(new Vector2(q1.Y, q1.Z) - objPos);
-                var diff2 = Vector2.Length(new Vector2(q2.Y, q2.Z) - objPos);
+                var objPos = new TGCVector2(objCenter.Y, objCenter.Z);
+                var diff1 = TGCVector2.Length(new TGCVector2(q1.Y, q1.Z) - objPos);
+                var diff2 = TGCVector2.Length(new TGCVector2(q2.Y, q2.Z) - objPos);
                 return diff1 < diff2 ? q1 : q2;
             }
             if (r1)
@@ -195,26 +197,26 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Picking con los planos XY e YZ ubicados en el centro del objeto
         /// </summary>
-        public Vector3 getPickingY(TgcRay ray, Vector3 objCenter)
+        public TGCVector3 getPickingY(TgcRay ray, TGCVector3 objCenter)
         {
             //Mover ambos planos hacia el centro del objeto
             pickingXYAabb.setExtremes(
-                new Vector3(pickingXYAabb.PMin.X, pickingXYAabb.PMin.Y, objCenter.Z - SMALL_VAL),
-                new Vector3(pickingXYAabb.PMax.X, pickingXYAabb.PMax.Y, objCenter.Z));
+                new TGCVector3(pickingXYAabb.PMin.X, pickingXYAabb.PMin.Y, objCenter.Z - SMALL_VAL),
+                new TGCVector3(pickingXYAabb.PMax.X, pickingXYAabb.PMax.Y, objCenter.Z));
             pickingYZAabb.setExtremes(
-                new Vector3(objCenter.X - SMALL_VAL, pickingYZAabb.PMin.Y, pickingYZAabb.PMin.Z),
-                new Vector3(objCenter.X, pickingYZAabb.PMax.Y, pickingYZAabb.PMax.Z));
+                new TGCVector3(objCenter.X - SMALL_VAL, pickingYZAabb.PMin.Y, pickingYZAabb.PMin.Z),
+                new TGCVector3(objCenter.X, pickingYZAabb.PMax.Y, pickingYZAabb.PMax.Z));
 
-            Vector3 q1, q2;
+            TGCVector3 q1, q2;
             bool r1, r2;
             r1 = TgcCollisionUtils.intersectRayAABB(ray, pickingXYAabb, out q1);
             r2 = TgcCollisionUtils.intersectRayAABB(ray, pickingYZAabb, out q2);
 
             if (r1 && r2)
             {
-                var objPos = new Vector2(objCenter.X, objCenter.Z);
-                var diff1 = Vector2.Length(new Vector2(q1.X, q1.Z) - objPos);
-                var diff2 = Vector2.Length(new Vector2(q2.X, q2.Z) - objPos);
+                var objPos = new TGCVector2(objCenter.X, objCenter.Z);
+                var diff1 = TGCVector2.Length(new TGCVector2(q1.X, q1.Z) - objPos);
+                var diff2 = TGCVector2.Length(new TGCVector2(q2.X, q2.Z) - objPos);
                 return diff1 < diff2 ? q1 : q2;
             }
             if (r1)
@@ -227,26 +229,26 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Picking con los planos XZ e YZ ubicados en el centro del objeto
         /// </summary>
-        public Vector3 getPickingZ(TgcRay ray, Vector3 objCenter)
+        public TGCVector3 getPickingZ(TgcRay ray, TGCVector3 objCenter)
         {
             //Mover ambos planos hacia el centro del objeto
             pickingXZAabb.setExtremes(
-                new Vector3(pickingXZAabb.PMin.X, objCenter.Y - SMALL_VAL, pickingXZAabb.PMin.Z),
-                new Vector3(pickingXZAabb.PMax.X, objCenter.Y, pickingXZAabb.PMax.Z));
+                new TGCVector3(pickingXZAabb.PMin.X, objCenter.Y - SMALL_VAL, pickingXZAabb.PMin.Z),
+                new TGCVector3(pickingXZAabb.PMax.X, objCenter.Y, pickingXZAabb.PMax.Z));
             pickingYZAabb.setExtremes(
-                new Vector3(objCenter.X - SMALL_VAL, pickingYZAabb.PMin.Y, pickingYZAabb.PMin.Z),
-                new Vector3(objCenter.X, pickingYZAabb.PMax.Y, pickingYZAabb.PMax.Z));
+                new TGCVector3(objCenter.X - SMALL_VAL, pickingYZAabb.PMin.Y, pickingYZAabb.PMin.Z),
+                new TGCVector3(objCenter.X, pickingYZAabb.PMax.Y, pickingYZAabb.PMax.Z));
 
-            Vector3 q1, q2;
+            TGCVector3 q1, q2;
             bool r1, r2;
             r1 = TgcCollisionUtils.intersectRayAABB(ray, pickingXZAabb, out q1);
             r2 = TgcCollisionUtils.intersectRayAABB(ray, pickingYZAabb, out q2);
 
             if (r1 && r2)
             {
-                var objPos = new Vector2(objCenter.X, objCenter.Y);
-                var diff1 = Vector2.Length(new Vector2(q1.X, q1.Y) - objPos);
-                var diff2 = Vector2.Length(new Vector2(q2.X, q2.Y) - objPos);
+                var objPos = new TGCVector2(objCenter.X, objCenter.Y);
+                var diff1 = TGCVector2.Length(new TGCVector2(q1.X, q1.Y) - objPos);
+                var diff2 = TGCVector2.Length(new TGCVector2(q2.X, q2.Y) - objPos);
                 return diff1 < diff2 ? q1 : q2;
             }
             if (r1)
@@ -256,7 +258,7 @@ namespace TGC.Tools.MeshCreator
             return objCenter;
         }
 
-        private Vector3 clampPickingResult(Vector3 v)
+        private TGCVector3 clampPickingResult(TGCVector3 v)
         {
             v.X = FastMath.Clamp(v.X, -BIG_VAL, BIG_VAL);
             v.Y = FastMath.Clamp(v.Y, -BIG_VAL, BIG_VAL);

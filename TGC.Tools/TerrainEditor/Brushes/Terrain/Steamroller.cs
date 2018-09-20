@@ -1,5 +1,5 @@
-﻿using Microsoft.DirectX;
-using System.Drawing;
+﻿using System.Drawing;
+using TGC.Core.Mathematica;
 
 namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 {
@@ -45,7 +45,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
         public override void beginEdition(SmartTerrain terrain)
         {
             base.beginEdition(terrain);
-            Vector2 coords;
+            TGCVector2 coords;
             if (terrain.xzToHeightmapCoords(Position.X, Position.Z, out coords))
                 terrain.interpoledIntensity(coords.X, coords.Y, out level);
         }

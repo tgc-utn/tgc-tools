@@ -1,6 +1,8 @@
-using Microsoft.DirectX;
+using System.Windows.Forms;
+using TGC.Core.Mathematica;
+using TGC.Tools.Camara;
 using TGC.Tools.Example;
-using TGC.Tools.Model;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.RoomsEditor
 {
@@ -18,43 +20,38 @@ namespace TGC.Tools.RoomsEditor
     ///     Las instrucciones se muestran al hacer clic en el botón "Help" de este Modifier.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class TgcRoomsEditor : TgcExample
+    public class TgcRoomsEditor : TGCExampleTools
     {
         private RoomsEditorModifier modifier;
 
-        public override string getCategory()
+        public TgcRoomsEditor(string mediaDir, string shadersDir, Panel modifiersPanel) : base(mediaDir, shadersDir, modifiersPanel)
         {
-            return "Utils";
+            Category = "Utils";
+            Name = "RoomsEditor";
+            Description = "Herramienta para crear escenarios Indoor compuestos por cuartos rectangulares que se comunican entre sí.";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "RoomsEditor";
+            //Crear Modifier especial para este editor
+            AddRoomsEditorModifier(this);
+
+            var fpsCamara = new TgcFpsCamera(Input);
+            fpsCamara.MovementSpeed = 200f;
+            fpsCamara.JumpSpeed = 200f;
+            fpsCamara.SetCamera(new TGCVector3(133.0014f, 264.8258f, -119.0311f), new TGCVector3(498.1584f, -299.4199f, 621.433f));
+            Camara = fpsCamara;
         }
 
-        public override string getDescription()
+        public override void Update()
         {
-            return
-                "Herramienta para crear escenarios Indoor compuestos por cuartos rectangulares que se comunican entre sí.";
+            PreUpdate();
+            PostUpdate();
         }
 
-        public override void init()
+        public override void Render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            modifier = new RoomsEditorModifier("RoomsEditor", this);
-            GuiController.Instance.Modifiers.add(modifier);
-
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.MovementSpeed = 200f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 200f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(133.0014f, 264.8258f, -119.0311f),
-                new Vector3(498.1584f, -299.4199f, 621.433f));
-        }
-
-        public override void render(float elapsedTime)
-        {
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            PreRender();
 
             foreach (var room in modifier.Rooms)
             {
@@ -63,11 +60,13 @@ namespace TGC.Tools.RoomsEditor
                     wall.render();
                 }
             }
+
+            PostRender();
         }
 
-        public override void close()
+        public override void Dispose()
         {
-            modifier.dispose();
+            modifier.Dispose();
         }
 
         /// <summary>

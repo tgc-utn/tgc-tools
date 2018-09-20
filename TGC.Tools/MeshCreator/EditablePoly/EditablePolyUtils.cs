@@ -1,7 +1,7 @@
-﻿using Microsoft.DirectX;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.EditablePoly.Primitives;
-using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.MeshCreator.EditablePoly
 {
@@ -22,24 +22,24 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             if (p.vertices.Count == 3)
                 return;
 
-            Vector3 planeNorm = p.getNormal();
+            TGCVector3 TGCPlaneNorm = p.getNormal();
             List<Edge> externalEdges = new List<Edge>();
             foreach (Edge e in p.edges)
             {
-                //Half-plane entre la arista y la normal del poligono
-                Vector3 vec = e.b.position - e.a.position;
-                Vector3 n = Vector3.Cross(planeNorm, vec);
-                Plane halfPlane = Plane.FromPointNormal(e.a.position, n);
+                //Half-TGCPlane entre la arista y la normal del poligono
+                TGCVector3 vec = e.b.position - e.a.position;
+                TGCVector3 n = TGCVector3.Cross(TGCPlaneNorm, vec);
+                TGCPlane halfTGCPlane = TGCPlane.FromPointNormal(e.a.position, n);
 
                 //Checkear el signo de todos los demas vertices del poligono
                 bool first = true;
-                TgcCollisionUtils.PointPlaneResult lastR = TgcCollisionUtils.PointPlaneResult.COINCIDENT;
+                TgcCollisionUtils.PointTGCPlaneResult lastR = TgcCollisionUtils.PointTGCPlaneResult.COINCIDENT;
                 bool inside = false;
                 foreach (Vertex v in p.vertices)
                 {
                     if(v.vbIndex != e.a.vbIndex && v.vbIndex != e.b.vbIndex )
                     {
-                        TgcCollisionUtils.PointPlaneResult r = TgcCollisionUtils.classifyPointPlane(v.position, halfPlane);
+                        TgcCollisionUtils.PointTGCPlaneResult r = TgcCollisionUtils.classifyPointTGCPlane(v.position, halfTGCPlane);
                         if(first)
                         {
                             first = false;
@@ -127,13 +127,13 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <returns></returns>
         public static bool sameVextex(EditPolyVertex a, EditPolyVertex b)
         {
-            return equalsVector3(a.position, b.position);
+            return equalsTGCVector3(a.position, b.position);
         }
 
         /// <summary>
-        ///     Indica si dos Vector3 son iguales
+        ///     Indica si dos TGCVector3 son iguales
         /// </summary>
-        public static bool equalsVector3(Vector3 a, Vector3 b)
+        public static bool equalsTGCVector3(TGCVector3 a, TGCVector3 b)
         {
             return equalsFloat(a.X, b.X)
                    && equalsFloat(a.Y, b.Y)
@@ -151,10 +151,10 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Compara si dos planos son iguales
         /// </summary>
-        public static bool samePlane(Plane p1, Plane p2)
+        public static bool sameTGCPlane(TGCPlane p1, TGCPlane p2)
         {
             //TODO: comparar en ambos sentidos por las dudas
-            return equalsVector3(new Vector3(p1.A, p1.B, p1.C), new Vector3(p2.A, p2.B, p2.C))
+            return equalsTGCVector3(new TGCVector3(p1.A, p1.B, p1.C), new TGCVector3(p2.A, p2.B, p2.C))
                    && equalsFloat(p1.D, p2.D);
         }
 
@@ -226,44 +226,44 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         /// <param name="list">primitivas</param>
         /// <returns>BoundingBox</returns>
-        public static TgcBoundingBox getSelectionBoundingBox(List<EditPolyPrimitive> primitives)
+        public static TgcBoundingAxisAlignBox getSelectionBoundingBox(List<EditPolyPrimitive> primitives)
         {
             if (primitives.Count == 0)
                 return null;
 
-            var vertices = new Vector3[primitives.Count];
+            var vertices = new TGCVector3[primitives.Count];
             for (var i = 0; i < primitives.Count; i++)
             {
                 vertices[i] = primitives[i].computeCenter();
             }
-            return TgcBoundingBox.computeFromPoints(vertices);
+            return TgcBoundingAxisAlignBox.computeFromPoints(vertices);
         }
 
-        public static void updateObbFromSegment(TgcObb obb, Vector3 a, Vector3 b, float thickness)
+        public static void updateObbFromSegment(TgcBoundingOrientedBox obb, TGCVector3 a, TGCVector3 b, float thickness)
         {
             var lineDiff = b - a;
             var lineLength = lineDiff.Length();
-            var lineVec = Vector3.Normalize(lineDiff);
+            var lineVec = TGCVector3.Normalize(lineDiff);
 
             //Obtener angulo y vector de rotacion
-            var upVec = new Vector3(0, 1, 0);
-            var angle = FastMath.Acos(Vector3.Dot(upVec, lineVec));
-            var axisRotation = Vector3.Cross(upVec, lineVec);
+            var upVec = new TGCVector3(0, 1, 0);
+            var angle = FastMath.Acos(TGCVector3.Dot(upVec, lineVec));
+            var axisRotation = TGCVector3.Cross(upVec, lineVec);
             axisRotation.Normalize();
 
             //Obtener matriz de rotacion para este eje y angulo
-            var rotM = Matrix.RotationAxis(axisRotation, angle);
+            var rotM = TGCMatrix.RotationAxis(axisRotation, angle);
 
             //Actualizar orientacion de OBB en base a matriz de rotacion
-            obb.Orientation[0] = new Vector3(rotM.M11, rotM.M12, rotM.M13);
-            obb.Orientation[1] = new Vector3(rotM.M21, rotM.M22, rotM.M23);
-            obb.Orientation[2] = new Vector3(rotM.M31, rotM.M32, rotM.M33);
+            obb.Orientation[0] = new TGCVector3(rotM.M11, rotM.M12, rotM.M13);
+            obb.Orientation[1] = new TGCVector3(rotM.M21, rotM.M22, rotM.M23);
+            obb.Orientation[2] = new TGCVector3(rotM.M31, rotM.M32, rotM.M33);
 
             //Actualizar extent de OBB segun el thickness del segmento
-            obb.Extents = new Vector3(thickness, lineLength / 2, thickness);
+            obb.Extents = new TGCVector3(thickness, lineLength / 2, thickness);
 
             //Actualizar centro del OBB segun centro del segmento
-            obb.Center = a + Vector3.Scale(lineDiff, 0.5f);
+            obb.Center = a + TGCVector3.Scale(lineDiff, 0.5f);
 
             //Regenerar OBB
             obb.updateValues();
@@ -272,12 +272,12 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Hacer zoom a un grupo de primitivas
         /// </summary>
-        public static void zoomPrimitives(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
+        public static void zoomPrimitives(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, TGCMatrix transform)
         {
             var aabb = getSelectionBoundingBox(primitives);
             if (aabb != null)
             {
-                camera.CameraCenter = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
+                camera.CameraCenter = TGCVector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
             }
         }
 
@@ -285,17 +285,17 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         ///     Poner la camara en top view respecto de un conjunto de primitivas
         /// </summary>
         public static void setCameraTopView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives,
-            Matrix transform)
+            TGCMatrix transform)
         {
             var aabb = getSelectionBoundingBox(primitives);
-            Vector3 lookAt;
+            TGCVector3 lookAt;
             if (aabb != null)
             {
-                lookAt = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
+                lookAt = TGCVector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
             }
             else
             {
-                lookAt = new Vector3(0, 0, 0);
+                lookAt = new TGCVector3(0, 0, 0);
             }
             camera.setFixedView(lookAt, -FastMath.PI_HALF, 0, camera.CameraDistance);
         }
@@ -304,17 +304,17 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         ///     Poner la camara en left view respecto de un conjunto de primitivas
         /// </summary>
         public static void setCameraLeftView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives,
-            Matrix transform)
+            TGCMatrix transform)
         {
             var aabb = getSelectionBoundingBox(primitives);
-            Vector3 lookAt;
+            TGCVector3 lookAt;
             if (aabb != null)
             {
-                lookAt = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
+                lookAt = TGCVector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
             }
             else
             {
-                lookAt = new Vector3(0, 0, 0);
+                lookAt = new TGCVector3(0, 0, 0);
             }
             camera.setFixedView(lookAt, 0, FastMath.PI_HALF, camera.CameraDistance);
         }
@@ -323,17 +323,17 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         ///     Poner la camara en front view respecto de un conjunto de primitivas
         /// </summary>
         public static void setCameraFrontView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives,
-            Matrix transform)
+            TGCMatrix transform)
         {
             var aabb = getSelectionBoundingBox(primitives);
-            Vector3 lookAt;
+            TGCVector3 lookAt;
             if (aabb != null)
             {
-                lookAt = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
+                lookAt = TGCVector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
             }
             else
             {
-                lookAt = new Vector3(0, 0, 0);
+                lookAt = new TGCVector3(0, 0, 0);
             }
             camera.setFixedView(lookAt, 0, 0, camera.CameraDistance);
         }

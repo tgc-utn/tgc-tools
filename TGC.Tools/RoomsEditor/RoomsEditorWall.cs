@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.DirectX;
+using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.RoomsEditor
 {
@@ -15,7 +15,7 @@ namespace TGC.Tools.RoomsEditor
     {
         private RoomsEditorRoom room;
         private Types type;
-        
+
         /// <summary>
         /// Que tipo de pared es en un room
         /// </summary>
@@ -34,11 +34,11 @@ namespace TGC.Tools.RoomsEditor
             this.room = room;
             this.type = type;
             Name = name;
-            WallSegments = new List<TgcPlaneWall>();
+            WallSegments = new List<TgcPlane>();
             IntersectingRooms = new List<RoomsEditorRoom>();
 
             //cargar valores default de la pared
-            Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
+            Texture = TgcTexture.createTexture(ToolsModel.Instance.D3dDevice,
                 room.RoomPanel.mapView.defaultTextureImage);
             AutoAdjustUv = true;
             UTile = 1f;
@@ -47,32 +47,37 @@ namespace TGC.Tools.RoomsEditor
             switch (type)
             {
                 case Types.Roof:
-                    Normal = new Vector3(0, -1, 0);
+                    Normal = new TGCVector3(0, -1, 0);
                     break;
+
                 case Types.Floor:
-                    Normal = new Vector3(0, 1, 0);
+                    Normal = new TGCVector3(0, 1, 0);
                     break;
+
                 case Types.East:
-                    Normal = new Vector3(-1, 0, 0);
+                    Normal = new TGCVector3(-1, 0, 0);
                     break;
+
                 case Types.West:
-                    Normal = new Vector3(1, 0, 0);
+                    Normal = new TGCVector3(1, 0, 0);
                     break;
+
                 case Types.North:
-                    Normal = new Vector3(0, 0, -1);
+                    Normal = new TGCVector3(0, 0, -1);
                     break;
+
                 case Types.South:
-                    Normal = new Vector3(0, 0, 1);
+                    Normal = new TGCVector3(0, 0, 1);
                     break;
             }
         }
 
-        public Vector3 Normal { get; private set; }
+        public TGCVector3 Normal { get; private set; }
 
         /// <summary>
         ///     Segmentos 3d de pared
         /// </summary>
-        public List<TgcPlaneWall> WallSegments { get; }
+        public List<TgcPlane> WallSegments { get; }
 
         /// <summary>
         ///     Textura general de todos los segmentos de la pared
@@ -108,7 +113,7 @@ namespace TGC.Tools.RoomsEditor
         {
             foreach (var wall3d in WallSegments)
             {
-                wall3d.dispose();
+                wall3d.Dispose();
             }
             Texture.dispose();
         }
@@ -117,7 +122,7 @@ namespace TGC.Tools.RoomsEditor
         {
             foreach (var wall3d in WallSegments)
             {
-                wall3d.render();
+                wall3d.Render();
             }
         }
 
@@ -127,7 +132,7 @@ namespace TGC.Tools.RoomsEditor
             {
                 wall.Normal = this.Normal;
                 return wall.toMesh(room.Name + "-" + this.Name + "-" + ind.ToString());
-            }); 
-        } 
+            });
+        }
     }
 }

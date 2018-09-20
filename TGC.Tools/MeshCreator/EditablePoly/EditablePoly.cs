@@ -1,12 +1,13 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
 using TGC.Tools.MeshCreator.EditablePoly.Primitives;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.EditablePoly
 {
@@ -39,7 +40,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         private readonly List<int> deletedTriangles;
         private bool dirtyValues;
 
-        private Vector2 initMousePos;
+        private TGCVector2 initMousePos;
 
         private TgcMesh mesh;
 
@@ -53,7 +54,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Construir un EditablePoly a partir de un mesh
         /// </summary>
-        public EditablePoly(MeshCreatorControl control, TgcMesh origMesh)
+        public EditablePoly(MeshCreatorModifier control, TgcMesh origMesh)
         {
             Control = control;
             CurrentPrimitive = PrimitiveType.None;
@@ -68,7 +69,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Main Control
         /// </summary>
-        public MeshCreatorControl Control { get; private set; }
+        public MeshCreatorModifier Control { get; private set; }
 
         /// <summary>
         ///     Estado actual
@@ -108,7 +109,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Transform del mesh
         /// </summary>
-        public Matrix Transform
+        public TGCMatrix Transform
         {
             get { return mesh.Transform; }
         }
@@ -161,7 +162,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         private void processShortcuts()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = ToolsModel.Instance.Input;
 
             //Select
             if (input.keyPressed(Key.Q))
@@ -253,7 +254,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             }
 
             //Render de mesh
-            mesh.render();
+            mesh.Render();
 
             //Render de primitivas
             primitiveRenderer.render(mesh.Transform);
@@ -312,21 +313,21 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         private void doSelectObject()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = ToolsModel.Instance.Input;
 
             //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
             if ((input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl))
                 && input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 CurrentState = State.SelectingObject;
-                initMousePos = new Vector2(input.Xpos, input.Ypos);
+                initMousePos = new TGCVector2(input.Xpos, input.Ypos);
                 selectiveObjectsAdditive = true;
             }
             //Si mantiene el clic con el mouse, iniciar cuadro de seleccion
             else if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 CurrentState = State.SelectingObject;
-                initMousePos = new Vector2(input.Xpos, input.Ypos);
+                initMousePos = new TGCVector2(input.Xpos, input.Ypos);
                 selectiveObjectsAdditive = false;
             }
         }
@@ -336,15 +337,15 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         private void doSelectingObject()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = ToolsModel.Instance.Input;
 
             //Mantiene el mouse apretado
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Definir recuadro
-                var mousePos = new Vector2(input.Xpos, input.Ypos);
-                var min = Vector2.Minimize(initMousePos, mousePos);
-                var max = Vector2.Maximize(initMousePos, mousePos);
+                var mousePos = new TGCVector2(input.Xpos, input.Ypos);
+                var min = TGCVector2.Minimize(initMousePos, mousePos);
+                var max = TGCVector2.Maximize(initMousePos, mousePos);
 
                 rectMesh.updateMesh(min, max);
             }
@@ -352,9 +353,9 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             else if (input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Definir recuadro
-                var mousePos = new Vector2(input.Xpos, input.Ypos);
-                var min = Vector2.Minimize(initMousePos, mousePos);
-                var max = Vector2.Maximize(initMousePos, mousePos);
+                var mousePos = new TGCVector2(input.Xpos, input.Ypos);
+                var min = TGCVector2.Minimize(initMousePos, mousePos);
+                var max = TGCVector2.Maximize(initMousePos, mousePos);
                 var r = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
 
                 //Usar recuadro de seleccion solo si tiene un tamaño minimo
@@ -523,14 +524,14 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             //Buscar menor colision con primitivas
             var minDistSq = float.MaxValue;
             EditPolyPrimitive closestPrimitive = null;
-            Vector3 q;
+            TGCVector3 q;
             var i = 0;
             var p = iteratePrimitive(CurrentPrimitive, i);
             while (p != null)
             {
                 if (p.intersectRay(Control.PickingRay.Ray, mesh.Transform, out q))
                 {
-                    var lengthSq = Vector3.Subtract(Control.PickingRay.Ray.Origin, q).LengthSq();
+                    var lengthSq = TGCVector3.Subtract(Control.PickingRay.Ray.Origin, q).LengthSq();
                     if (lengthSq < minDistSq)
                     {
                         minDistSq = lengthSq;
@@ -864,8 +865,8 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                 p.edges.Add(e3);
                 p.vbTriangles = new List<int>();
                 p.vbTriangles.Add(i * 3);
-                p.plane = Plane.FromPoints(v1.position, v2.position, v3.position);
-                p.plane.Normalize();
+                p.TGCPlane = TGCPlane.FromPoints(v1.position, v2.position, v3.position);
+                p.TGCPlane.Normalize();
                 p.matId = attributeBuffer[i];
 
                 //Agregar triangulo al index buffer
@@ -883,7 +884,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                 {
                     //Coplanares y con igual material ID
                     EditPolyPolygon p0 = polygons[j];
-                    if (p0.matId == p.matId && EditablePolyUtils.samePlane(p0.plane, p.plane))
+                    if (p0.matId == p.matId && EditablePolyUtils.sameTGCPlane(p0.TGCPlane, p.TGCPlane))
                     {
                         //Buscar si tienen una arista igual
                         int p0SharedEdgeIdx;
@@ -995,7 +996,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                         var v = new EditPolyVertex();
                         v.position = verts2[i].Position;
                         /*v.normal = verts2[i].Normal;
-                        v.texCoords = new Vector2(verts2[i].Tu, verts2[i].Tv);
+                        v.texCoords = new TGCVector2(verts2[i].Tu, verts2[i].Tv);
                         v.color = verts2[i].Color;*/
                         origVertices.Add(v);
                     }
@@ -1011,9 +1012,9 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                         var v = new EditPolyVertex();
                         v.position = verts3[i].Position;
                         /*v.normal = verts3[i].Normal;
-                        v.texCoords = new Vector2(verts3[i].Tu0, verts3[i].Tv0);
+                        v.texCoords = new TGCVector2(verts3[i].Tu0, verts3[i].Tv0);
                         v.color = verts3[i].Color;
-                        v.texCoords2 = new Vector2(verts3[i].Tu1, verts3[i].Tv1);*/
+                        v.texCoords2 = new TGCVector2(verts3[i].Tu1, verts3[i].Tv1);*/
                         origVertices.Add(v);
                     }
                     origMesh.D3dMesh.UnlockVertexBuffer();
@@ -1041,7 +1042,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                 {
                     case TgcMesh.MeshRenderType.VERTEX_COLOR:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.VertexColorVertexElements, GuiController.Instance.D3dDevice);
+                            TgcSceneLoader.VertexColorVertexElements, ToolsModel.Instance.D3dDevice);
                         var origVert1 = (TgcSceneLoader.VertexColorVertex[])mesh.D3dMesh.LockVertexBuffer(
                             typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         mesh.D3dMesh.UnlockVertexBuffer();
@@ -1067,7 +1068,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
 
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.DiffuseMapVertexElements, GuiController.Instance.D3dDevice);
+                            TgcSceneLoader.DiffuseMapVertexElements, ToolsModel.Instance.D3dDevice);
                         var origVert2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
                             typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         mesh.D3dMesh.UnlockVertexBuffer();
@@ -1092,7 +1093,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
 
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.DiffuseMapAndLightmapVertexElements, GuiController.Instance.D3dDevice);
+                            TgcSceneLoader.DiffuseMapAndLightmapVertexElements, ToolsModel.Instance.D3dDevice);
                         var origVert3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
                             typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
                             mesh.D3dMesh.NumberVertices);
@@ -1127,7 +1128,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             for (var i = 0; i < Vertices.Count; i++)
             {
                 Vertices[i].position += Vertices[i].movement;
-                Vertices[i].movement = new Vector3(0, 0, 0);
+                Vertices[i].movement = new TGCVector3(0, 0, 0);
             }
 
             //Actualizar vertexBuffer

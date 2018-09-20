@@ -1,11 +1,13 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator
 {
@@ -14,24 +16,24 @@ namespace TGC.Tools.MeshCreator
     /// </summary>
     public class SelectionRectangle
     {
-        private List<TgcBoundingBox> auxBoundingBoxList;
-        private readonly MeshCreatorControl control;
-        private Vector2 initMousePos;
+        private List<TgcBoundingAxisAlignBox> auxBoundingBoxList;
+        private readonly MeshCreatorModifier control;
+        private TGCVector2 initMousePos;
         private readonly SelectionRectangleMesh rectMesh;
         private bool selectiveObjectsAdditive;
 
-        public SelectionRectangle(MeshCreatorControl control)
+        public SelectionRectangle(MeshCreatorModifier control)
         {
             this.control = control;
             rectMesh = new SelectionRectangleMesh();
-            auxBoundingBoxList = new List<TgcBoundingBox>();
+            auxBoundingBoxList = new List<TgcBoundingAxisAlignBox>();
             selectiveObjectsAdditive = false;
         }
 
         /// <summary>
         ///     Iniciar seleccion
         /// </summary>
-        public void initSelection(Vector2 mousePos)
+        public void initSelection(TGCVector2 mousePos)
         {
             initMousePos = mousePos;
         }
@@ -41,21 +43,21 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         public void doSelectObject()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = ToolsModel.Instance.Input;
 
             //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
             if ((input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl))
                 && input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                control.CurrentState = MeshCreatorControl.State.SelectingObject;
-                initMousePos = new Vector2(input.Xpos, input.Ypos);
+                control.CurrentState = MeshCreatorModifier.State.SelectingObject;
+                initMousePos = new TGCVector2(input.Xpos, input.Ypos);
                 selectiveObjectsAdditive = true;
             }
             //Si mantiene el clic con el mouse, iniciar cuadro de seleccion
             else if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                control.CurrentState = MeshCreatorControl.State.SelectingObject;
-                initMousePos = new Vector2(input.Xpos, input.Ypos);
+                control.CurrentState = MeshCreatorModifier.State.SelectingObject;
+                initMousePos = new TGCVector2(input.Xpos, input.Ypos);
                 selectiveObjectsAdditive = false;
             }
         }
@@ -65,15 +67,15 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         public void render()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = ToolsModel.Instance.Input;
 
             //Mantiene el mouse apretado
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Definir recuadro
-                var mousePos = new Vector2(input.Xpos, input.Ypos);
-                var min = Vector2.Minimize(initMousePos, mousePos);
-                var max = Vector2.Maximize(initMousePos, mousePos);
+                var mousePos = new TGCVector2(input.Xpos, input.Ypos);
+                var min = TGCVector2.Minimize(initMousePos, mousePos);
+                var max = TGCVector2.Maximize(initMousePos, mousePos);
 
                 rectMesh.updateMesh(min, max);
             }
@@ -81,9 +83,9 @@ namespace TGC.Tools.MeshCreator
             else if (input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Definir recuadro
-                var mousePos = new Vector2(input.Xpos, input.Ypos);
-                var min = Vector2.Minimize(initMousePos, mousePos);
-                var max = Vector2.Maximize(initMousePos, mousePos);
+                var mousePos = new TGCVector2(input.Xpos, input.Ypos);
+                var min = TGCVector2.Minimize(initMousePos, mousePos);
+                var max = TGCVector2.Maximize(initMousePos, mousePos);
                 var r = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
 
                 //Usar recuadro de seleccion solo si tiene un tamaño minimo
@@ -129,7 +131,7 @@ namespace TGC.Tools.MeshCreator
                     doDirectSelection(selectiveObjectsAdditive);
                 }
 
-                control.CurrentState = MeshCreatorControl.State.SelectObject;
+                control.CurrentState = MeshCreatorModifier.State.SelectObject;
 
                 //Si quedo algo seleccionado activar gizmo
                 if (control.SelectionList.Count > 0)
@@ -189,7 +191,7 @@ namespace TGC.Tools.MeshCreator
                 }
             }
 
-            control.CurrentState = MeshCreatorControl.State.SelectObject;
+            control.CurrentState = MeshCreatorModifier.State.SelectObject;
 
             //Si quedo algo seleccionado activar gizmo
             if (control.SelectionList.Count > 0)
@@ -231,7 +233,7 @@ namespace TGC.Tools.MeshCreator
             //Buscar menor colision con objetos
             var minDistSq = float.MaxValue;
             EditorPrimitive closestPrimitive = null;
-            Vector3 q;
+            TGCVector3 q;
             foreach (var p in control.Meshes)
             {
                 //Solo los visibles
@@ -239,7 +241,7 @@ namespace TGC.Tools.MeshCreator
                 {
                     if (TgcCollisionUtils.intersectRayAABB(control.PickingRay.Ray, p.BoundingBox, out q))
                     {
-                        var lengthSq = Vector3.Subtract(control.PickingRay.Ray.Origin, q).LengthSq();
+                        var lengthSq = TGCVector3.Subtract(control.PickingRay.Ray.Origin, q).LengthSq();
                         if (lengthSq < minDistSq)
                         {
                             minDistSq = lengthSq;
@@ -306,14 +308,14 @@ namespace TGC.Tools.MeshCreator
         public void setTopView()
         {
             var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
-            Vector3 lookAt;
+            TGCVector3 lookAt;
             if (aabb != null)
             {
                 lookAt = aabb.calculateBoxCenter();
             }
             else
             {
-                lookAt = new Vector3(0, 0, 0);
+                lookAt = new TGCVector3(0, 0, 0);
             }
             control.Camera.setFixedView(lookAt, -FastMath.PI_HALF, 0, control.Camera.CameraDistance);
         }
@@ -324,14 +326,14 @@ namespace TGC.Tools.MeshCreator
         public void setLeftView()
         {
             var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
-            Vector3 lookAt;
+            TGCVector3 lookAt;
             if (aabb != null)
             {
                 lookAt = aabb.calculateBoxCenter();
             }
             else
             {
-                lookAt = new Vector3(0, 0, 0);
+                lookAt = new TGCVector3(0, 0, 0);
             }
             control.Camera.setFixedView(lookAt, 0, FastMath.PI_HALF, control.Camera.CameraDistance);
         }
@@ -342,14 +344,14 @@ namespace TGC.Tools.MeshCreator
         public void setFrontView()
         {
             var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
-            Vector3 lookAt;
+            TGCVector3 lookAt;
             if (aabb != null)
             {
                 lookAt = aabb.calculateBoxCenter();
             }
             else
             {
-                lookAt = new Vector3(0, 0, 0);
+                lookAt = new TGCVector3(0, 0, 0);
             }
             control.Camera.setFixedView(lookAt, 0, 0, control.Camera.CameraDistance);
         }
@@ -358,7 +360,7 @@ namespace TGC.Tools.MeshCreator
         ///     Obtener pivote central para efectuar la rotacion.
         ///     Se busca el centro de todos los AABB
         /// </summary>
-        public Vector3 getRotationPivot()
+        public TGCVector3 getRotationPivot()
         {
             var aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
             return aabb.calculateBoxCenter();

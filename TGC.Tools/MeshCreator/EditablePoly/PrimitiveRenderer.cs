@@ -1,6 +1,6 @@
-﻿using Microsoft.DirectX;
-using System.Drawing;
-using TGC.Tools.Utils.TgcGeometry;
+﻿using System.Drawing;
+using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 
 namespace TGC.Tools.MeshCreator.EditablePoly
 {
@@ -13,23 +13,23 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         private readonly TrianglesBatchRenderer batchRenderer;
 
         private readonly EditablePoly editablePoly;
-        private readonly TgcBox selectedVertexBox;
-        private readonly TgcBox vertexBox;
+        private readonly TGCBox selectedVertexBox;
+        private readonly TGCBox vertexBox;
 
         public PrimitiveRenderer(EditablePoly editablePoly)
         {
             this.editablePoly = editablePoly;
             batchRenderer = new TrianglesBatchRenderer();
 
-            vertexBox = TgcBox.fromSize(new Vector3(1, 1, 1), Color.Blue);
-            selectedVertexBox = TgcBox.fromSize(new Vector3(1, 1, 1), Color.Red);
+            vertexBox = TGCBox.fromSize(new TGCVector3(1, 1, 1), Color.Blue);
+            selectedVertexBox = TGCBox.fromSize(new TGCVector3(1, 1, 1), Color.Red);
         }
 
         /// <summary>
         ///     Dibujar primitivas
         /// </summary>
-        /// <param name="transform">Transform matrix del mesh</param>
-        public void render(Matrix transform)
+        /// <param name="transform">Transform TGCMatrix del mesh</param>
+        public void render(TGCMatrix transform)
         {
             switch (editablePoly.CurrentPrimitive)
             {
@@ -50,29 +50,29 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Dibujar vertices
         /// </summary>
-        private void renderVertices(Matrix transform)
+        private void renderVertices(TGCMatrix transform)
         {
             foreach (var v in editablePoly.Vertices)
             {
-                var pos = Vector3.TransformCoordinate(v.position, transform);
+                var pos = TGCVector3.TransformCoordinate(v.position, transform);
                 var box = v.Selected ? selectedVertexBox : vertexBox;
-                box.Position = pos /*+ new Vector3(0.5f, 0.5f, 0.5f)*/;
-                box.render();
+                box.Position = pos /*+ new TGCVector3(0.5f, 0.5f, 0.5f)*/;
+                box.Render();
             }
         }
 
         /// <summary>
         ///     Dibujar poligonos
         /// </summary>
-        private void renderPolygons(Matrix transform)
+        private void renderPolygons(TGCMatrix transform)
         {
             batchRenderer.reset();
 
             //Edges
             foreach (var e in editablePoly.Edges)
             {
-                var a = Vector3.TransformCoordinate(e.a.position, transform);
-                var b = Vector3.TransformCoordinate(e.b.position, transform);
+                var a = TGCVector3.TransformCoordinate(e.a.position, transform);
+                var b = TGCVector3.TransformCoordinate(e.b.position, transform);
                 batchRenderer.addBoxLine(a, b, 0.06f, e.Selected ? Color.Red : Color.Blue);
             }
 
@@ -82,30 +82,30 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                 if (p.Selected)
                 {
                     /*
-                    Vector3 n = new Vector3(p.plane.A, p.plane.B, p.plane.C) * 0.1f;
-                    Vector3 v0 = Vector3.TransformCoordinate(p.vertices[0].position, transform);
-                    Vector3 v1 = Vector3.TransformCoordinate(p.vertices[1].position, transform);
+                    TGCVector3 n = new TGCVector3(p.TGCPlane.A, p.TGCPlane.B, p.TGCPlane.C) * 0.1f;
+                    TGCVector3 v0 = TGCVector3.TransformCoordinate(p.vertices[0].position, transform);
+                    TGCVector3 v1 = TGCVector3.TransformCoordinate(p.vertices[1].position, transform);
                     for (int i = 2; i < p.vertices.Count; i++)
                     {
                         batchRenderer.checkAndFlush(6);
-                        Vector3 v2 = Vector3.TransformCoordinate(p.vertices[i].position, transform);
+                        TGCVector3 v2 = TGCVector3.TransformCoordinate(p.vertices[i].position, transform);
                         batchRenderer.addTriangle(v0 + n, v1 + n, v2 + n, SELECTED_POLYGON_COLOR);
                         batchRenderer.addTriangle(v0 - n, v1 - n, v2 - n, SELECTED_POLYGON_COLOR);
                         v1 = v2;
                     }
                      */
-                    var n = new Vector3(p.plane.A, p.plane.B, p.plane.C) * 0.1f;
+                    var n = new TGCVector3(p.TGCPlane.A, p.TGCPlane.B, p.TGCPlane.C) * 0.1f;
                     for (var i = 0; i < p.vbTriangles.Count; i++)
                     {
                         var triIdx = p.vbTriangles[i];
                         var v0 =
-                            Vector3.TransformCoordinate(
+                            TGCVector3.TransformCoordinate(
                                 editablePoly.Vertices[editablePoly.IndexBuffer[triIdx]].position, transform);
                         var v1 =
-                            Vector3.TransformCoordinate(
+                            TGCVector3.TransformCoordinate(
                                 editablePoly.Vertices[editablePoly.IndexBuffer[triIdx + 1]].position, transform);
                         var v2 =
-                            Vector3.TransformCoordinate(
+                            TGCVector3.TransformCoordinate(
                                 editablePoly.Vertices[editablePoly.IndexBuffer[triIdx + 2]].position, transform);
 
                         batchRenderer.checkAndFlush(6);
@@ -121,14 +121,14 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// <summary>
         ///     Dibujar aristas
         /// </summary>
-        private void renderEdges(Matrix transform)
+        private void renderEdges(TGCMatrix transform)
         {
             batchRenderer.reset();
 
             foreach (var e in editablePoly.Edges)
             {
-                var a = Vector3.TransformCoordinate(e.a.position, transform);
-                var b = Vector3.TransformCoordinate(e.b.position, transform);
+                var a = TGCVector3.TransformCoordinate(e.a.position, transform);
+                var b = TGCVector3.TransformCoordinate(e.b.position, transform);
                 batchRenderer.addBoxLine(a, b, 0.12f, e.Selected ? Color.Red : Color.Blue);
             }
             //Vaciar todo lo que haya
@@ -137,8 +137,8 @@ namespace TGC.Tools.MeshCreator.EditablePoly
 
         public void dispose()
         {
-            vertexBox.dispose();
-            selectedVertexBox.dispose();
+            vertexBox.Dispose();
+            selectedVertexBox.Dispose();
             batchRenderer.dispose();
         }
     }

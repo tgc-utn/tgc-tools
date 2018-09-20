@@ -1,8 +1,9 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Camara;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcGeometry;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Tools.MeshCreator
@@ -18,10 +19,10 @@ namespace TGC.Tools.MeshCreator
         private float diffX;
         private float diffY;
         private float diffZ;
-        private Vector3 nextPos;
+        private TGCVector3 nextPos;
 
-        private Vector3 upVector;
-        private Matrix viewMatrix;
+        private TGCVector3 upVector;
+        private TGCMatrix viewTGCMatrix;
 
         public MeshCreatorCamera()
         {
@@ -38,8 +39,8 @@ namespace TGC.Tools.MeshCreator
                 return;
             }
 
-            var d3dInput = GuiController.Instance.D3dInput;
-            var elapsedTime = GuiController.Instance.ElapsedTime;
+            var d3dInput = ToolsModel.Instance.Input;
+            var elapsedTime = ToolsModel.Instance.ElapsedTime;
 
             //Obtener variacion XY del mouse
             var mouseX = 0f;
@@ -97,10 +98,10 @@ namespace TGC.Tools.MeshCreator
             }
 
             //Realizar Transformacion: primero alejarse en Z, despues rotar en X e Y y despues ir al centro de la cmara
-            var m = Matrix.Translation(0, 0, -distance)
-                    * Matrix.RotationX(rotX)
-                    * Matrix.RotationY(rotY)
-                    * Matrix.Translation(CameraCenter);
+            var m = TGCMatrix.Translation(0, 0, -distance)
+                    * TGCMatrix.RotationX(rotX)
+                    * TGCMatrix.RotationY(rotY)
+                    * TGCMatrix.Translation(CameraCenter);
 
             //Extraer la posicion final de la matriz de transformacion
             nextPos.X = m.M41;
@@ -117,38 +118,38 @@ namespace TGC.Tools.MeshCreator
                 var d = CameraCenter - nextPos;
                 d.Normalize();
 
-                var n = Vector3.Cross(d, upVector);
+                var n = TGCVector3.Cross(d, upVector);
                 n.Normalize();
 
-                var up = Vector3.Cross(n, d);
-                var desf = Vector3.Scale(up, dy * panSpeedZoom) - Vector3.Scale(n, dx * panSpeedZoom);
+                var up = TGCVector3.Cross(n, d);
+                var desf = TGCVector3.Scale(up, dy * panSpeedZoom) - TGCVector3.Scale(n, dx * panSpeedZoom);
                 nextPos = nextPos + desf;
                 CameraCenter = CameraCenter + desf;
             }
 
-            //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
-            viewMatrix = Matrix.LookAtLH(nextPos, CameraCenter, upVector);
+            //Obtener ViewTGCMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
+            viewTGCMatrix = TGCMatrix.LookAtLH(nextPos, CameraCenter, upVector);
         }
 
         /// <summary>
-        ///     Actualiza la ViewMatrix, si es que la camara esta activada
+        ///     Actualiza la ViewTGCMatrix, si es que la camara esta activada
         /// </summary>
-        public void updateViewMatrix(Device d3dDevice)
+        public void updateViewTGCMatrix(Device d3dDevice)
         {
             if (!Enable)
             {
                 return;
             }
 
-            d3dDevice.Transform.View = viewMatrix;
+            d3dDevice.Transform.View = viewTGCMatrix;
         }
 
-        public Vector3 getPosition()
+        public TGCVector3 getPosition()
         {
             return nextPos;
         }
 
-        public Vector3 getLookAt()
+        public TGCVector3 getLookAt()
         {
             return CameraCenter;
         }
@@ -158,16 +159,16 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         internal void resetValues()
         {
-            upVector = new Vector3(0.0f, 1.0f, 0.0f);
-            CameraCenter = new Vector3(0, 0, 0);
-            nextPos = new Vector3(0, 0, 0);
+            upVector = new TGCVector3(0.0f, 1.0f, 0.0f);
+            CameraCenter = new TGCVector3(0, 0, 0);
+            nextPos = new TGCVector3(0, 0, 0);
             CameraDistance = DEFAULT_CAMERA_DISTANCE;
             ZoomFactor = DEFAULT_ZOOM_FACTOR;
             RotationSpeed = DEFAULT_ROTATION_SPEED;
             diffX = 0f;
             diffY = 0f;
             diffZ = 1f;
-            viewMatrix = Matrix.Identity;
+            viewTGCMatrix = TGCMatrix.Identity;
             PanSpeed = 0.01f;
             BaseRotX = 0;
             BaseRotY = 0;
@@ -176,21 +177,21 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Setear la camara con una determinada posicion y lookAt
         /// </summary>
-        public void lookAt(Vector3 pos, Vector3 lookAt)
+        public void lookAt(TGCVector3 pos, TGCVector3 lookAt)
         {
             //TODO: solo funciona bien para hacer un TopView
 
             var v = pos - lookAt;
-            var length = Vector3.Length(v);
+            var length = TGCVector3.Length(v);
             v.Scale(1 / length);
 
             CameraDistance = length;
-            upVector = new Vector3(0, 1, 0);
+            upVector = new TGCVector3(0, 1, 0);
             diffX = 0;
             diffY = 0.01f;
             diffZ = 1;
-            BaseRotX = -FastMath.Acos(Vector3.Dot(new Vector3(0, 0, -1), v));
-            //baseRotY = FastMath.Acos(Vector3.Dot(new Vector3(0, 0, -1), v));
+            BaseRotX = -FastMath.Acos(TGCVector3.Dot(new TGCVector3(0, 0, -1), v));
+            //baseRotY = FastMath.Acos(TGCVector3.Dot(new TGCVector3(0, 0, -1), v));
             BaseRotY = 0;
             CameraCenter = lookAt;
         }
@@ -203,10 +204,10 @@ namespace TGC.Tools.MeshCreator
         /// <param name="rotX">Cuanto rotar en el eje X</param>
         /// <param name="rotY">Cuanto rotar en el eje Y</param>
         /// <param name="distance">Distancia de la camara desde el punto de lookAt</param>
-        public void setFixedView(Vector3 lookAt, float rotX, float rotY, float distance)
+        public void setFixedView(TGCVector3 lookAt, float rotX, float rotY, float distance)
         {
             CameraDistance = distance;
-            upVector = new Vector3(0, 1, 0);
+            upVector = new TGCVector3(0, 1, 0);
             diffX = 0;
             diffY = 0.01f;
             diffZ = 1;
@@ -219,7 +220,7 @@ namespace TGC.Tools.MeshCreator
         ///     Configura los parámetros de la cámara en funcion del BoundingBox de un modelo
         /// </summary>
         /// <param name="boundingBox">BoundingBox en base al cual configurar</param>
-        public void targetObject(TgcBoundingBox boundingBox)
+        public void targetObject(TgcBoundingAxisAlignBox boundingBox)
         {
             CameraCenter = boundingBox.calculateBoxCenter();
             var r = boundingBox.calculateBoxRadius();
@@ -236,7 +237,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Centro de la camara sobre la cual se rota
         /// </summary>
-        public Vector3 CameraCenter { get; set; }
+        public TGCVector3 CameraCenter { get; set; }
 
         /// <summary>
         ///     Distance entre la camara y el centro
@@ -271,7 +272,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Configura el centro de la camara, la distancia y la velocidad de zoom
         /// </summary>
-        public void setCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor)
+        public void setCamera(TGCVector3 cameraCenter, float cameraDistance, float zoomFactor)
         {
             CameraCenter = cameraCenter;
             CameraDistance = cameraDistance;
@@ -281,7 +282,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Configura el centro de la camara, la distancia
         /// </summary>
-        public void setCamera(Vector3 cameraCenter, float cameraDistance)
+        public void setCamera(TGCVector3 cameraCenter, float cameraDistance)
         {
             CameraCenter = cameraCenter;
             CameraDistance = cameraDistance;

@@ -1,10 +1,11 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Tools.Model;
-using TGC.Tools.Utils.Shaders;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.TerrainEditor
 {
@@ -19,7 +20,7 @@ namespace TGC.Tools.TerrainEditor
             Effect = TgcShaders.loadEffect("Shaders\\EditableTerrain.fx");
             Technique = "PositionColoredTextured";
 
-            aabb = new TgcBoundingBox();
+            aabb = new TgcBoundingAxisAlignBox();
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace TGC.Tools.TerrainEditor
                 terrainTexture.Dispose();
             }
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
 
             //Rotar e invertir textura
             var b = (Bitmap)Image.FromFile(path);
@@ -45,11 +46,11 @@ namespace TGC.Tools.TerrainEditor
 
         private float maxIntensity;
         private float minIntensity;
-        private Vector3 traslation;
+        private TGCVector3 traslation;
         private VertexBuffer vbTerrain;
         private CustomVertex.PositionColoredTextured[] vertices;
         private Texture terrainTexture;
-        private readonly TgcBoundingBox aabb;
+        private readonly TgcBoundingAxisAlignBox aabb;
 
         #endregion Private fields
 
@@ -70,12 +71,12 @@ namespace TGC.Tools.TerrainEditor
         /// </summary>
         public bool Enabled { get; set; }
 
-        private Vector3 center;
+        private TGCVector3 center;
 
         /// <summary>
         ///     Centro del terreno
         /// </summary>
-        public Vector3 Center
+        public TGCVector3 Center
         {
             get { return center; }
         }
@@ -151,9 +152,9 @@ namespace TGC.Tools.TerrainEditor
         /// <param name="scaleXZ">Escala para los ejes X y Z</param>
         /// <param name="scaleY">Escala para el eje Y</param>
         /// <param name="center">Centro de la malla del terreno</param>
-        public void loadPlainHeightmap(int width, int length, int level, float scaleXZ, float scaleY, Vector3 center)
+        public void loadPlainHeightmap(int width, int length, int level, float scaleXZ, float scaleY, TGCVector3 center)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
             this.center = center;
             ScaleXZ = scaleXZ;
             ScaleY = scaleY;
@@ -191,9 +192,9 @@ namespace TGC.Tools.TerrainEditor
         /// <param name="scaleXZ">Escala para los ejes X y Z</param>
         /// <param name="scaleY">Escala para el eje Y</param>
         /// <param name="center">Centro de la malla del terreno</param>
-        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, Vector3 center)
+        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, TGCVector3 center)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
             this.center = center;
             ScaleXZ = scaleXZ;
             ScaleY = scaleY;
@@ -257,8 +258,8 @@ namespace TGC.Tools.TerrainEditor
             }
 
             vbTerrain.SetData(vertices, 0, LockFlags.None);
-            aabb.setExtremes(new Vector3(0, minIntensity, 0),
-                new Vector3(HeightmapData.GetLength(0), maxIntensity, HeightmapData.GetLength(1)));
+            aabb.setExtremes(new TGCVector3(0, minIntensity, 0),
+                new TGCVector3(HeightmapData.GetLength(0), maxIntensity, HeightmapData.GetLength(1)));
         }
 
         /// <summary>
@@ -284,16 +285,16 @@ namespace TGC.Tools.TerrainEditor
                     if (minIntensity == -1 || HeightmapData[i, j] < minIntensity) minIntensity = HeightmapData[i, j];
 
                     //Vertices
-                    var v1 = new Vector3(i, HeightmapData[i, j], j);
-                    var v2 = new Vector3(i, HeightmapData[i, j + 1], j + 1);
-                    var v3 = new Vector3(i + 1, HeightmapData[i + 1, j], j);
-                    var v4 = new Vector3(i + 1, HeightmapData[i + 1, j + 1], j + 1);
+                    var v1 = new TGCVector3(i, HeightmapData[i, j], j);
+                    var v2 = new TGCVector3(i, HeightmapData[i, j + 1], j + 1);
+                    var v3 = new TGCVector3(i + 1, HeightmapData[i + 1, j], j);
+                    var v4 = new TGCVector3(i + 1, HeightmapData[i + 1, j + 1], j + 1);
 
                     //Coordendas de textura
-                    var t1 = new Vector2(i / width, j / length);
-                    var t2 = new Vector2(i / width, (j + 1) / length);
-                    var t3 = new Vector2((i + 1) / width, j / length);
-                    var t4 = new Vector2((i + 1) / width, (j + 1) / length);
+                    var t1 = new TGCVector2(i / width, j / length);
+                    var t2 = new TGCVector2(i / width, (j + 1) / length);
+                    var t3 = new TGCVector2((i + 1) / width, j / length);
+                    var t4 = new TGCVector2((i + 1) / width, (j + 1) / length);
 
                     //Cargar triangulo 1
                     vertices[dataIdx] = new CustomVertex.PositionColoredTextured(v1, color, t1.X, t1.Y);
@@ -309,8 +310,8 @@ namespace TGC.Tools.TerrainEditor
                 }
                 vbTerrain.SetData(vertices, 0, LockFlags.None);
 
-                aabb.setExtremes(new Vector3(0, minIntensity, 0),
-                    new Vector3(HeightmapData.GetLength(0), maxIntensity, HeightmapData.GetLength(1)));
+                aabb.setExtremes(new TGCVector3(0, minIntensity, 0),
+                    new TGCVector3(HeightmapData.GetLength(0), maxIntensity, HeightmapData.GetLength(1)));
             }
         }
 
@@ -326,17 +327,17 @@ namespace TGC.Tools.TerrainEditor
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var texturesManager = GuiController.Instance.TexturesManager;
-            var transform = Matrix.Translation(traslation) * Matrix.Scaling(ScaleXZ, ScaleY, ScaleXZ);
+            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var texturesManager = ToolsModel.Instance.TexturesManager;
+            var transform = TGCMatrix.Translation(traslation) * TGCMatrix.Scaling(ScaleXZ, ScaleY, ScaleXZ);
 
             //Textura
             effect.SetValue("texDiffuseMap", terrainTexture);
 
             texturesManager.clear(1);
 
-            GuiController.Instance.Shaders.setShaderMatrix(effect, transform);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColoredTextured;
+            ToolsModel.Instance.Shaders.setShaderMatrix(effect, transform);
+            d3dDevice.VertexDeclaration = ToolsModel.Instance.Shaders.VdecPositionColoredTextured;
             effect.Technique = technique;
             d3dDevice.SetStreamSource(0, vbTerrain, 0);
 
@@ -377,17 +378,17 @@ namespace TGC.Tools.TerrainEditor
         /// <param name="ray"></param>
         /// <param name="collisionPoint"></param>
         /// <returns></returns>
-        public bool intersectRay(TgcRay ray, out Vector3 collisionPoint)
+        public bool intersectRay(TgcRay ray, out TGCVector3 collisionPoint)
         {
-            collisionPoint = Vector3.Empty;
-            var scaleInv = Matrix.Scaling(new Vector3(1 / ScaleXZ, 1 / ScaleY, 1 / ScaleXZ));
-            var a = Vector3.TransformCoordinate(ray.Origin, scaleInv) - traslation;
-            var r = Vector3.TransformCoordinate(ray.Direction, scaleInv);
+            collisionPoint = TGCVector3.Empty;
+            var scaleInv = TGCMatrix.Scaling(new TGCVector3(1 / ScaleXZ, 1 / ScaleY, 1 / ScaleXZ));
+            var a = TGCVector3.TransformCoordinate(ray.Origin, scaleInv) - traslation;
+            var r = TGCVector3.TransformCoordinate(ray.Direction, scaleInv);
 
             if (a.Y < minIntensity)
                 return false;
 
-            Vector3 q;
+            TGCVector3 q;
             //Me fijo si intersecta con el BB del terreno.
             if (!TgcCollisionUtils.intersectRayAABB(new TgcRay(a, r).toStruct(), aabb.toStruct(), out q))
                 return false;
@@ -417,8 +418,8 @@ namespace TGC.Tools.TerrainEditor
                 if (collisionPoint.Y <= y + float.Epsilon)
                 {
                     collisionPoint.Y = y;
-                    collisionPoint = Vector3.TransformCoordinate(collisionPoint + traslation,
-                        Matrix.Scaling(ScaleXZ, ScaleY, ScaleXZ));
+                    collisionPoint = TGCVector3.TransformCoordinate(collisionPoint + traslation,
+                        TGCMatrix.Scaling(ScaleXZ, ScaleY, ScaleXZ));
                     return true;
                 }
             }
@@ -430,30 +431,33 @@ namespace TGC.Tools.TerrainEditor
         /// <param name="ray"></param>
         /// <param name="collisionPoint"></param>
         /// <returns></returns>
-        public bool intersectRayPlane(TgcRay ray, out Vector3 collisionPoint)
+        public bool intersectRayTGCPlane(TgcRay ray, out TGCVector3 collisionPoint)
         {
-            collisionPoint = Vector3.Empty;
+            collisionPoint = TGCVector3.Empty;
             var minHeight = (minIntensity + traslation.Y) * ScaleY;
 
             float t;
             //Me fijo si intersecta con el BB del terreno.
-            if (!TgcCollisionUtils.intersectRayPlane(ray, new Plane(0, 1, 0, -minHeight), out t, out collisionPoint))
+            if (!TgcCollisionUtils.intersectRayPlane(ray, new TGCPlane(0, 1, 0, -minHeight), out t, out collisionPoint))
                 return false;
 
-            return interpoledHeight(collisionPoint.X, collisionPoint.Z, out collisionPoint.Y);
+            var collisionPointY = collisionPoint.Y;
+            var interseccion = interpoledHeight(collisionPoint.X, collisionPoint.Z, out collisionPointY);
+            collisionPoint.Y = collisionPointY;
+            return interseccion;
         }
 
         /// <summary>
         ///     Transforma coordenadas del mundo en coordenadas del heightmap.
         /// </summary>
-        public bool xzToHeightmapCoords(float x, float z, out Vector2 coords)
+        public bool xzToHeightmapCoords(float x, float z, out TGCVector2 coords)
         {
             float i, j;
 
             i = x / ScaleXZ - traslation.X;
             j = z / ScaleXZ - traslation.Z;
 
-            coords = new Vector2(i, j);
+            coords = new TGCVector2(i, j);
 
             if (coords.X >= HeightmapData.GetLength(0) || coords.Y >= HeightmapData.GetLength(1) || coords.Y < 0 ||
                 coords.X < 0) return false;
@@ -470,7 +474,7 @@ namespace TGC.Tools.TerrainEditor
         /// <returns></returns>
         public bool interpoledHeight(float x, float z, out float y)
         {
-            Vector2 coords;
+            TGCVector2 coords;
             float i;
             y = 0;
 
@@ -527,7 +531,7 @@ namespace TGC.Tools.TerrainEditor
         {
             float y;
             if (!interpoledHeight(o.Position.X, o.Position.Z, out y)) return false;
-            o.Position = new Vector3(o.Position.X, y, o.Position.Z);
+            o.Position = new TGCVector3(o.Position.X, y, o.Position.Z);
             return true;
         }
 

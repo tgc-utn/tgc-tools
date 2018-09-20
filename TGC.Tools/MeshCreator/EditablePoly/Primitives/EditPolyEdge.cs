@@ -1,7 +1,8 @@
-﻿using Microsoft.DirectX;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using TGC.Tools.Utils.TgcGeometry;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
+using TGC.Core.Mathematica;
 
 namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
 {
@@ -10,7 +11,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
     /// </summary>
     public class EditPolyEdge : EditPolyPrimitive
     {
-        private static readonly TgcObb COLLISION_OBB = new TgcObb();
+        private static readonly TgcBoundingOrientedBox COLLISION_OBB = new TgcBoundingOrientedBox();
 
         public EditPolyVertex a;
         public EditPolyVertex b;
@@ -26,31 +27,31 @@ namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
             return a.vbIndex + " => " + b.vbIndex;
         }
 
-        public override bool projectToScreen(Matrix transform, out Rectangle box2D)
+        public override bool projectToScreen(TGCMatrix transform, out Rectangle box2D)
         {
             return MeshCreatorUtils.projectSegmentToScreenRect(
-                Vector3.TransformCoordinate(a.position, transform),
-                Vector3.TransformCoordinate(b.position, transform), out box2D);
+                TGCVector3.TransformCoordinate(a.position, transform),
+                TGCVector3.TransformCoordinate(b.position, transform), out box2D);
         }
 
-        public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
+        public override bool intersectRay(TgcRay ray, TGCMatrix transform, out TGCVector3 q)
         {
             //Actualizar OBB con posiciones de la arista para utilizar en colision
             EditablePolyUtils.updateObbFromSegment(COLLISION_OBB,
-                Vector3.TransformCoordinate(a.position, transform),
-                Vector3.TransformCoordinate(b.position, transform),
+                TGCVector3.TransformCoordinate(a.position, transform),
+                TGCVector3.TransformCoordinate(b.position, transform),
                 0.4f);
 
             //ray-obb
             return TgcCollisionUtils.intersectRayObb(ray, COLLISION_OBB, out q);
         }
 
-        public override Vector3 computeCenter()
+        public override TGCVector3 computeCenter()
         {
             return (a.position + b.position) * 0.5f;
         }
 
-        public override void move(Vector3 movement)
+        public override void move(TGCVector3 movement)
         {
             /*
             a.position += movement;

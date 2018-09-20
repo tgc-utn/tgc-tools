@@ -1,5 +1,6 @@
-﻿using Microsoft.DirectX;
+﻿using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Gizmos
 {
@@ -8,7 +9,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
     /// </summary>
     public abstract class EditorGizmo
     {
-        public EditorGizmo(MeshCreatorControl control)
+        public EditorGizmo(MeshCreatorModifier control)
         {
             Control = control;
         }
@@ -16,7 +17,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
         /// <summary>
         ///     Control
         /// </summary>
-        public MeshCreatorControl Control { get; }
+        public MeshCreatorModifier Control { get; }
 
         /// <summary>
         ///     Activar o desactivar gizmo
@@ -36,7 +37,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
         /// <summary>
         ///     Mover gizmo de lugar para acomodarse a la nueva posicion del objeto seleccionado
         /// </summary>
-        public abstract void move(EditorPrimitive selectedPrimitive, Vector3 movement);
+        public abstract void move(EditorPrimitive selectedPrimitive, TGCVector3 movement);
 
         /// <summary>
         ///     Liberar recursos

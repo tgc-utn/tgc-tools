@@ -1,8 +1,10 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Primitives
 {
@@ -13,11 +15,11 @@ namespace TGC.Tools.MeshCreator.Primitives
     {
         private bool editablePolyEnabled;
         private TgcMesh mesh;
-        private Vector2[] originalUVCoords;
-        private Vector2 uvOffset;
-        private Vector2 uvTile;
+        private TGCVector2[] originalUVCoords;
+        private TGCVector2 uvOffset;
+        private TGCVector2 uvTile;
 
-        public MeshPrimitive(MeshCreatorControl control, TgcMesh mesh)
+        public MeshPrimitive(MeshCreatorModifier control, TgcMesh mesh)
             : base(control)
         {
             //this.Name = mesh.Name + "_" + EditorPrimitive.PRIMITIVE_COUNT++;
@@ -46,8 +48,8 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
 
             UserProperties = this.mesh.UserProperties;
-            uvOffset = new Vector2(0, 0);
-            uvTile = new Vector2(1, 1);
+            uvOffset = new TGCVector2(0, 0);
+            uvTile = new TGCVector2(1, 1);
 
             //Layer
             if (this.mesh.Layer != null && this.mesh.Layer.Length > 0)
@@ -68,7 +70,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// </summary>
         public EditablePoly.EditablePoly EditablePoly { get; private set; }
 
-        public override TgcBoundingBox BoundingBox
+        public override TgcBoundingAxisAlignBox BoundingBox
         {
             get { return mesh.BoundingBox; }
         }
@@ -79,7 +81,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             set { mesh.AlphaBlendEnable = value; }
         }
 
-        public override Vector2 TextureOffset
+        public override TGCVector2 TextureOffset
         {
             get { return uvOffset; }
             set
@@ -89,7 +91,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override Vector2 TextureTiling
+        public override TGCVector2 TextureTiling
         {
             get { return uvTile; }
             set
@@ -99,18 +101,18 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
         }
 
-        public override Vector3 Position
+        public override TGCVector3 Position
         {
             get { return mesh.Position; }
             set { mesh.Position = value; }
         }
 
-        public override Vector3 Rotation
+        public override TGCVector3 Rotation
         {
             get { return mesh.Rotation; }
         }
 
-        public override Vector3 Scale
+        public override TGCVector3 Scale
         {
             get { return mesh.Scale; }
             set { mesh.Scale = value; }
@@ -133,7 +135,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// <summary>
         ///     Mover fisicamente los vertices del mesh
         /// </summary>
-        private void moveMeshVertices(Vector3 offset)
+        private void moveMeshVertices(TGCVector3 offset)
         {
             switch (mesh.RenderType)
             {
@@ -215,13 +217,13 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
             else
             {
-                mesh.render();
+                mesh.Render();
             }
         }
 
         public override void dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
             mesh = null;
             originalUVCoords = null;
             if (EditablePoly != null)
@@ -238,7 +240,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             mesh.BoundingBox.setRenderColor(color);
         }
 
-        public override void initCreation(Vector3 gridPoint)
+        public override void initCreation(TGCVector3 gridPoint)
         {
             throw new NotImplementedException(
                 "Nunca se deberia iniciar una creacion de primitiva para un Mesh. Siempre se importan");
@@ -250,9 +252,9 @@ namespace TGC.Tools.MeshCreator.Primitives
                 "Nunca se deberia iniciar una creacion de primitiva para un Mesh. Siempre se importan");
         }
 
-        public override void move(Vector3 move)
+        public override void move(TGCVector3 move)
         {
-            mesh.move(move);
+            mesh.Move(move);
         }
 
         public override void setTexture(TgcTexture texture, int slot)
@@ -262,7 +264,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             {
                 if (i != slot)
                 {
-                    newTextures[i] = mesh.DiffuseMaps[i].clone();
+                    newTextures[i] = mesh.DiffuseMaps[i].Clone();
                 }
                 else
                 {
@@ -296,13 +298,13 @@ namespace TGC.Tools.MeshCreator.Primitives
             ModifyCaps.TextureNumbers = mesh.DiffuseMaps.Length;
         }
 
-        public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
+        public override void setRotationFromPivot(TGCVector3 rotation, TGCVector3 pivot)
         {
             mesh.Rotation = rotation;
             var translation = pivot - mesh.Position;
-            var m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
-                    Matrix.Translation(translation);
-            mesh.move(new Vector3(m.M41, m.M42, m.M43));
+            var m = TGCMatrix.Translation(-translation) * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
+                    TGCMatrix.Translation(translation);
+            mesh.Move(new TGCVector3(m.M41, m.M42, m.M43));
         }
 
         public override TgcMesh createMeshToExport()
@@ -376,9 +378,9 @@ namespace TGC.Tools.MeshCreator.Primitives
         private void applyMeshTransformToVertices(TgcMesh m)
         {
             //Transformacion actual
-            var transform = Matrix.Scaling(m.Scale)
-                            * Matrix.RotationYawPitchRoll(m.Rotation.Y, m.Rotation.X, m.Rotation.Z)
-                            * Matrix.Translation(m.Position);
+            var transform = TGCMatrix.Scaling(m.Scale)
+                            * TGCMatrix.RotationYawPitchRoll(m.Rotation.Y, m.Rotation.X, m.Rotation.Z)
+                            * TGCMatrix.Translation(m.Position);
 
             switch (m.RenderType)
             {
@@ -387,7 +389,7 @@ namespace TGC.Tools.MeshCreator.Primitives
                         typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts1.Length; i++)
                     {
-                        verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, transform);
+                        verts1[i].Position = TGCVector3.transform(verts1[i].Position, transform);
                     }
                     m.D3dMesh.SetVertexBufferData(verts1, LockFlags.None);
                     m.D3dMesh.UnlockVertexBuffer();
@@ -398,7 +400,7 @@ namespace TGC.Tools.MeshCreator.Primitives
                         typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts2.Length; i++)
                     {
-                        verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, transform);
+                        verts2[i].Position = TGCVector3.transform(verts2[i].Position, transform);
                     }
                     m.D3dMesh.SetVertexBufferData(verts2, LockFlags.None);
                     m.D3dMesh.UnlockVertexBuffer();
@@ -409,7 +411,7 @@ namespace TGC.Tools.MeshCreator.Primitives
                         typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts3.Length; i++)
                     {
-                        verts3[i].Position = TgcVectorUtils.transform(verts3[i].Position, transform);
+                        verts3[i].Position = TGCVector3.transform(verts3[i].Position, transform);
                     }
                     m.D3dMesh.SetVertexBufferData(verts3, LockFlags.None);
                     m.D3dMesh.UnlockVertexBuffer();
@@ -417,11 +419,11 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
 
             //Quitar movimientos del mesh
-            m.Position = new Vector3(0, 0, 0);
-            m.Scale = new Vector3(1, 1, 1);
-            m.Rotation = new Vector3(0, 0, 0);
-            m.Transform = Matrix.Identity;
-            m.AutoTransformEnable = true;
+            m.Position = new TGCVector3(0, 0, 0);
+            m.Scale = new TGCVector3(1, 1, 1);
+            m.Rotation = new TGCVector3(0, 0, 0);
+            m.Transform = TGCMatrix.Identity;
+            m.AutoTransform = true;
 
             //Calcular nuevo bounding box
             m.createBoundingBox();
