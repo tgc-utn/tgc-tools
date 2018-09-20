@@ -1228,8 +1228,8 @@ namespace TGC.Tools.UserControls
         {
             //Multiplicar velocidad de camara
             var speed = (float)numericUpDownFPSCameraSpeed.Value;
-            ToolsModel.Instance.FpsCamera.MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED * speed;
-            ToolsModel.Instance.FpsCamera.JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED * speed;
+            FPSCamera.MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED * speed;
+            FPSCamera.JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED * speed;
         }
 
         /// <summary>

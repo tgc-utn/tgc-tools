@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
@@ -11,7 +10,6 @@ using TGC.Core.Shaders;
 using TGC.Core.Sound;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Tools.Camara;
 using TGC.Tools.Example;
 using TGC.Tools.Forms;
 using TGC.Tools.Properties;
@@ -50,9 +48,7 @@ namespace TGC.Tools.Model
         /// <summary>
         ///     Constructor privado para poder hacer el singleton
         /// </summary>
-        private ToolsModel()
-        {
-        }
+        private ToolsModel() { }
 
         public static ToolsModel Instance { get; } = new ToolsModel();
 
@@ -70,10 +66,11 @@ namespace TGC.Tools.Model
         {
             ApplicationRunning = true;
             Form = form;
+            Panel3d = control;
 
             //Inicio Device
-            //D3DDevice.Instance.InitializeD3DDevice(control);
-            //D3DDevice.Instance.Device.DeviceReset += OnResetDevice;
+            D3DDevice.Instance.InitializeD3DDevice(control);
+            D3DDevice.Instance.Device.DeviceReset += OnResetDevice;
 
             //Inicio inputs
             Input = new TgcD3dInput();
@@ -252,25 +249,13 @@ namespace TGC.Tools.Model
         }
 
         /// <summary>
-        ///     Utilidad de camara en Primera Persona
-        /// </summary>
-        public TgcFpsCamera FpsCamera { get; private set; }
-
-        /// <summary>
-        ///     Utilidad de camara que rota alrededor de un objetivo
-        /// </summary>
-        public TgcRotationalCamera RotCamera { get; private set; }
-
-        /// <summary>
-        ///     Utilidad de camara en tercera persona que sigue a un objeto que se mueve desde atrás
-        /// </summary>
-        public TgcThirdPersonCamera ThirdPersonCamera { get; private set; }
-
-        /// <summary>
         ///     Tiempo en segundos transcurridos desde el último frame.
         ///     Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
         /// </summary>
-        public float ElapsedTime { get; private set; }
+        public float ElapsedTime
+        {
+            get { return CurrentExample.ElapsedTime; }
+        }
 
         /// <summary>
         ///     Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el
@@ -281,7 +266,10 @@ namespace TGC.Tools.Model
         /// <summary>
         ///     Herramienta para configurar texturas en el Device
         /// </summary>
-        public TexturesManager TexturesManager { get; private set; }
+        public TexturesManager TexturesManager
+        {
+            get { return TexturesManager.Instance; }
+        }
 
         /// <summary>
         ///     Configura la posicion de la cámara
@@ -301,16 +289,14 @@ namespace TGC.Tools.Model
         }
 
         /// <summary>
-        ///     Cámara actual que utiliza el framework
-        /// </summary>
-        public TgcCamera CurrentCamera { get; set; }
-
-        /// <summary>
         ///     Utilidad para manejo de shaders
         /// </summary>
-        public TgcShaders Shaders { get; private set; }
+        public TgcShaders Shaders
+        {
+            get { return TgcShaders.Instance; }
+        }
 
-        public String Media
+        public string Media
         {
             get { return Settings.Default.MediaDirectory; }
         }

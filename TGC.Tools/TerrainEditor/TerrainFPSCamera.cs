@@ -77,12 +77,6 @@ namespace TGC.Tools.TerrainEditor
         /// </summary>
         public void updateCamera()
         {
-            //Si la camara no está habilitada, no procesar el resto del input
-            if (!enable)
-            {
-                return;
-            }
-
             var elapsedTimeSec = ToolsModel.Instance.ElapsedTime;
             var d3dInput = ToolsModel.Instance.Input;
 
@@ -111,27 +105,9 @@ namespace TGC.Tools.TerrainEditor
             updatePosition(direction, elapsedTimeSec);
         }
 
-        /// <summary>
-        ///     Actualiza la ViewTGCMatrix, si es que la camara esta activada
-        /// </summary>
-        public void updateViewTGCMatrix(Device d3dDevice)
-        {
-            if (!enable)
-            {
-                return;
-            }
-
-            d3dDevice.Transform.View = viewTGCMatrix;
-        }
-
         public TGCVector3 getPosition()
         {
             return eye;
-        }
-
-        public TGCVector3 getLookAt()
-        {
-            return LookAt;
         }
 
         /// <summary>
@@ -678,26 +654,6 @@ namespace TGC.Tools.TerrainEditor
                 else if (!value && fpsModeEnable) eye.Y = previousY;
                 fpsModeEnable = value;
                 setPosition(eye);
-            }
-        }
-
-        private bool enable;
-
-        /// <summary>
-        ///     Habilita o no el uso de la camara
-        /// </summary>
-        public bool Enable
-        {
-            get { return enable; }
-            set
-            {
-                enable = value;
-
-                //Si se habilito la camara, cargar como la cámara actual
-                if (value)
-                {
-                    ToolsModel.Instance.CurrentCamera = this;
-                }
             }
         }
 

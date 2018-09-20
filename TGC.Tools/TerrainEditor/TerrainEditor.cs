@@ -63,7 +63,7 @@ namespace TGC.Tools.TerrainEditor
             ToolsModel.Instance.Panel3d.MouseLeave += mouseLeave;
 
             //Configurar FPS Camara
-            Camera.Enable = true;
+            Camera = new TerrainFpsCamera();
             Camera.RotateMouseButton = cameraRotationButton;
             Camera.setCamera(new TGCVector3(-722.6171f, 495.0046f, -31.2611f), new TGCVector3(164.9481f, 35.3185f, -61.5394f));
 

@@ -58,7 +58,7 @@ namespace TGC.Tools.Forms
                     Environment.Exit(0);
                 }
             }
-            
+
             //Iniciar graficos
             Model.InitGraphics(this, panel3D, Settings.ShadersDirectory + Settings.CommonShaders);
 
@@ -81,7 +81,7 @@ namespace TGC.Tools.Forms
             {
                 MessageBox.Show(ex.Message, "Error en RenderLoop del ejemplo: " + Model.CurrentExample.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+
             panel3D.Focus();
         }
 

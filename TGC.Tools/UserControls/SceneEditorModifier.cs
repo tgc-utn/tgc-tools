@@ -449,8 +449,8 @@ namespace TGC.Tools.UserControls
         /// </summary>
         private void cameraSpeed_ValueChanged(object sender, EventArgs e)
         {
-            ToolsModel.Instance.FpsCamera.MovementSpeed = (float)cameraSpeed.Value;
-            ToolsModel.Instance.FpsCamera.JumpSpeed = (float)cameraSpeed.Value;
+            FPSCamera.MovementSpeed = (float)cameraSpeed.Value;
+            FPSCamera.JumpSpeed = (float)cameraSpeed.Value;
         }
 
         /// <summary>
