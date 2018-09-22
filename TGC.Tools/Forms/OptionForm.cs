@@ -51,7 +51,7 @@ namespace TGC.Tools.Forms
         {
             //TODO mejorar esta valicacion ya que si esta la carpeta pero no los shaders/media necesarios pasaria lo mismo.
             return this.CheckFolder(this.textBoxMediaDirectory.Text) || this.CheckFolder(this.textBoxShadersDirectory.Text)
-                || this.CheckFolder(this.textBoxShadersDirectory.Text + this.textBoxCommonShaders.Text);
+                || this.CheckFolder(this.textBoxCommonShaders.Text);
         }
 
         private void OptionForm_Load(object sender, EventArgs e)

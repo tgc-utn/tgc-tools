@@ -69,7 +69,7 @@ namespace TGC.Tools.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + Settings.DefaultExampleName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "No se pudo cargar el MeshCreator ", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

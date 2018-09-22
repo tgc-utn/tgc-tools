@@ -10,11 +10,11 @@ using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
+using TGC.Core.Utils;
 using TGC.Tools.Camara;
 using TGC.Tools.Model;
 using TGC.Tools.Properties;
 using TGC.Tools.SceneEditor;
-using TGC.Tools.Utils;
 
 namespace TGC.Tools.UserControls
 {

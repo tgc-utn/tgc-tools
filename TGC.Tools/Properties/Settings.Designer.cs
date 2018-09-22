@@ -25,7 +25,7 @@ namespace TGC.Tools.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\TGC.Examples\\Shaders\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Shaders\\")]
         public string ShadersDirectory {
             get {
                 return ((string)(this["ShadersDirectory"]));
@@ -49,31 +49,7 @@ namespace TGC.Tools.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Others")]
-        public string DefaultExampleCategory {
-            get {
-                return ((string)(this["DefaultExampleCategory"]));
-            }
-            set {
-                this["DefaultExampleCategory"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Logo de TGC")]
-        public string DefaultExampleName {
-            get {
-                return ((string)(this["DefaultExampleName"]));
-            }
-            set {
-                this["DefaultExampleName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TGC Viewer - Técnicas de Gráficos por Computadora - UTN - FRBA")]
+        [global::System.Configuration.DefaultSettingValueAttribute("TGC Tools - Técnicas de Gráficos por Computadora - UTN - FRBA")]
         public string Title {
             get {
                 return ((string)(this["Title"]));
@@ -85,7 +61,7 @@ namespace TGC.Tools.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TgcViewer\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Shaders\\Common\\")]
         public string CommonShaders {
             get {
                 return ((string)(this["CommonShaders"]));
