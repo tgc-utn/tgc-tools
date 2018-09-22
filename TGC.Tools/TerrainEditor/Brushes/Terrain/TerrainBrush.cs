@@ -5,8 +5,6 @@ using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.Sound;
 using TGC.Core.Text;
-using TGC.Tools.Model;
-using TGC.Tools.Properties;
 
 namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 {
@@ -18,7 +16,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
         protected SmartTerrain terrain;
         protected TgcText2D text;
 
-        public TerrainBrush()
+        public TerrainBrush(TgcTerrainEditor editor)
         {
             SoundEnabled = true;
             text = new TgcText2D();
@@ -27,7 +25,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
 
             bBrush = TGCBox.fromSize(new TGCVector3(10, 100, 10));
             sound = new TgcStaticSound();
-            sound.loadSound(Settings.Default.MediaDirectory + "Sound\\tierra.wav", ToolsModel.Instance.DirectSound.DsDevice);
+            sound.loadSound(editor.MediaDir + "Sound\\tierra.wav", editor.DirectSound.DsDevice);
         }
 
         /// <summary>
@@ -51,9 +49,9 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
             Editing = true;
         }
 
-        public virtual bool editTerrain()
+        public virtual bool editTerrain(float elapsedTime)
         {
-            var speed = ToolsModel.Instance.ElapsedTime * getSpeedAdjustment();
+            var speed = elapsedTime * getSpeedAdjustment();
             if (Invert) speed *= -1;
 
             var radius = Radius / terrain.ScaleXZ;
@@ -252,10 +250,10 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
             var changes = false;
             if (Enabled)
             {
-                if (ToolsModel.Instance.Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                if (editor.Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                 {
                     reproduceSound();
-                    var invert = ToolsModel.Instance.Input.keyDown(Key.LeftAlt);
+                    var invert = editor.Input.keyDown(Key.LeftAlt);
 
                     var oldInvert = Invert;
                     Invert ^= invert;
@@ -263,7 +261,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
                     {
                         beginEdition(editor.Terrain);
                     }
-                    if (editTerrain())
+                    if (editTerrain(editor.ElapsedTime))
                     {
                         changes = true;
                         terrain.updateVertices();

@@ -4,7 +4,6 @@ using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Tools.Model;
 using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Primitives
@@ -124,7 +123,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// </summary>
         public override void doCreation()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = Control.creator.Input;
 
             switch (currentCreatingState)
             {

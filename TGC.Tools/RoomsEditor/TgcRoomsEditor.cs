@@ -33,14 +33,14 @@ namespace TGC.Tools.RoomsEditor
 
         public override void Init()
         {
-            //Crear Modifier especial para este editor
-            AddRoomsEditorModifier(this);
-
             var fpsCamara = new TgcFpsCamera(Input);
             fpsCamara.MovementSpeed = 200f;
             fpsCamara.JumpSpeed = 200f;
             fpsCamara.SetCamera(new TGCVector3(133.0014f, 264.8258f, -119.0311f), new TGCVector3(498.1584f, -299.4199f, 621.433f));
             Camara = fpsCamara;
+
+            //Crear Modifier especial para este editor
+            modifier = AddRoomsEditorModifier(this);
         }
 
         public override void Update()

@@ -3,7 +3,6 @@ using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
-using TGC.Tools.Model;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Tools.MeshCreator
@@ -24,31 +23,31 @@ namespace TGC.Tools.MeshCreator
         private TGCVector3 upVector;
         private TGCMatrix viewTGCMatrix;
 
-        public MeshCreatorCamera()
+        private TgcD3dInput Input { get; }
+
+        public MeshCreatorCamera(TgcD3dInput input)
         {
+            Input = input;
             resetValues();
         }
 
         /// <summary>
         ///     Actualiza los valores de la camara
         /// </summary>
-        public void updateCamera()
+        public void updateCamera(float elapsedTime)
         {
             if (!Enable)
             {
                 return;
             }
 
-            var d3dInput = ToolsModel.Instance.Input;
-            var elapsedTime = ToolsModel.Instance.ElapsedTime;
-
             //Obtener variacion XY del mouse
             var mouseX = 0f;
             var mouseY = 0f;
-            if (d3dInput.keyDown(Key.LeftAlt) && d3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_MIDDLE))
+            if (Input.keyDown(Key.LeftAlt) && Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_MIDDLE))
             {
-                mouseX = d3dInput.XposRelative;
-                mouseY = d3dInput.YposRelative;
+                mouseX = Input.XposRelative;
+                mouseY = Input.YposRelative;
 
                 diffX += mouseX * elapsedTime * RotationSpeed;
                 diffY += mouseY * elapsedTime * RotationSpeed;
@@ -85,9 +84,9 @@ namespace TGC.Tools.MeshCreator
             }
 
             //Determinar distancia de la camara o zoom segun el Mouse Wheel
-            if (d3dInput.WheelPos != 0)
+            if (Input.WheelPos != 0)
             {
-                diffZ += ZoomFactor * d3dInput.WheelPos * -1;
+                diffZ += ZoomFactor * Input.WheelPos * -1;
             }
             var distance = -CameraDistance * diffZ;
 
@@ -109,10 +108,10 @@ namespace TGC.Tools.MeshCreator
             nextPos.Z = m.M43;
 
             //Hacer efecto de Pan View
-            if (!d3dInput.keyDown(Key.LeftAlt) && d3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_MIDDLE))
+            if (!Input.keyDown(Key.LeftAlt) && Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_MIDDLE))
             {
-                var dx = -d3dInput.XposRelative;
-                var dy = d3dInput.YposRelative;
+                var dx = -Input.XposRelative;
+                var dy = Input.YposRelative;
                 var panSpeedZoom = PanSpeed * FastMath.Abs(distance);
 
                 var d = CameraCenter - nextPos;

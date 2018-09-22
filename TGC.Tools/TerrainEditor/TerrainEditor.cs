@@ -31,6 +31,7 @@ namespace TGC.Tools.TerrainEditor
     {
         private TerrainEditorModifier Modifier { get; set; }
         public bool RenderBoundingBoxes { get; set; }
+        private TerrainFpsCamera TerrainFpsCamera { get; set; }
 
         public TgcTerrainEditor(string mediaDir, string shadersDir, Panel modifiersPanel) : base(mediaDir, shadersDir, modifiersPanel)
         {
@@ -46,10 +47,12 @@ namespace TGC.Tools.TerrainEditor
 
         public override void Init()
         {
-            //Crear Modifier especial para este editor
-            Modifier = AddTerrainEditorModifier(this);
+            //Configurar FPS Camara
+            TerrainFpsCamera = new TerrainFpsCamera(Input);
+            Camera = TerrainFpsCamera;
+            Camera.RotateMouseButton = cameraRotationButton;
+            Camera.setCamera(new TGCVector3(-722.6171f, 495.0046f, -31.2611f), new TGCVector3(164.9481f, 35.3185f, -61.5394f));
 
-            Camera = new TerrainFpsCamera();
             Terrain = new SmartTerrain();
             brush = new DummyBrush();
             Vegetation = new List<TgcMesh>();
@@ -59,13 +62,9 @@ namespace TGC.Tools.TerrainEditor
             mouseMove = Panel3d_MouseMove;
             mouseLeave = Panel3d_MouseLeave;
             noBrush = new DummyBrush();
+
             ToolsModel.Instance.Panel3d.MouseMove += mouseMove;
             ToolsModel.Instance.Panel3d.MouseLeave += mouseLeave;
-
-            //Configurar FPS Camara
-            Camera = new TerrainFpsCamera();
-            Camera.RotateMouseButton = cameraRotationButton;
-            Camera.setCamera(new TGCVector3(-722.6171f, 495.0046f, -31.2611f), new TGCVector3(164.9481f, 35.3185f, -61.5394f));
 
             labelFPS = new TgcText2D();
             labelFPS.Text = "Press F to go back to edition mode";
@@ -78,6 +77,9 @@ namespace TGC.Tools.TerrainEditor
             labelVegetationHidden.changeFont(new Font("Arial", 12, FontStyle.Bold));
             labelVegetationHidden.Color = Color.GreenYellow;
             labelVegetationHidden.Format = DrawTextFormat.Bottom | DrawTextFormat.Center;
+
+            //Crear Modifier especial para este editor
+            Modifier = AddTerrainEditorModifier(this);
         }
 
         private void Panel3d_MouseLeave(object sender, EventArgs e)
@@ -117,7 +119,7 @@ namespace TGC.Tools.TerrainEditor
 
             updateVegetationScale(scaleRatioXZ);
             updateVegetationY();
-            Camera.updateCamera();
+            TerrainFpsCamera.UpdateCamera(ElapsedTime);
         }
 
         /// <summary>
@@ -177,6 +179,7 @@ namespace TGC.Tools.TerrainEditor
             Modifier.dispose();
             labelFPS.Dispose();
             labelVegetationHidden.Dispose();
+
             ToolsModel.Instance.Panel3d.MouseMove -= mouseMove;
             ToolsModel.Instance.Panel3d.MouseLeave -= mouseLeave;
         }
@@ -302,6 +305,8 @@ namespace TGC.Tools.TerrainEditor
 
         public override void Render()
         {
+            PreRender();
+
             if (Input.keyPressed(Key.V))
                 ShowVegetation ^= true;
 
@@ -323,6 +328,8 @@ namespace TGC.Tools.TerrainEditor
             Brush.update(this);
 
             Brush.render(this);
+
+            PostRender();
         }
 
         public void doRender()

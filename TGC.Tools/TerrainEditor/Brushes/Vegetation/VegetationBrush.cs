@@ -6,6 +6,10 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
     {
         private string vegetationName;
 
+        public VegetationBrush(TgcTerrainEditor editor) : base(editor)
+        {
+        }
+
         /// <summary>
         ///     Setea el nombre del mesh que le va a pedir a InstanceManager
         /// </summary>

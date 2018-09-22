@@ -2,9 +2,10 @@
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
-using TGC.Tools.Model;
+using TGC.Core.Textures;
 using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator
@@ -73,16 +74,16 @@ namespace TGC.Tools.MeshCreator
 
         public void render()
         {
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
-            var texturesManager = ToolsModel.Instance.TexturesManager;
+            var d3dDevice = D3DDevice.Instance.Device;
+            var texturesManager = TexturesManager.Instance;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            var effect = ToolsModel.Instance.Shaders.VariosShader;
+            var effect = TgcShaders.Instance.VariosShader;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
-            ToolsModel.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = ToolsModel.Instance.Shaders.VdecPositionColored;
+            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            d3dDevice.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
 
             //Render con shader
             effect.Begin(0);

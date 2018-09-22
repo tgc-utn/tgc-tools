@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Tools.Model;
 
 namespace TGC.Tools.RoomsEditor
 {
@@ -38,7 +38,7 @@ namespace TGC.Tools.RoomsEditor
             IntersectingRooms = new List<RoomsEditorRoom>();
 
             //cargar valores default de la pared
-            Texture = TgcTexture.createTexture(ToolsModel.Instance.D3dDevice,
+            Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 room.RoomPanel.mapView.defaultTextureImage);
             AutoAdjustUv = true;
             UTile = 1f;

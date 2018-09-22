@@ -2,7 +2,6 @@
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
-using TGC.Tools.Model;
 using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Gizmos
@@ -41,7 +40,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
 
         public override void update()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = Control.creator.Input;
 
             switch (currentState)
             {

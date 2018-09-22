@@ -2,7 +2,7 @@
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Tools.Model;
+using TGC.Core.Textures;
 
 namespace TGC.Tools.MeshCreator
 {
@@ -47,8 +47,8 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         public void render()
         {
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
-            var texturesManager = ToolsModel.Instance.TexturesManager;
+            var d3dDevice = D3DDevice.Instance.Device;
+            var texturesManager = TexturesManager.Instance;
 
             texturesManager.clear(0);
             texturesManager.clear(1);

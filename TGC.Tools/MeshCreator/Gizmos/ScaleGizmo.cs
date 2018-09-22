@@ -1,11 +1,11 @@
 ﻿using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using TGC.Core.Collision;
+using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
-using TGC.Tools.Model;
 using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Gizmos
@@ -77,7 +77,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
 
         public override void update()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = Control.creator.Input;
 
             switch (currentState)
             {
@@ -233,7 +233,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
         public override void render()
         {
             //Desactivar Z-Buffer para dibujar arriba de todo el escenario
-            ToolsModel.Instance.D3dDevice.RenderState.ZBufferEnable = false;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = false;
 
             //Dibujar
             boxX.Render();
@@ -246,7 +246,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                 selectedBox.BoundingBox.Render();
             }
 
-            ToolsModel.Instance.D3dDevice.RenderState.ZBufferEnable = true;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = true;
         }
 
         private TGCBox getAxisBox(Axis axis)

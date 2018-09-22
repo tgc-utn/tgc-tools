@@ -7,7 +7,6 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Sound;
 using TGC.Core.Text;
 using TGC.Tools.Model;
-using TGC.Tools.Properties;
 
 namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
 {
@@ -26,7 +25,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
         private TGCVector3 scaleAxis = new TGCVector3(1, 1, 1);
         private readonly TgcStaticSound sound;
 
-        public VegetationPicker()
+        public VegetationPicker(TgcTerrainEditor editor)
         {
             label = new TgcText2D();
             label.Color = Color.Yellow;
@@ -37,7 +36,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
             Rotation = RotationAxis.Y;
             SoundEnabled = true;
             sound = new TgcStaticSound();
-            sound.loadSound(Settings.Default.MediaDirectory + "Sound\\pisada arena dcha.wav", -2000, ToolsModel.Instance.DirectSound.DsDevice);
+            sound.loadSound(editor.MediaDir + "Sound\\pisada arena dcha.wav", -2000, editor.DirectSound.DsDevice);
         }
 
         protected TgcMesh Mesh { get; set; }
@@ -56,7 +55,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
 
         private TgcMesh pickVegetation(TgcTerrainEditor editor)
         {
-            var ray = new TgcPickingRay(ToolsModel.Instance.Input);
+            var ray = new TgcPickingRay(editor.Input);
             ray.updateRay();
             float minT = -1;
             TgcMesh closerMesh = null;
@@ -86,23 +85,23 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
             return closerMesh;
         }
 
-        private void updateMeshScaleAndRotation()
+        private void updateMeshScaleAndRotation(TgcTerrainEditor editor)
         {
-            if (ToolsModel.Instance.Input.keyDown(Key.J))
+            if (editor.Input.keyDown(Key.J))
             {
-                rotate(FastMath.ToRad(60 * ToolsModel.Instance.ElapsedTime));
+                rotate(FastMath.ToRad(60 * editor.ElapsedTime));
             }
-            else if (ToolsModel.Instance.Input.keyDown(Key.L))
+            else if (editor.Input.keyDown(Key.L))
             {
-                rotate(FastMath.ToRad(-60 * ToolsModel.Instance.ElapsedTime));
+                rotate(FastMath.ToRad(-60 * editor.ElapsedTime));
             }
-            else if (ToolsModel.Instance.Input.keyDown(Key.I))
+            else if (editor.Input.keyDown(Key.I))
             {
-                Mesh.Scale += ScaleAxis * 1.5f * ToolsModel.Instance.ElapsedTime;
+                Mesh.Scale += ScaleAxis * 1.5f * editor.ElapsedTime;
             }
-            else if (ToolsModel.Instance.Input.keyDown(Key.K))
+            else if (editor.Input.keyDown(Key.K))
             {
-                Mesh.Scale -= ScaleAxis * 1.5f * ToolsModel.Instance.ElapsedTime;
+                Mesh.Scale -= ScaleAxis * 1.5f * editor.ElapsedTime;
             }
         }
 
@@ -172,26 +171,27 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
                     Position = pos;
                     Mesh.Position = pos;
 
-                    setLabelPosition();
+                    setLabelPosition(editor);
                 }
             }
 
             return false;
         }
 
-        private void setLabelPosition()
+        private void setLabelPosition(TgcTerrainEditor editor)
         {
             label.Text = string.Format("\"{0}\"( {1} ; {2} ; {3} )", Mesh.Name, Mesh.Position.X, Mesh.Position.Y,
                 Mesh.Position.Z);
             SizeF nameSize;
+
             using (var g = ToolsModel.Instance.Panel3d.CreateGraphics())
             {
                 nameSize = g.MeasureString(label.Text, font);
             }
 
             label.Size = nameSize.ToSize();
-            label.Position = new Point((int)(ToolsModel.Instance.Input.Xpos - nameSize.Width / 2),
-                (int)(ToolsModel.Instance.Input.Ypos + nameSize.Height + 5));
+            label.Position = new Point((int)(editor.Input.Xpos - nameSize.Width / 2),
+                (int)(editor.Input.Ypos + nameSize.Height + 5));
         }
 
         public bool mouseLeave(TgcTerrainEditor editor)
@@ -205,9 +205,9 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
             var changes = false;
             if (Enabled)
             {
-                if (Mesh != null) updateMeshScaleAndRotation();
+                if (Mesh != null) updateMeshScaleAndRotation(editor);
 
-                if (ToolsModel.Instance.Input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                if (editor.Input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                 {
                     if (Mesh != null)
                     {
@@ -220,17 +220,17 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
                         if (Mesh != null)
                         {
                             changes = true;
-                            setLabelPosition();
+                            setLabelPosition(editor);
                         }
                     }
                 }
 
-                if (ToolsModel.Instance.Input.keyPressed(Key.Delete))
+                if (editor.Input.keyPressed(Key.Delete))
                 {
                     removeFloatingVegetation();
                 }
 
-                if (ToolsModel.Instance.Input.keyPressed(Key.Z))
+                if (editor.Input.keyPressed(Key.Z))
                 {
                     if (editor.HasVegetation)
                     {

@@ -4,9 +4,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using TGC.Core.Mathematica;
-using TGC.Tools.Properties;
+using TGC.Core.Utils;
 using TGC.Tools.UserControls;
-using TGC.Tools.Utils;
 
 namespace TGC.Tools.RoomsEditor
 {
@@ -38,7 +37,7 @@ namespace TGC.Tools.RoomsEditor
         internal RoomsEditorRoom selectedRoom;
         private readonly RoomsEditorTexturesEdit texturesEdit;
 
-        public RoomsEditorMapView(RoomsEditorModifier editorControl)
+        public RoomsEditorMapView(RoomsEditorModifier editorControl, string mediaDir)
         {
             InitializeComponent();
 
@@ -46,9 +45,9 @@ namespace TGC.Tools.RoomsEditor
             roomsNameCounter = 0;
 
             //textura default para los rooms
-            defaultTextureDir = Settings.Default.MediaDirectory + "Texturas\\";
+            defaultTextureDir = mediaDir + "Texturas\\";
             defaultTextureImage = defaultTextureDir + "tierra.jpg";
-            texturesEdit = new RoomsEditorTexturesEdit(this);
+            texturesEdit = new RoomsEditorTexturesEdit(this, mediaDir);
 
             //Tamaño inicial del panel2
             panel2d.MinimumSize = new Size((int)numericUpDownMapWidth.Value, (int)numericUpDownMapHeight.Value);

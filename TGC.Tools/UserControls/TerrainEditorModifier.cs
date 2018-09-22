@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Tools.Forms;
 using TGC.Tools.MeshCreator;
-using TGC.Tools.Model;
 using TGC.Tools.Properties;
 using TGC.Tools.TerrainEditor;
 using TGC.Tools.TerrainEditor.Brushes;
@@ -37,17 +36,17 @@ namespace TGC.Tools.UserControls
 
             pictureBoxModifyHeightmap.ImageLocation = heightmapBrowser.SelectedImage;
 
-            textureBrowser = new TgcTextureBrowser(ToolsModel.Instance.Media);
+            textureBrowser = new TgcTextureBrowser(terrainEditor.MediaDir);
             textureBrowser.ShowFolders = true;
             textureBrowser.setSelectedImage(Settings.Default.MediaDirectory + "Heighmaps\\TerrainTexture1-256x256.jpg");
             pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
             terrainEditor.Terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value, (float)nudScaleY.Value, new TGCVector3(0, 0, 0));
             terrainEditor.Terrain.loadTexture(textureBrowser.SelectedImage);
 
-            shovel = new Shovel();
-            vegetationBrush = new VegetationBrush();
-            steamroller = new Steamroller();
-            vegetationPicker = new VegetationPicker();
+            shovel = new Shovel(terrainEditor);
+            vegetationBrush = new VegetationBrush(terrainEditor);
+            steamroller = new Steamroller(terrainEditor);
+            vegetationPicker = new VegetationPicker(terrainEditor);
 
             //Tooltips
             toolTip1.SetToolTip(rbShovel, "Aumenta la altura del terreno.\nShovel sound by adough1@freesound");
@@ -110,7 +109,7 @@ namespace TGC.Tools.UserControls
 
         private void createHeightmapBrowser()
         {
-            heightmapBrowser = new TgcTextureBrowser(ToolsModel.Instance.Media);
+            heightmapBrowser = new TgcTextureBrowser(terrainEditor.MediaDir);
             heightmapBrowser.ShowFolders = true;
             heightmapBrowser.setSelectedImage(Settings.Default.MediaDirectory + "Heighmaps\\Heightmap1.jpg");
         }

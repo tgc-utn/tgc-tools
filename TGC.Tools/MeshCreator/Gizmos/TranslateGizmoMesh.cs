@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 using TGC.Core.Collision;
+using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
-using TGC.Tools.Model;
 
 namespace TGC.Tools.MeshCreator.Gizmos
 {
@@ -172,7 +172,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
         public void render()
         {
             //Desactivar Z-Buffer para dibujar arriba de todo el escenario
-            ToolsModel.Instance.D3dDevice.RenderState.ZBufferEnable = false;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = false;
 
             //Dibujar
             boxXZ.Render();
@@ -188,7 +188,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                 selectedBox.BoundingBox.Render();
             }
 
-            ToolsModel.Instance.D3dDevice.RenderState.ZBufferEnable = true;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = true;
         }
 
         private TGCBox getAxisBox(Axis axis)

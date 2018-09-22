@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using TGC.Core.BoundingVolumes;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
-using TGC.Tools.Model;
 
 namespace TGC.Tools.MeshCreator
 {
@@ -114,7 +114,7 @@ namespace TGC.Tools.MeshCreator
         public static bool projectBoundingBox(TgcBoundingAxisAlignBox box3d, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
             var viewport = d3dDevice.Viewport;
             var view = d3dDevice.Transform.View;
             var proj = d3dDevice.Transform.Projection;
@@ -201,7 +201,7 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         public static TGCVector2 projectAABBScreenVec(TgcBoundingAxisAlignBox aabb)
         {
-            var device = ToolsModel.Instance.D3dDevice;
+            var device = D3DDevice.Instance.Device;
             var viewport = device.Viewport;
             var world = device.Transform.World;
             var view = device.Transform.View;
@@ -226,7 +226,7 @@ namespace TGC.Tools.MeshCreator
         public static bool projectPoint(TGCVector3 p, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
             var viewport = d3dDevice.Viewport;
             var view = d3dDevice.Transform.View;
             var proj = d3dDevice.Transform.Projection;
@@ -268,7 +268,7 @@ namespace TGC.Tools.MeshCreator
         public static bool projectSegmentToScreenRect(TGCVector3 a, TGCVector3 b, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
             var viewport = d3dDevice.Viewport;
             var view = d3dDevice.Transform.View;
             var proj = d3dDevice.Transform.Projection;
@@ -312,7 +312,7 @@ namespace TGC.Tools.MeshCreator
         public static bool projectPolygon(TGCVector3[] vertices, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
             var viewport = d3dDevice.Viewport;
             var view = d3dDevice.Transform.View;
             var proj = d3dDevice.Transform.Projection;

@@ -2,11 +2,11 @@
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Tools.MeshCreator.EditablePoly.Primitives;
-using TGC.Tools.Model;
 using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.EditablePoly
@@ -162,7 +162,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         private void processShortcuts()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = Control.creator.Input;
 
             //Select
             if (input.keyPressed(Key.Q))
@@ -313,7 +313,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         private void doSelectObject()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = Control.creator.Input;
 
             //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
             if ((input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl))
@@ -337,7 +337,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         private void doSelectingObject()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = Control.creator.Input;
 
             //Mantiene el mouse apretado
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -1042,7 +1042,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                 {
                     case TgcMesh.MeshRenderType.VERTEX_COLOR:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.VertexColorVertexElements, ToolsModel.Instance.D3dDevice);
+                            TgcSceneLoader.VertexColorVertexElements, D3DDevice.Instance.Device);
                         var origVert1 = (TgcSceneLoader.VertexColorVertex[])mesh.D3dMesh.LockVertexBuffer(
                             typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         mesh.D3dMesh.UnlockVertexBuffer();
@@ -1068,7 +1068,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
 
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.DiffuseMapVertexElements, ToolsModel.Instance.D3dDevice);
+                            TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
                         var origVert2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
                             typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         mesh.D3dMesh.UnlockVertexBuffer();
@@ -1093,7 +1093,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
 
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.DiffuseMapAndLightmapVertexElements, ToolsModel.Instance.D3dDevice);
+                            TgcSceneLoader.DiffuseMapAndLightmapVertexElements, D3DDevice.Instance.Device);
                         var origVert3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
                             typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
                             mesh.D3dMesh.NumberVertices);

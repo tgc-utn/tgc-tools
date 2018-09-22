@@ -10,7 +10,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
     {
         private float level;
 
-        public Steamroller()
+        public Steamroller(TgcTerrainEditor editor) : base(editor)
         {
             Color1 = Color.LightGoldenrodYellow;
             Color2 = Color.Purple;

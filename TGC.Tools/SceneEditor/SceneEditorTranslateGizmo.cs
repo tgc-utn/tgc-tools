@@ -1,8 +1,8 @@
 using System.Drawing;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.Mathematica;
-using TGC.Tools.Model;
 
 namespace TGC.Tools.SceneEditor
 {
@@ -28,7 +28,9 @@ namespace TGC.Tools.SceneEditor
 
         private TGCBox selectedAxisBox;
 
-        public SceneEditorTranslateGizmo()
+        private TgcD3dInput input;
+
+        public SceneEditorTranslateGizmo(TgcD3dInput input)
         {
             boxX = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
                 new TGCVector3(LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
@@ -36,6 +38,8 @@ namespace TGC.Tools.SceneEditor
                 new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE), Color.Green);
             boxZ = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
                 new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE), Color.Blue);
+
+            this.input = input;
         }
 
         /// <summary>
@@ -124,7 +128,6 @@ namespace TGC.Tools.SceneEditor
             //Desplazamiento inicial
             if (SelectedAxis != Axis.None)
             {
-                var input = ToolsModel.Instance.Input;
                 initMouseP = new TGCVector2(input.XposRelative, input.YposRelative);
             }
         }
@@ -134,7 +137,6 @@ namespace TGC.Tools.SceneEditor
         /// </summary>
         public void updateMove()
         {
-            var input = ToolsModel.Instance.Input;
             var currentMove = new TGCVector3(0, 0, 0);
 
             //Desplazamiento segun el mouse en X

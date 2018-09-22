@@ -60,7 +60,7 @@ namespace TGC.Tools.UserControls
             parser = new TgcSceneParser();
             sceneLoader = new TgcSceneLoader();
             pickingRay = new TgcPickingRay(ToolsModel.Instance.Input);
-            translateGizmo = new SceneEditorTranslateGizmo();
+            translateGizmo = new SceneEditorTranslateGizmo(editor.Input);
             helpWindow = new SceneEditorHelpWindow();
 
             //openMeshDialog

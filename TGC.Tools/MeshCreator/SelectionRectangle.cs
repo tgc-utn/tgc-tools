@@ -6,7 +6,6 @@ using TGC.Core.Collision;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
-using TGC.Tools.Model;
 using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator
@@ -43,7 +42,7 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         public void doSelectObject()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = control.creator.Input;
 
             //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
             if ((input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl))
@@ -67,7 +66,7 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         public void render()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = control.creator.Input;
 
             //Mantiene el mouse apretado
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))

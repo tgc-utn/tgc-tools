@@ -5,11 +5,11 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Tools.Model;
 using TGC.Tools.Properties;
 using TGC.Tools.RoomsEditor;
 
@@ -33,7 +33,7 @@ namespace TGC.Tools.UserControls
             InitializeComponent();
 
             this.editor = editor;
-            mapView = new RoomsEditorMapView(this);
+            mapView = new RoomsEditorMapView(this, editor.MediaDir);
             helpWindow = new RoomsEditorHelpWindow();
 
             //openMapDialog
@@ -221,7 +221,7 @@ namespace TGC.Tools.UserControls
                         {
                             wall.Texture.dispose();
                         }
-                        wall.Texture = TgcTexture.createTexture(ToolsModel.Instance.D3dDevice,
+                        wall.Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                             texturesDir + "\\" + textureName);
                         wall.AutoAdjustUv = autoAdjustUv;
                         wall.UTile = uTile;

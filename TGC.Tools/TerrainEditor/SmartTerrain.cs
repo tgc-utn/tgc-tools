@@ -2,10 +2,11 @@
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Tools.Model;
+using TGC.Core.Textures;
 
 namespace TGC.Tools.TerrainEditor
 {
@@ -34,7 +35,7 @@ namespace TGC.Tools.TerrainEditor
                 terrainTexture.Dispose();
             }
 
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
 
             //Rotar e invertir textura
             var b = (Bitmap)Image.FromFile(path);
@@ -154,7 +155,7 @@ namespace TGC.Tools.TerrainEditor
         /// <param name="center">Centro de la malla del terreno</param>
         public void loadPlainHeightmap(int width, int length, int level, float scaleXZ, float scaleY, TGCVector3 center)
         {
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
             this.center = center;
             ScaleXZ = scaleXZ;
             ScaleY = scaleY;
@@ -194,7 +195,7 @@ namespace TGC.Tools.TerrainEditor
         /// <param name="center">Centro de la malla del terreno</param>
         public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, TGCVector3 center)
         {
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
             this.center = center;
             ScaleXZ = scaleXZ;
             ScaleY = scaleY;
@@ -327,8 +328,8 @@ namespace TGC.Tools.TerrainEditor
             if (!Enabled)
                 return;
 
-            var d3dDevice = ToolsModel.Instance.D3dDevice;
-            var texturesManager = ToolsModel.Instance.TexturesManager;
+            var d3dDevice = D3DDevice.Instance.Device;
+            var texturesManager = TexturesManager.Instance;
             var transform = TGCMatrix.Translation(traslation) * TGCMatrix.Scaling(ScaleXZ, ScaleY, ScaleXZ);
 
             //Textura
@@ -336,8 +337,8 @@ namespace TGC.Tools.TerrainEditor
 
             texturesManager.clear(1);
 
-            ToolsModel.Instance.Shaders.setShaderMatrix(effect, transform);
-            d3dDevice.VertexDeclaration = ToolsModel.Instance.Shaders.VdecPositionColoredTextured;
+            TgcShaders.Instance.setShaderMatrix(effect, transform);
+            d3dDevice.VertexDeclaration = TgcShaders.Instance.VdecPositionColoredTextured;
             effect.Technique = technique;
             d3dDevice.SetStreamSource(0, vbTerrain, 0);
 

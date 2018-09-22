@@ -1,18 +1,14 @@
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
-using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Sound;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 using TGC.Tools.Example;
 using TGC.Tools.Forms;
-using TGC.Tools.Properties;
 
 namespace TGC.Tools.Model
 {
@@ -42,6 +38,12 @@ namespace TGC.Tools.Model
         /// Ejemplo actual.
         /// </summary>
         public TGCExampleTools CurrentExample { get; set; }
+
+        /// <summary>
+        ///     Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el
+        ///     Device de Direct3D
+        /// </summary>
+        public Control Panel3d { get; private set; }
 
         #region Singleton
 
@@ -237,70 +239,5 @@ namespace TGC.Tools.Model
         }
 
         #endregion Internal Methods
-
-        #region Getters and Setters and Public Methods
-
-        /// <summary>
-        ///     Direct3D Device
-        /// </summary>
-        public Device D3dDevice
-        {
-            get { return D3DDevice.Instance.Device; }
-        }
-
-        /// <summary>
-        ///     Tiempo en segundos transcurridos desde el último frame.
-        ///     Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
-        /// </summary>
-        public float ElapsedTime
-        {
-            get { return CurrentExample.ElapsedTime; }
-        }
-
-        /// <summary>
-        ///     Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el
-        ///     Device de Direct3D
-        /// </summary>
-        public Control Panel3d { get; private set; }
-
-        /// <summary>
-        ///     Herramienta para configurar texturas en el Device
-        /// </summary>
-        public TexturesManager TexturesManager
-        {
-            get { return TexturesManager.Instance; }
-        }
-
-        /// <summary>
-        ///     Configura la posicion de la cámara
-        /// </summary>
-        /// <param name="pos">Posición de la cámara</param>
-        /// <param name="lookAt">Punto hacia el cuál se quiere ver</param>
-        public void setCamera(TGCVector3 pos, TGCVector3 lookAt)
-        {
-            D3dDevice.Transform.View = TGCMatrix.LookAtLH(pos, lookAt, TGCVector3.Up);
-
-            //Imprimir posicion
-            var statusPos = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " + TgcParserUtils.printFloat(pos.Y) +
-                            ", " + TgcParserUtils.printFloat(pos.Z) + "] " +
-                            "- LookAt: [" + TgcParserUtils.printFloat(lookAt.X) + ", " +
-                            TgcParserUtils.printFloat(lookAt.Y) + ", " + TgcParserUtils.printFloat(lookAt.Z) + "]";
-            Form.setStatusPosition(statusPos);
-        }
-
-        /// <summary>
-        ///     Utilidad para manejo de shaders
-        /// </summary>
-        public TgcShaders Shaders
-        {
-            get { return TgcShaders.Instance; }
-        }
-
-        public string Media
-        {
-            get { return Settings.Default.MediaDirectory; }
-        }
-
-        #endregion Getters and Setters and Public Methods
     }
 }

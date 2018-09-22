@@ -7,8 +7,6 @@ using TGC.Core.Camara;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.Utils;
-using TGC.Tools.Model;
-using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Tools.TerrainEditor
 {
@@ -53,6 +51,8 @@ namespace TGC.Tools.TerrainEditor
         private TGCVector3 yAxis;
         private TGCVector3 zAxis;
 
+        private TgcD3dInput Input { get; }
+
         /// <summary>
         ///     Crea la cámara con valores iniciales.
         ///     Aceleración desactivada por Default
@@ -67,21 +67,19 @@ namespace TGC.Tools.TerrainEditor
         ///     Crea la cámara con valores iniciales.
         ///     Aceleración desactivada por Default
         /// </summary>
-        public TerrainFpsCamera()
+        public TerrainFpsCamera(TgcD3dInput input)
         {
+            Input = input;
             resetValues();
         }
 
         /// <summary>
         ///     Actualiza los valores de la camara
         /// </summary>
-        public void updateCamera()
+        public override void UpdateCamera(float elapsedTime)
         {
-            var elapsedTimeSec = ToolsModel.Instance.ElapsedTime;
-            var d3dInput = ToolsModel.Instance.Input;
-
             //Imprimir por consola la posicion actual de la camara
-            if ((d3dInput.keyDown(Key.LeftShift) || d3dInput.keyDown(Key.RightShift)) && d3dInput.keyPressed(Key.P))
+            if ((Input.keyDown(Key.LeftShift) || Input.keyDown(Key.RightShift)) && Input.keyPressed(Key.P))
             {
                 Debug.Write(TGCVector3.PrintVector3(getPosition()));
                 return;
@@ -91,18 +89,18 @@ namespace TGC.Tools.TerrainEditor
             var pitch = 0.0f;
 
             //Obtener direccion segun entrada de teclado
-            var direction = getMovementDirection(d3dInput);
+            var direction = getMovementDirection(Input);
 
-            pitch = d3dInput.YposRelative * RotationSpeed;
-            heading = d3dInput.XposRelative * RotationSpeed;
+            pitch = Input.YposRelative * RotationSpeed;
+            heading = Input.XposRelative * RotationSpeed;
 
             //Solo rotar si se esta aprentando el boton del mouse configurado
-            if (d3dInput.buttonDown(RotateMouseButton))
+            if (Input.buttonDown(RotateMouseButton))
             {
                 rotate(heading, pitch, 0.0f);
             }
 
-            updatePosition(direction, elapsedTimeSec);
+            updatePosition(direction, elapsedTime);
         }
 
         public TGCVector3 getPosition()

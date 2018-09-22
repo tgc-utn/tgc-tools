@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using TGC.Core.Camara;
 using TGC.Core.Collision;
+using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
@@ -40,7 +41,7 @@ namespace TGC.Tools.UserControls
             EditablePoly
         }
 
-        private TgcMeshCreator creator;
+        public TgcMeshCreator creator;
 
         private readonly string defaultMeshPath;
         private readonly string defaultTexturePath;
@@ -87,7 +88,7 @@ namespace TGC.Tools.UserControls
 
             //meshBrowser
             defaultMeshPath = MediaPath + "\\Meshes\\Vegetacion";
-            meshBrowser = new TgcMeshBrowser(ToolsModel.Instance.Media);
+            meshBrowser = new TgcMeshBrowser(creator.MediaDir);
             meshBrowser.setSelectedMesh(defaultMeshPath);
 
             //Export scene dialog
@@ -98,7 +99,7 @@ namespace TGC.Tools.UserControls
             exportSceneSaveDialog.Title = "Export scene to a -TgcScene.xml file";
 
             //Camara
-            Camera = new MeshCreatorCamera();
+            Camera = new MeshCreatorCamera(creator.Input);
             Camera.Enable = true;
             Camera.setCamera(new TGCVector3(0, 0, 0), 500);
             Camera.BaseRotX = -FastMath.PI / 4f;
@@ -117,7 +118,7 @@ namespace TGC.Tools.UserControls
             textBoxCreateCurrentLayer.Text = "Default";
 
             //Tab Modify
-            textureBrowser = new TgcTextureBrowser(ToolsModel.Instance.Media);
+            textureBrowser = new TgcTextureBrowser(creator.MediaDir);
             textureBrowser.ShowFolders = true;
             textureBrowser.setSelectedImage(defaultTexturePath);
             textureBrowser.AsyncModeEnable = true;
@@ -143,7 +144,7 @@ namespace TGC.Tools.UserControls
             objectBrowser = new ObjectBrowser(this);
 
             //TextureBrowser para EditablePoly
-            textureBrowserEPoly = new TgcTextureBrowser(ToolsModel.Instance.Media);
+            textureBrowserEPoly = new TgcTextureBrowser(creator.MediaDir);
             textureBrowserEPoly.ShowFolders = true;
             textureBrowserEPoly.setSelectedImage(defaultTexturePath);
             textureBrowserEPoly.AsyncModeEnable = true;
@@ -565,8 +566,8 @@ namespace TGC.Tools.UserControls
             }
             Camera.ZoomFactor = MeshCreatorUtils.getMouseZoomSpeed(Camera, q);
 
-            Camera.updateCamera();
-            Camera.updateViewTGCMatrix(ToolsModel.Instance.D3dDevice);
+            Camera.updateCamera(creator.ElapsedTime);
+            Camera.updateViewTGCMatrix(D3DDevice.Instance.Device);
         }
 
         /// <summary>

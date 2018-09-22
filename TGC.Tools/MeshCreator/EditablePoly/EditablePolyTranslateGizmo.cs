@@ -2,7 +2,6 @@
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Gizmos;
-using TGC.Tools.Model;
 
 namespace TGC.Tools.MeshCreator.EditablePoly
 {
@@ -48,7 +47,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         public void update()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = editablePoly.Control.creator.Input;
             var pickingRay = editablePoly.Control.PickingRay;
 
             switch (currentState)

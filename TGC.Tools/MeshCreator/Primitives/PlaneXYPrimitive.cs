@@ -4,7 +4,6 @@ using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Tools.Model;
 using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Primitives
@@ -107,7 +106,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         public override void initCreation(TGCVector3 gridPoint)
         {
             initSelectionPoint = gridPoint;
-            creatingInitMouseY = ToolsModel.Instance.Input.Ypos;
+            creatingInitMouseY = Control.creator.Input.Ypos;
 
             //Crear plano inicial
             var TGCPlaneTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
@@ -125,7 +124,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         /// </summary>
         public override void doCreation()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = Control.creator.Input;
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))

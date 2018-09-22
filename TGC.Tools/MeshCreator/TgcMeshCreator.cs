@@ -31,11 +31,11 @@ namespace TGC.Tools.MeshCreator
 
         public override void Init()
         {
-            //Crear Modifier especial para este editor
-            Modifier = AddMeshCreatorModifier(this);
-
             //Color de fondo
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(38, 38, 38), 1.0f, 0);
+
+            //Crear Modifier especial para este editor
+            Modifier = AddMeshCreatorModifier(this);
         }
 
         public override void Update()
