@@ -193,6 +193,16 @@ namespace TGC.Tools.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap ICON_MONKEY {
+            get {
+                object obj = ResourceManager.GetObject("ICON_MONKEY", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap ICON_RNDCURVE {
             get {
                 object obj = ResourceManager.GetObject("ICON_RNDCURVE", resourceCulture);

@@ -53,6 +53,13 @@ namespace TGC.Tools.Example
             return modifier;
         }
 
+        public TGCFileModifier AddFile(string varName, string defaultPath, string fileFilter)
+        {
+            var fileModifier = new TGCFileModifier(varName, defaultPath, fileFilter);
+            AddModifier(fileModifier);
+            return fileModifier;
+        }
+
         #endregion Facilitadores de Modifiers
 
         public void ClearModifiers()

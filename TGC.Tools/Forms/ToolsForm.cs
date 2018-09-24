@@ -6,6 +6,7 @@ using TGC.Tools.Model;
 using TGC.Tools.Properties;
 using TGC.Tools.RoomsEditor;
 using TGC.Tools.SceneEditor;
+using TGC.Tools.SceneLoader;
 using TGC.Tools.TerrainEditor;
 
 namespace TGC.Tools.Forms
@@ -50,7 +51,7 @@ namespace TGC.Tools.Forms
             Model = ToolsModel.Instance;
 
             //Verificamos la carpeta Media y la de TGC shaders basicos
-            if (Model.CheckFolder(Settings.MediaDirectory) || Model.CheckFolder(Settings.ShadersDirectory + Settings.CommonShaders))
+            if (Model.CheckFolder(Settings.MediaDirectory) || Model.CheckFolder(Settings.ShadersDirectory) || Model.CheckFolder(Settings.CommonShaders))
             {
                 if (OpenOption() == DialogResult.Cancel)
                 {
@@ -60,7 +61,7 @@ namespace TGC.Tools.Forms
             }
 
             //Iniciar graficos
-            Model.InitGraphics(this, panel3D, Settings.ShadersDirectory + Settings.CommonShaders);
+            Model.InitGraphics(this, panel3D, Settings.CommonShaders);
 
             try
             {
@@ -289,6 +290,11 @@ namespace TGC.Tools.Forms
         private void terrainEditorSoolStripButton_Click(object sender, EventArgs e)
         {
             ExcecuteExample(new TgcTerrainEditor(Settings.MediaDirectory, Settings.ShadersDirectory, splitContainerPrincipal.Panel2));
+        }
+
+        private void toolStripButtonSceneLoader_Click(object sender, EventArgs e)
+        {
+            ExcecuteExample(new SceneLoader.SceneLoader(Settings.MediaDirectory, Settings.ShadersDirectory, splitContainerPrincipal.Panel2));
         }
 
         private void mostrarPosiciónDeCámaraToolStripMenuItem_Click(object sender, EventArgs e)
