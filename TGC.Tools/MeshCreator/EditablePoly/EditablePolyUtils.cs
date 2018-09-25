@@ -246,7 +246,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             var lineVec = TGCVector3.Normalize(lineDiff);
 
             //Obtener angulo y vector de rotacion
-            var upVec = new TGCVector3(0, 1, 0);
+            var upVec = TGCVector3.Up;
             var angle = FastMath.Acos(TGCVector3.Dot(upVec, lineVec));
             var axisRotation = TGCVector3.Cross(upVec, lineVec);
             axisRotation.Normalize();
@@ -295,7 +295,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             }
             else
             {
-                lookAt = new TGCVector3(0, 0, 0);
+                lookAt = TGCVector3.Empty;
             }
             camera.setFixedView(lookAt, -FastMath.PI_HALF, 0, camera.CameraDistance);
         }
@@ -314,7 +314,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             }
             else
             {
-                lookAt = new TGCVector3(0, 0, 0);
+                lookAt = TGCVector3.Empty;
             }
             camera.setFixedView(lookAt, 0, FastMath.PI_HALF, camera.CameraDistance);
         }
@@ -333,7 +333,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             }
             else
             {
-                lookAt = new TGCVector3(0, 0, 0);
+                lookAt = TGCVector3.Empty;
             }
             camera.setFixedView(lookAt, 0, 0, camera.CameraDistance);
         }

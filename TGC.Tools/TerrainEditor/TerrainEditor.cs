@@ -130,7 +130,7 @@ namespace TGC.Tools.TerrainEditor
         /// <param name="scaleY"></param>
         public void loadHeightmap(string path, float scaleXZ, float scaleY)
         {
-            Terrain.loadHeightmap(path, scaleXZ, scaleY, new TGCVector3(0, 0, 0));
+            Terrain.loadHeightmap(path, scaleXZ, scaleY, TGCVector3.Empty);
             clearVegetation();
         }
 
@@ -144,7 +144,7 @@ namespace TGC.Tools.TerrainEditor
         /// <param name="scaleY"></param>
         public void loadPlainHeightmap(int width, int length, int level, float scaleXZ, float scaleY)
         {
-            Terrain.loadPlainHeightmap(width, length, level, scaleXZ, scaleY, new TGCVector3(0, 0, 0));
+            Terrain.loadPlainHeightmap(width, length, level, scaleXZ, scaleY, TGCVector3.Empty);
             clearVegetation();
         }
 

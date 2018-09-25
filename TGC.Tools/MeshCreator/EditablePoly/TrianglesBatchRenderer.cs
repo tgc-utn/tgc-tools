@@ -13,7 +13,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
     public class TrianglesBatchRenderer
     {
         private const int BATCH_SIZE = 1200;
-        private readonly TGCVector3 BOX_LINE_ORIGINAL_DIR = new TGCVector3(0, 1, 0);
+        private readonly TGCVector3 BOX_LINE_ORIGINAL_DIR = TGCVector3.Up;
         private readonly CustomVertex.PositionColored[] vertices;
         private int idx;
 

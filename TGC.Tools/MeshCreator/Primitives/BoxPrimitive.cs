@@ -9,7 +9,7 @@ using TGC.Tools.UserControls;
 namespace TGC.Tools.MeshCreator.Primitives
 {
     /// <summary>
-    ///     Primitiva de Box 3D
+    /// Primitiva de Box 3D
     /// </summary>
     public class BoxPrimitive : EditorPrimitive
     {
@@ -20,8 +20,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         private TGCBox mesh;
         private TGCVector3 originalSize;
 
-        public BoxPrimitive(MeshCreatorModifier control)
-            : base(control)
+        public BoxPrimitive(MeshCreatorModifier control) : base(control)
         {
             Name = "Box_" + PRIMITIVE_COUNT++;
         }
@@ -69,7 +68,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Configurar tamaño del box
+        /// Configurar tamaño del box
         /// </summary>
         public override TGCVector3 Scale
         {
@@ -104,7 +103,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Iniciar la creacion
+        /// Iniciar la creacion
         /// </summary>
         public override void initCreation(TGCVector3 gridPoint)
         {
@@ -112,14 +111,15 @@ namespace TGC.Tools.MeshCreator.Primitives
             currentCreatingState = CreatingBoxState.DraggingSize;
 
             //Crear caja inicial
-            var boxTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
+            var boxTexture = TgcTexture.createTexture(Control.CreationTexturePath());
             mesh = TGCBox.fromExtremes(initSelectionPoint, initSelectionPoint, boxTexture);
             mesh.BoundingBox.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
+            mesh.AutoTransform = true;
             Layer = Control.CurrentLayer;
         }
 
         /// <summary>
-        ///     Construir caja
+        /// Construir caja
         /// </summary>
         public override void doCreation()
         {
@@ -179,12 +179,12 @@ namespace TGC.Tools.MeshCreator.Primitives
                         Control.CreatingPrimitive = new BoxPrimitive(Control);
 
                         //Agregar box a la lista de modelos
-                        Control.addMesh(this);
+                        Control.AddMesh(this);
 
                         //Seleccionar Box
                         Control.SelectionRectangle.clearSelection();
                         Control.SelectionRectangle.selectObject(this);
-                        Control.updateModifyPanel();
+                        Control.UpdateModifyPanel();
                     }
                     //Determinar altura en base a la posicion Y del mouse
                     else
@@ -236,6 +236,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             var m = mesh.ToMesh(Name);
             m.UserProperties = UserProperties;
             m.Layer = Layer;
+            m.AutoTransform = true;
             return m;
         }
 
@@ -243,6 +244,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         {
             var p = new BoxPrimitive(Control);
             p.mesh = mesh.clone();
+            p.mesh.AutoTransform = true;
             p.originalSize = originalSize;
             p.UserProperties = UserProperties;
             p.Layer = Layer;
@@ -257,7 +259,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Estado cuando se esta creando un Box
+        /// Estado cuando se esta creando un Box
         /// </summary>
         private enum CreatingBoxState
         {

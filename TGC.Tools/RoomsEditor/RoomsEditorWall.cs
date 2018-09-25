@@ -47,11 +47,11 @@ namespace TGC.Tools.RoomsEditor
             switch (type)
             {
                 case Types.Roof:
-                    Normal = new TGCVector3(0, -1, 0);
+                    Normal = TGCVector3.Down;
                     break;
 
                 case Types.Floor:
-                    Normal = new TGCVector3(0, 1, 0);
+                    Normal = TGCVector3.Up;
                     break;
 
                 case Types.East:

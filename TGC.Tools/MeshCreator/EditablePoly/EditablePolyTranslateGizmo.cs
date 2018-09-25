@@ -122,7 +122,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                         var endMouseP3d = initMouseP3d;
 
                         //Solo se mueve un eje
-                        var currentMove = new TGCVector3(0, 0, 0);
+                        var currentMove = TGCVector3.Empty;
                         if (gizmoMesh.isSingleAxis(gizmoMesh.SelectedAxis))
                         {
                             //Desplazamiento en eje X
@@ -212,7 +212,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                             editablePoly.setDirtyValues(false);
 
                             //Actualizar datos de modify
-                            //Control.updateModifyPanel();
+                            //Control.UpdateModifyPanel();
                         }
                     }
 

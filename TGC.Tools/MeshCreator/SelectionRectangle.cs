@@ -139,7 +139,7 @@ namespace TGC.Tools.MeshCreator
                 }
 
                 //Actualizar panel de Modify con lo que se haya seleccionado, o lo que no
-                control.updateModifyPanel();
+                control.UpdateModifyPanel();
             }
 
             //Dibujar recuadro
@@ -199,7 +199,7 @@ namespace TGC.Tools.MeshCreator
             }
 
             //Actualizar panel de Modify con lo que se haya seleccionado, o lo que no
-            control.updateModifyPanel();
+            control.UpdateModifyPanel();
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace TGC.Tools.MeshCreator
                 p.setSelected(false);
             }
             control.SelectionList.Clear();
-            control.updateModifyPanel();
+            control.UpdateModifyPanel();
         }
 
         public void dispose()
@@ -275,7 +275,7 @@ namespace TGC.Tools.MeshCreator
 
             //Pasar a modo seleccion
             control.setSelectObjectState();
-            control.updateModifyPanel();
+            control.UpdateModifyPanel();
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace TGC.Tools.MeshCreator
             }
             else
             {
-                lookAt = new TGCVector3(0, 0, 0);
+                lookAt = TGCVector3.Empty;
             }
             control.Camera.setFixedView(lookAt, -FastMath.PI_HALF, 0, control.Camera.CameraDistance);
         }
@@ -332,7 +332,7 @@ namespace TGC.Tools.MeshCreator
             }
             else
             {
-                lookAt = new TGCVector3(0, 0, 0);
+                lookAt = TGCVector3.Empty;
             }
             control.Camera.setFixedView(lookAt, 0, FastMath.PI_HALF, control.Camera.CameraDistance);
         }
@@ -350,7 +350,7 @@ namespace TGC.Tools.MeshCreator
             }
             else
             {
-                lookAt = new TGCVector3(0, 0, 0);
+                lookAt = TGCVector3.Empty;
             }
             control.Camera.setFixedView(lookAt, 0, 0, control.Camera.CameraDistance);
         }

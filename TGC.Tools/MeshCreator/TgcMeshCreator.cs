@@ -31,9 +31,6 @@ namespace TGC.Tools.MeshCreator
 
         public override void Init()
         {
-            //Color de fondo
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(38, 38, 38), 1.0f, 0);
-
             //Crear Modifier especial para este editor
             Modifier = AddMeshCreatorModifier(this);
         }
@@ -48,8 +45,11 @@ namespace TGC.Tools.MeshCreator
         {
             PreRender();
 
-            //Delegar render al control
-            Modifier.render();
+            //Color de fondo, TGCExample deberia aceptar un BackgroundColor para evitar esto en cada Render, ya que en BeginRenderScene tambien se hace.
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(38, 38, 38), 1.0f, 0);
+
+            //Delegar Render al control
+            Modifier.Render();
 
             PostRender();
         }
@@ -57,7 +57,7 @@ namespace TGC.Tools.MeshCreator
         public override void Dispose()
         {
             //Delegar al control
-            Modifier.Dispose();
+            Modifier.DisposeElements();
         }
     }
 }

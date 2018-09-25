@@ -32,12 +32,12 @@ namespace TGC.Tools.SceneEditor
 
         public SceneEditorTranslateGizmo(TgcD3dInput input)
         {
-            boxX = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
-            boxY = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE), Color.Green);
-            boxZ = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE), Color.Blue);
+            boxX = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
+            boxX.AutoTransform = true;
+            boxY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE), Color.Green);
+            boxY.AutoTransform = true;
+            boxZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE), Color.Blue);
+            boxZ.AutoTransform = true;
 
             this.input = input;
         }
@@ -137,7 +137,7 @@ namespace TGC.Tools.SceneEditor
         /// </summary>
         public void updateMove()
         {
-            var currentMove = new TGCVector3(0, 0, 0);
+            var currentMove = TGCVector3.Empty;
 
             //Desplazamiento segun el mouse en X
             if (SelectedAxis == Axis.X)

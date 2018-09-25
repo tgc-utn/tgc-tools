@@ -158,9 +158,9 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         internal void resetValues()
         {
-            upVector = new TGCVector3(0.0f, 1.0f, 0.0f);
-            CameraCenter = new TGCVector3(0, 0, 0);
-            nextPos = new TGCVector3(0, 0, 0);
+            upVector = TGCVector3.Up;
+            CameraCenter = TGCVector3.Empty;
+            nextPos = TGCVector3.Empty;
             CameraDistance = DEFAULT_CAMERA_DISTANCE;
             ZoomFactor = DEFAULT_ZOOM_FACTOR;
             RotationSpeed = DEFAULT_ROTATION_SPEED;
@@ -185,7 +185,7 @@ namespace TGC.Tools.MeshCreator
             v.Scale(1 / length);
 
             CameraDistance = length;
-            upVector = new TGCVector3(0, 1, 0);
+            upVector = TGCVector3.Up;
             diffX = 0;
             diffY = 0.01f;
             diffZ = 1;
@@ -206,7 +206,7 @@ namespace TGC.Tools.MeshCreator
         public void setFixedView(TGCVector3 lookAt, float rotX, float rotY, float distance)
         {
             CameraDistance = distance;
-            upVector = new TGCVector3(0, 1, 0);
+            upVector = TGCVector3.Up;
             diffX = 0;
             diffY = 0.01f;
             diffZ = 1;

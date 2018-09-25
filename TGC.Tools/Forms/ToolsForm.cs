@@ -6,7 +6,6 @@ using TGC.Tools.Model;
 using TGC.Tools.Properties;
 using TGC.Tools.RoomsEditor;
 using TGC.Tools.SceneEditor;
-using TGC.Tools.SceneLoader;
 using TGC.Tools.TerrainEditor;
 
 namespace TGC.Tools.Forms
@@ -70,7 +69,7 @@ namespace TGC.Tools.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "No se pudo cargar el MeshCreator ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "No se pudo cargar el MeshCreator.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -80,7 +79,7 @@ namespace TGC.Tools.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error en RenderLoop del ejemplo: " + Model.CurrentExample.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error en RenderLoop de la herramienta.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             panel3D.Focus();

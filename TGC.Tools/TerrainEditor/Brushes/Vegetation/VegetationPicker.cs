@@ -21,8 +21,8 @@ namespace TGC.Tools.TerrainEditor.Brushes.Vegetation
 
         protected Font font;
         protected TgcText2D label;
-        private TGCVector3 rotationAxis = new TGCVector3(0, 1, 0);
-        private TGCVector3 scaleAxis = new TGCVector3(1, 1, 1);
+        private TGCVector3 rotationAxis = TGCVector3.Up;
+        private TGCVector3 scaleAxis = TGCVector3.One;
         private readonly TgcStaticSound sound;
 
         public VegetationPicker(TgcTerrainEditor editor)

@@ -40,7 +40,7 @@ namespace TGC.Tools.UserControls
             textureBrowser.ShowFolders = true;
             textureBrowser.setSelectedImage(Settings.Default.MediaDirectory + "Heighmaps\\TerrainTexture1-256x256.jpg");
             pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
-            terrainEditor.Terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value, (float)nudScaleY.Value, new TGCVector3(0, 0, 0));
+            terrainEditor.Terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value, (float)nudScaleY.Value, TGCVector3.Empty);
             terrainEditor.Terrain.loadTexture(textureBrowser.SelectedImage);
 
             shovel = new Shovel(terrainEditor);
@@ -238,10 +238,10 @@ namespace TGC.Tools.UserControls
 
         private void configVegetationBrush()
         {
-            var scale = new TGCVector3(0, 0, 0);
+            var scale = TGCVector3.Empty;
 
             if (cbSx.Checked) scale += new TGCVector3(1, 0, 0);
-            if (cbSy.Checked) scale += new TGCVector3(0, 1, 0);
+            if (cbSy.Checked) scale += TGCVector3.Up;
             if (cbSz.Checked) scale += new TGCVector3(0, 0, 1);
 
             vegetationPicker.ScaleAxis = scale;

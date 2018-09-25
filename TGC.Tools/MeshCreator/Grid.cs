@@ -111,7 +111,7 @@ namespace TGC.Tools.MeshCreator
                 return collisionPoint;
             }
 
-            return new TGCVector3(0, 0, 0);
+            return TGCVector3.Empty;
             //throw new Exception("Sin colision con Grid");
         }
 

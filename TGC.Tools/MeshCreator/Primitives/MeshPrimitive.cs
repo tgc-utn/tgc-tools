@@ -202,7 +202,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Actualizacion de estado en render loop del editablePoly
+        ///     Actualizacion de estado en Render loop del editablePoly
         /// </summary>
         public void doEditablePolyUpdate()
         {
@@ -419,9 +419,9 @@ namespace TGC.Tools.MeshCreator.Primitives
             }
 
             //Quitar movimientos del mesh
-            m.Position = new TGCVector3(0, 0, 0);
-            m.Scale = new TGCVector3(1, 1, 1);
-            m.Rotation = new TGCVector3(0, 0, 0);
+            m.Position = TGCVector3.Empty;
+            m.Scale = TGCVector3.One;
+            m.Rotation = TGCVector3.Empty;
             m.Transform = TGCMatrix.Identity;
             m.AutoTransform = true;
 

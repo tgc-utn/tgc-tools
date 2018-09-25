@@ -49,8 +49,8 @@ namespace TGC.Tools.SceneEditor
         {
             PreRender();
 
-            //Delegar render al control
-            Modifier.render();
+            //Delegar RenderModifier al control
+            Modifier.Render();
 
             PostRender();
         }
@@ -58,7 +58,7 @@ namespace TGC.Tools.SceneEditor
         public override void Dispose()
         {
             //Delegar al control
-            Modifier.close();
+            Modifier.DisposeElements();
         }
 
         /// <summary>

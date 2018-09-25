@@ -24,12 +24,12 @@ using TGC.Tools.Properties;
 namespace TGC.Tools.UserControls
 {
     /// <summary>
-    ///     Control grafico de MeshCreator
+    /// Control grafico de MeshCreator
     /// </summary>
     public partial class MeshCreatorModifier : UserControl
     {
         /// <summary>
-        ///     Estado general del editor
+        /// Estado general del editor
         /// </summary>
         public enum State
         {
@@ -73,7 +73,7 @@ namespace TGC.Tools.UserControls
             this.creator = creator;
             Meshes = new List<EditorPrimitive>();
             SelectionList = new List<EditorPrimitive>();
-            PickingRay = new TgcPickingRay(ToolsModel.Instance.Input);
+            PickingRay = new TgcPickingRay(creator.Input);
             Grid = new Grid(this);
             SelectionRectangle = new SelectionRectangle(this);
             CreatingPrimitive = null;
@@ -101,7 +101,7 @@ namespace TGC.Tools.UserControls
             //Camara
             Camera = new MeshCreatorCamera(creator.Input);
             Camera.Enable = true;
-            Camera.setCamera(new TGCVector3(0, 0, 0), 500);
+            Camera.setCamera(TGCVector3.Empty, 500);
             Camera.BaseRotX = -FastMath.PI / 4f;
             creator.Camara = Camera;
 
@@ -126,7 +126,7 @@ namespace TGC.Tools.UserControls
             textureBrowser.OnClose += textureBrowser_OnClose;
             pictureBoxModifyTexture.ImageLocation = defaultTexturePath;
             pictureBoxModifyTexture.Image = MeshCreatorUtils.getImage(defaultTexturePath);
-            updateModifyPanel();
+            UpdateModifyPanel();
 
             //ObjectPosition Text
             objectPositionText = new TgcText2D();
@@ -201,57 +201,57 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Objetos del escenario
+        /// Objetos del escenario
         /// </summary>
         public List<EditorPrimitive> Meshes { get; }
 
         /// <summary>
-        ///     Objetos seleccionados
+        /// Objetos seleccionados
         /// </summary>
         public List<EditorPrimitive> SelectionList { get; }
 
         /// <summary>
-        ///     Grid
+        /// Grid
         /// </summary>
         public Grid Grid { get; }
 
         /// <summary>
-        ///     Camara
+        /// Camara
         /// </summary>
         public MeshCreatorCamera Camera { get; }
 
         /// <summary>
-        ///     PickingRay
+        /// PickingRay
         /// </summary>
         public TgcPickingRay PickingRay { get; }
 
         /// <summary>
-        ///     Estado actual
+        /// Estado actual
         /// </summary>
         public State CurrentState { get; set; }
 
         /// <summary>
-        ///     Primitiva actual seleccionada para crear
+        /// Primitiva actual seleccionada para crear
         /// </summary>
         public EditorPrimitive CreatingPrimitive { get; set; }
 
         /// <summary>
-        ///     Gizmo seleccionado actualmente
+        /// Gizmo seleccionado actualmente
         /// </summary>
         public EditorGizmo CurrentGizmo { get; set; }
 
         /// <summary>
-        ///     Rectangulo de seleccion
+        /// Rectangulo de seleccion
         /// </summary>
         public SelectionRectangle SelectionRectangle { get; }
 
         /// <summary>
-        ///     Archivos de Media propios del editor
+        /// Archivos de Media propios del editor
         /// </summary>
         public string MediaPath { get; }
 
         /// <summary>
-        ///     Mostrar AABB de los objetos no seleccionados
+        /// Mostrar AABB de los objetos no seleccionados
         /// </summary>
         public bool ShowObjectsAABB
         {
@@ -259,7 +259,7 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Hacer Snap to Grid
+        /// Hacer Snap to Grid
         /// </summary>
         public bool SnapToGridEnabled
         {
@@ -267,17 +267,17 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Tamaño de celda de Snap to grid
+        /// Tamaño de celda de Snap to grid
         /// </summary>
         public float SnapToGridCellSize { get; private set; }
 
         /// <summary>
-        ///     True si hay un popup abierto y hay que evitar eventos
+        /// True si hay un popup abierto y hay que evitar eventos
         /// </summary>
         public bool PopupOpened { get; set; }
 
         /// <summary>
-        ///     Layer default actual para crear nuevos objetos
+        /// Layer default actual para crear nuevos objetos
         /// </summary>
         public string CurrentLayer
         {
@@ -285,7 +285,7 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Indica si hay que escalar para ambas direcciones o solo una
+        /// Indica si hay que escalar para ambas direcciones o solo una
         /// </summary>
         public bool ScaleBothDirections
         {
@@ -293,14 +293,14 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Flag para ignorar eventos de UI
+        /// Flag para ignorar eventos de UI
         /// </summary>
         public bool IgnoreChangeEvents { get; set; }
 
         /// <summary>
-        ///     Ciclo loop del editor
+        /// Ciclo loop del editor
         /// </summary>
-        public void render()
+        public void Render()
         {
             //Hacer update de estado salvo que haya un popup abierto
             if (!PopupOpened)
@@ -308,49 +308,49 @@ namespace TGC.Tools.UserControls
                 //Modo camara FPS
                 if (fpsCameraEnabled)
                 {
-                    doFpsCameraMode();
+                    FPSCameraMode();
                 }
                 //Modo normal
                 else
                 {
                     //Procesar shorcuts de teclado
-                    processShortcuts();
+                    ProcessShortcuts();
 
                     //Actualizar camara
-                    updateCamera();
+                    UpdateCamera();
 
                     //Maquina de estados
                     switch (CurrentState)
                     {
                         case State.SelectObject:
-                            doSelectObject();
+                            SelectObject();
                             break;
 
                         case State.SelectingObject:
-                            doSelectingObject();
+                            SelectingObject();
                             break;
 
                         case State.CreatePrimitiveSelected:
-                            doCreatePrimitiveSelected();
+                            CreatePrimitiveSelected();
                             break;
 
                         case State.CreatingPrimitve:
-                            doCreatingPrimitve();
+                            CreatingAPrimitive();
                             break;
 
                         case State.GizmoActivated:
-                            doGizmoActivated();
+                            GizmoActivated();
                             break;
 
                         case State.EditablePoly:
-                            doEditablePoly();
+                            EditablePoly();
                             break;
                     }
                 }
             }
 
             //Dibujar objetos del escenario (siempre, aunque no haya foco)
-            renderObjects();
+            RenderObjects();
 
             //Dibujar gizmo (sin Z-Buffer, al final de tod)
             if (CurrentGizmo != null && SelectionList.Count > 0)
@@ -360,15 +360,15 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Procesar shorcuts de teclado
+        /// Procesar shorcuts de teclado
         /// </summary>
-        private void processShortcuts()
+        private void ProcessShortcuts()
         {
             //Solo en estados pasivos
             if (CurrentState == State.SelectObject || CurrentState == State.CreatePrimitiveSelected
                 || CurrentState == State.GizmoActivated || CurrentState == State.EditablePoly)
             {
-                var input = ToolsModel.Instance.Input;
+                var input = creator.Input;
 
                 //Acciones que no se pueden hacer si estamos en modo EditablePoly
                 if (CurrentState != State.EditablePoly)
@@ -486,9 +486,9 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Dibujar todos los objetos
+        /// Dibujar todos los objetos
         /// </summary>
-        private void renderObjects()
+        private void RenderObjects()
         {
             //Objetos opacos
             foreach (var mesh in Meshes)
@@ -550,9 +550,9 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Actualizar camara segun movimientos
+        /// Actualizar camara segun movimientos
         /// </summary>
-        private void updateCamera()
+        private void UpdateCamera()
         {
             //Ajustar velocidad de zoom segun distancia a objeto
             TGCVector3 q;
@@ -571,14 +571,14 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Modo camara FPS
+        /// Modo camara FPS
         /// </summary>
-        private void doFpsCameraMode()
+        private void FPSCameraMode()
         {
             //No hay actualizar la camara FPS, la actualiza ToolsModel
 
             //Detectar si hay que salor de este modo
-            var input = ToolsModel.Instance.Input;
+            var input = creator.Input;
             if (input.keyPressed(Key.F))
             {
                 radioButtonFPSCamera.Checked = false;
@@ -586,27 +586,27 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Estado: seleccionar objetos (estado default)
+        /// Estado: seleccionar objetos (estado default)
         /// </summary>
-        private void doSelectObject()
+        private void SelectObject()
         {
             SelectionRectangle.doSelectObject();
         }
 
         /// <summary>
-        ///     Estado: Cuando se esta arrastrando el mouse para armar el cuadro de seleccion
+        /// Estado: Cuando se esta arrastrando el mouse para armar el cuadro de seleccion
         /// </summary>
-        private void doSelectingObject()
+        private void SelectingObject()
         {
             SelectionRectangle.render();
         }
 
         /// <summary>
-        ///     Estado: cuando se hizo clic en algun boton de primitiva para crear
+        /// Estado: cuando se hizo clic en algun boton de primitiva para crear
         /// </summary>
-        private void doCreatePrimitiveSelected()
+        private void CreatePrimitiveSelected()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = creator.Input;
 
             //Quitar gizmo actual
             CurrentGizmo = null;
@@ -621,17 +621,17 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Estado: mientras se esta creando una primitiva
+        /// Estado: mientras se esta creando una primitiva
         /// </summary>
-        private void doCreatingPrimitve()
+        private void CreatingAPrimitive()
         {
             CreatingPrimitive.doCreation();
         }
 
         /// <summary>
-        ///     Estado: se traslada, rota o escala un objeto
+        /// Estado: se traslada, rota o escala un objeto
         /// </summary>
-        private void doGizmoActivated()
+        private void GizmoActivated()
         {
             if (SelectionList.Count > 0)
             {
@@ -640,43 +640,42 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Estado: hay un objeto en modo editablePoly
+        /// Estado: hay un objeto en modo editablePoly
         /// </summary>
-        private void doEditablePoly()
+        private void EditablePoly()
         {
             var p = (MeshPrimitive)SelectionList[0];
             p.doEditablePolyUpdate();
         }
 
         /// <summary>
-        ///     Agregar mesh creado
+        /// Agregar mesh creado
         /// </summary>
-        public void addMesh(EditorPrimitive mesh)
+        public void AddMesh(EditorPrimitive mesh)
         {
             Meshes.Add(mesh);
         }
 
         /// <summary>
-        ///     Textura para crear un nuevo objeto
+        /// Textura para crear un nuevo objeto
         /// </summary>
-        /// <returns></returns>
-        public string getCreationTexturePath()
+        public string CreationTexturePath()
         {
             return pictureBoxModifyTexture.ImageLocation;
         }
 
         /// <summary>
-        ///     Nombre para crear una nueva primitiva
+        /// Nombre para crear una nueva primitiva
         /// </summary>
-        public string getNewPrimitiveName(string type)
+        public string NewPrimitiveName(string type)
         {
             return type + "_" + primitiveNameCounter++;
         }
 
         /// <summary>
-        ///     Eliminar los objetos especificados
+        /// Eliminar los objetos especificados
         /// </summary>
-        public void deleteObjects(List<EditorPrimitive> objectsToDelete)
+        public void DeleteObjects(List<EditorPrimitive> objectsToDelete)
         {
             foreach (var p in objectsToDelete)
             {
@@ -689,7 +688,7 @@ namespace TGC.Tools.UserControls
             }
 
             //Actualizar panel de modifiy
-            updateModifyPanel();
+            UpdateModifyPanel();
 
             //Quitar gizmo actual
             CurrentGizmo = null;
@@ -699,9 +698,9 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Eliminar todos los objetos seleccionados
+        /// Eliminar todos los objetos seleccionados
         /// </summary>
-        public void deleteSelectedObjects()
+        public void DeleteSelectedObjects()
         {
             foreach (var p in SelectionList)
             {
@@ -711,7 +710,7 @@ namespace TGC.Tools.UserControls
 
             //Limpiar lista de seleccion
             SelectionList.Clear();
-            updateModifyPanel();
+            UpdateModifyPanel();
 
             //Quitar gizmo actual
             CurrentGizmo = null;
@@ -721,10 +720,10 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Mostrar u ocultar una lista de objetos.
-        ///     Si estaban seleccionados y se ocultan los quita de la lista de seleccion
+        /// Mostrar u ocultar una lista de objetos.
+        /// Si estaban seleccionados y se ocultan los quita de la lista de seleccion
         /// </summary>
-        public void showHideObjects(List<EditorPrimitive> objects, bool show)
+        public void ShowHideObjects(List<EditorPrimitive> objects, bool show)
         {
             if (objects.Count > 0)
             {
@@ -748,7 +747,7 @@ namespace TGC.Tools.UserControls
                     }
                 }
 
-                updateModifyPanel();
+                UpdateModifyPanel();
 
                 //Quitar gizmo actual
                 CurrentGizmo = null;
@@ -759,9 +758,9 @@ namespace TGC.Tools.UserControls
         }
 
         /// <summary>
-        ///     Cargar Tab de Modify cuando hay un objeto seleccionado
+        /// Cargar Tab de Modify cuando hay un objeto seleccionado
         /// </summary>
-        public void updateModifyPanel()
+        public void UpdateModifyPanel()
         {
             IgnoreChangeEvents = true;
             if (SelectionList.Count >= 1)
@@ -922,10 +921,9 @@ namespace TGC.Tools.UserControls
             IgnoreChangeEvents = false;
         }
 
-        /// <summary>
-        /// Liberar recursos
+        /// <summary> Liberar recursos
         /// </summary>
-        public void Dispose()
+        public void DisposeElements()
         {
             foreach (var mesh in Meshes)
             {
@@ -1128,7 +1126,7 @@ namespace TGC.Tools.UserControls
             if (SelectionList.Count > 0)
             {
                 var objectsToHide = new List<EditorPrimitive>(SelectionList);
-                showHideObjects(objectsToHide, false);
+                ShowHideObjects(objectsToHide, false);
             }
         }
 
@@ -1148,7 +1146,7 @@ namespace TGC.Tools.UserControls
         /// </summary>
         private void buttonDeleteObject_Click(object sender, EventArgs e)
         {
-            deleteSelectedObjects();
+            DeleteSelectedObjects();
         }
 
         /// <summary>
@@ -1175,7 +1173,7 @@ namespace TGC.Tools.UserControls
                 }
                 CurrentState = State.SelectObject;
                 SelectionRectangle.activateCurrentGizmo();
-                updateModifyPanel();
+                UpdateModifyPanel();
             }
         }
 
@@ -1196,7 +1194,7 @@ namespace TGC.Tools.UserControls
             {
                 //Limpiar lista de seleccion
                 SelectionRectangle.clearSelection();
-                updateModifyPanel();
+                UpdateModifyPanel();
 
                 //Quitar gizmo actual
                 CurrentGizmo = null;
@@ -1258,7 +1256,7 @@ namespace TGC.Tools.UserControls
                     }
                     CurrentState = State.SelectObject;
                     SelectionRectangle.activateCurrentGizmo();
-                    updateModifyPanel();
+                    UpdateModifyPanel();
                 }
                 catch (Exception ex)
                 {
@@ -1321,7 +1319,7 @@ namespace TGC.Tools.UserControls
                 }
 
                 //Eliminar los originales
-                deleteSelectedObjects();
+                DeleteSelectedObjects();
 
                 //Hacer merge
                 var exporter = new TgcSceneExporter();
@@ -1335,11 +1333,11 @@ namespace TGC.Tools.UserControls
 
                 //Agregar nuevo mesh al escenario y seleccionarlo
                 EditorPrimitive pMerged = new MeshPrimitive(this, mergedMesh);
-                addMesh(pMerged);
+                AddMesh(pMerged);
                 SelectionRectangle.selectObject(pMerged);
                 CurrentState = State.SelectObject;
                 SelectionRectangle.activateCurrentGizmo();
-                updateModifyPanel();
+                UpdateModifyPanel();
             }
         }
 
@@ -1774,7 +1772,7 @@ namespace TGC.Tools.UserControls
             {
                 p.updateBoundingBox();
             }
-            updateModifyPanel();
+            UpdateModifyPanel();
         }
 
         /// <summary>
@@ -1887,17 +1885,17 @@ namespace TGC.Tools.UserControls
             }
 
             //Eliminar objetos anteriores
-            deleteObjects(objectToDelete);
+            DeleteObjects(objectToDelete);
 
             //Agregar nuevos objetos al escenario y seleccionarlos
             foreach (var p in newObjects)
             {
-                addMesh(p);
+                AddMesh(p);
                 SelectionRectangle.selectObject(p);
             }
             CurrentState = State.SelectObject;
             SelectionRectangle.activateCurrentGizmo();
-            updateModifyPanel();
+            UpdateModifyPanel();
         }
 
         #endregion Eventos de Modify

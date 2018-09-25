@@ -7,7 +7,7 @@ using TGC.Core.Mathematica;
 namespace TGC.Tools.MeshCreator.Gizmos
 {
     /// <summary>
-    ///     Mesh para renderizar un gizmo de Translate
+    /// Mesh para renderizar un gizmo de Translate
     /// </summary>
     public class TranslateGizmoMesh
     {
@@ -37,32 +37,32 @@ namespace TGC.Tools.MeshCreator.Gizmos
         {
             SelectedAxis = Axis.None;
 
-            boxX = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
-            boxY = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Green);
-            boxZ = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.Blue);
-            boxXZ = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
-            boxXY = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Orange);
-            boxYZ = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
+            boxX = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
+            boxX.AutoTransform = true;
+            boxY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Green);
+            boxY.AutoTransform = true;
+            boxZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.Blue);
+            boxZ.AutoTransform = true;
+            boxXZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
+            boxXZ.AutoTransform = true;
+            boxXY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Orange);
+            boxXY.AutoTransform = true;
+            boxYZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
+            boxYZ.AutoTransform = true;
         }
 
         /// <summary>
-        ///     Eje seleccionado
+        /// Eje seleccionado
         /// </summary>
         public Axis SelectedAxis { get; private set; }
 
         /// <summary>
-        ///     Centro del gizmo
+        /// Centro del gizmo
         /// </summary>
         public TGCVector3 GizmoCenter { get; private set; }
 
         /// <summary>
-        ///     Setear centro del gizmo y ajustar tamaño segun distancia con la camara
+        /// Setear centro del gizmo y ajustar tamaño segun distancia con la camara
         /// </summary>
         public void setCenter(TGCVector3 gizmoCenter, MeshCreatorCamera camera)
         {
@@ -72,12 +72,9 @@ namespace TGC.Tools.MeshCreator.Gizmos
             boxX.Size = TGCVector3.Multiply(new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
             boxY.Size = TGCVector3.Multiply(new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
             boxZ.Size = TGCVector3.Multiply(new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), increment);
-            boxXZ.Size = TGCVector3.Multiply(new TGCVector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE),
-                increment);
-            boxXY.Size = TGCVector3.Multiply(new TGCVector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE),
-                increment);
-            boxYZ.Size = TGCVector3.Multiply(new TGCVector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE),
-                increment);
+            boxXZ.Size = TGCVector3.Multiply(new TGCVector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), increment);
+            boxXY.Size = TGCVector3.Multiply(new TGCVector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
+            boxYZ.Size = TGCVector3.Multiply(new TGCVector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), increment);
 
             boxX.Position = gizmoCenter + TGCVector3.Multiply(boxX.Size, 0.5f) + new TGCVector3(SHORT_AXIS_SIZE, 0, 0);
             boxY.Position = gizmoCenter + TGCVector3.Multiply(boxY.Size, 0.5f) + new TGCVector3(0, SHORT_AXIS_SIZE, 0);
@@ -95,8 +92,8 @@ namespace TGC.Tools.MeshCreator.Gizmos
         }
 
         /// <summary>
-        ///     Hacer picking contra todos los ejes y devolver el eje seleccionado (si hay colision).
-        ///     Tambien se evaluan los ejes compuestos (XY, XZ, YZ)
+        /// Hacer picking contra todos los ejes y devolver el eje seleccionado (si hay colision).
+        /// Tambien se evaluan los ejes compuestos (XY, XZ, YZ)
         /// </summary>
         public Axis doPickAxis(TgcRay ray)
         {

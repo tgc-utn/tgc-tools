@@ -13,7 +13,7 @@ using TGC.Tools.Forms;
 namespace TGC.Tools.Model
 {
     /// <summary>
-    ///     Controlador principal de la aplicación
+    /// Controlador principal de la aplicación
     /// </summary>
     public class ToolsModel
     {
@@ -27,28 +27,27 @@ namespace TGC.Tools.Model
         /// <summary>
         /// Controlador de sonido.
         /// </summary>
-        public TgcDirectSound DirectSound { get; set; }
+        private TgcDirectSound DirectSound { get; set; }
 
         /// <summary>
         /// Controlador de inputs.
         /// </summary>
-        public TgcD3dInput Input { get; set; }
+        private TgcD3dInput Input { get; set; }
 
         /// <summary>
         /// Ejemplo actual.
         /// </summary>
-        public TGCExampleTools CurrentExample { get; set; }
+        private TGCExampleTools CurrentExample { get; set; }
 
         /// <summary>
-        ///     Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el
-        ///     Device de Direct3D
+        /// Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el Device de Direct3D
         /// </summary>
         public Control Panel3d { get; private set; }
 
         #region Singleton
 
         /// <summary>
-        ///     Constructor privado para poder hacer el singleton
+        /// Constructor privado para poder hacer el singleton
         /// </summary>
         private ToolsModel() { }
 
@@ -97,7 +96,7 @@ namespace TGC.Tools.Model
         }
 
         /// <summary>
-        /// Se inicia el render loop del ejemplo.
+        /// Se inicia el Render loop del ejemplo.
         /// </summary>
         public void InitRenderLoop()
         {
@@ -167,8 +166,8 @@ namespace TGC.Tools.Model
         }
 
         /// <summary>
-        ///     Arranca a ejecutar un ejemplo.
-        ///     Para el ejemplo anterior, si hay alguno.
+        /// Arranca a ejecutar un ejemplo.
+        /// Para el ejemplo anterior, si hay alguno.
         /// </summary>
         /// <param name="example"></param>
         internal void ExecuteExample(TGCExampleTools example)

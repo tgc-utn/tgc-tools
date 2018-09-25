@@ -9,7 +9,7 @@ using TGC.Tools.UserControls;
 namespace TGC.Tools.MeshCreator.Primitives
 {
     /// <summary>
-    ///     Primitiva de Sphere 3D
+    /// Primitiva de Sphere 3D
     /// </summary>
     public class SpherePrimitive : EditorPrimitive
     {
@@ -19,17 +19,11 @@ namespace TGC.Tools.MeshCreator.Primitives
         private float originalRadius;
         private float scale = 1;
 
-        public SpherePrimitive(MeshCreatorModifier control)
-            : base(control)
+        public SpherePrimitive(MeshCreatorModifier control) : base(control)
         {
             bb = new TgcBoundingAxisAlignBox();
             Name = "Sphere_" + PRIMITIVE_COUNT++;
         }
-
-        /*public override TgcBoundingSphere BoundingSphere
-        {
-            get { return mesh.BoundingSphere; }
-        }*/
 
         public override TgcBoundingAxisAlignBox BoundingBox
         {
@@ -78,7 +72,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Configurar tamaño del sphere
+        /// Configurar tamaño del sphere
         /// </summary>
         public override TGCVector3 Scale
         {
@@ -124,24 +118,24 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Iniciar la creacion
+        /// Iniciar la creacion
         /// </summary>
         public override void initCreation(TGCVector3 gridPoint)
         {
             initSelectionPoint = gridPoint;
 
             //Crear caja inicial
-            var sphereTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
+            var sphereTexture = TgcTexture.createTexture(Control.CreationTexturePath());
             mesh = new TGCSphere();
-
             mesh.setTexture(sphereTexture);
             // mesh.BoundingSphere.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
+            mesh.AutoTransform = true;
             bb.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
             Layer = Control.CurrentLayer;
         }
 
         /// <summary>
-        ///     Construir caja
+        /// Construir caja
         /// </summary>
         public override void doCreation()
         {
@@ -167,12 +161,12 @@ namespace TGC.Tools.MeshCreator.Primitives
                 Control.CreatingPrimitive = new SpherePrimitive(Control);
 
                 //Agregar sphere a la lista de modelos
-                Control.addMesh(this);
+                Control.AddMesh(this);
 
                 //Seleccionar Box
                 Control.SelectionRectangle.clearSelection();
                 Control.SelectionRectangle.selectObject(this);
-                Control.updateModifyPanel();
+                Control.UpdateModifyPanel();
             }
         }
 
@@ -212,6 +206,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             var m = mesh.toMesh(Name);
             m.UserProperties = UserProperties;
             m.Layer = Layer;
+            m.AutoTransform = true;
             return m;
         }
 
@@ -219,6 +214,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         {
             var p = new SpherePrimitive(Control);
             p.mesh = mesh.clone();
+            p.mesh.AutoTransform = true;
             p.originalRadius = originalRadius;
             p.Scale = Scale;
             p.UserProperties = UserProperties;

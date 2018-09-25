@@ -59,7 +59,7 @@ namespace TGC.Tools.UserControls
             this.editor = editor;
             parser = new TgcSceneParser();
             sceneLoader = new TgcSceneLoader();
-            pickingRay = new TgcPickingRay(ToolsModel.Instance.Input);
+            pickingRay = new TgcPickingRay(editor.Input);
             translateGizmo = new SceneEditorTranslateGizmo(editor.Input);
             helpWindow = new SceneEditorHelpWindow();
 
@@ -229,7 +229,7 @@ namespace TGC.Tools.UserControls
         /// <summary>
         ///     Render Loop
         /// </summary>
-        internal void render()
+        internal void Render()
         {
             //Frustum culling
             doFrustumCulling();
@@ -285,7 +285,7 @@ namespace TGC.Tools.UserControls
         /// <summary>
         ///     Se cierra el ejemplo. Liberar recursos
         /// </summary>
-        internal void close()
+        internal void DisposeElements()
         {
             if (tgcTerrain != null)
             {
@@ -303,7 +303,7 @@ namespace TGC.Tools.UserControls
         /// </summary>
         private void handleInput()
         {
-            var input = ToolsModel.Instance.Input;
+            var input = editor.Input;
 
             //Seleccionar modelo
             if (currentState == GuiState.SelectionMode)
@@ -387,6 +387,7 @@ namespace TGC.Tools.UserControls
                     {
                         var mo = new SceneEditorMeshObject();
                         mo.mesh = mesh;
+                        mo.mesh.AutoTransform = true;
                         mo.name = mesh.Name + meshCounter++;
                         mo.userInfo = "";
                         mo.index = MeshObjects.Count;

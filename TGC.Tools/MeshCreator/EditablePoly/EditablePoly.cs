@@ -133,7 +133,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         }
 
         /// <summary>
-        ///     Actualizacion de estado en render loop
+        ///     Actualizacion de estado en Render loop
         /// </summary>
         public void update()
         {
@@ -630,7 +630,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             {
                 //No quedo nada del mesh. Eliminarlo del editor
                 Control.setEditablePolyEnable(false, PrimitiveType.None);
-                Control.deleteSelectedObjects();
+                Control.DeleteSelectedObjects();
             }
         }
 
@@ -818,6 +818,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         {
             //Obtener vertices del mesh
             mesh = origMesh;
+            mesh.AutoTransform = true;
             var origVertices = getMeshOriginalVertexData(origMesh);
             var origTriCount = origVertices.Count / 3;
 
@@ -1128,7 +1129,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             for (var i = 0; i < Vertices.Count; i++)
             {
                 Vertices[i].position += Vertices[i].movement;
-                Vertices[i].movement = new TGCVector3(0, 0, 0);
+                Vertices[i].movement = TGCVector3.Empty;
             }
 
             //Actualizar vertexBuffer
@@ -1204,6 +1205,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         public void updateValuesFromMesh(TgcMesh mesh)
         {
             this.mesh = mesh;
+            this.mesh.AutoTransform = true;
             var origVertices = getMeshOriginalVertexData(mesh);
             for (var i = 0; i < origVertices.Count; i++)
             {

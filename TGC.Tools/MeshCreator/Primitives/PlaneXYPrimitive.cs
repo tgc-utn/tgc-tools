@@ -9,7 +9,7 @@ using TGC.Tools.UserControls;
 namespace TGC.Tools.MeshCreator.Primitives
 {
     /// <summary>
-    ///     Primitiva de plano en el eje XY
+    /// Primitiva de plano en el eje XY
     /// </summary>
     public class TGCPlaneXYPrimitive : EditorPrimitive
     {
@@ -18,8 +18,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         private TgcPlane mesh;
         private TGCVector3 originalSize;
 
-        public TGCPlaneXYPrimitive(MeshCreatorModifier control)
-            : base(control)
+        public TGCPlaneXYPrimitive(MeshCreatorModifier control) : base(control)
         {
             Name = "TGCPlane_" + PRIMITIVE_COUNT++;
             ModifyCaps.ChangeRotation = false;
@@ -101,7 +100,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Iniciar la creacion
+        /// Iniciar la creacion
         /// </summary>
         public override void initCreation(TGCVector3 gridPoint)
         {
@@ -109,9 +108,8 @@ namespace TGC.Tools.MeshCreator.Primitives
             creatingInitMouseY = Control.creator.Input.Ypos;
 
             //Crear plano inicial
-            var TGCPlaneTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
-            mesh = new TgcPlane(initSelectionPoint, new TGCVector3(0, 0, 0), TgcPlane.Orientations.XYplane,
-                TGCPlaneTexture);
+            var TGCPlaneTexture = TgcTexture.createTexture(Control.CreationTexturePath());
+            mesh = new TgcPlane(initSelectionPoint, TGCVector3.Empty, TgcPlane.Orientations.XYplane, TGCPlaneTexture);
             mesh.AutoAdjustUv = false;
             mesh.UTile = 1;
             mesh.VTile = 1;
@@ -120,7 +118,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Construir plano
+        /// Construir plano
         /// </summary>
         public override void doCreation()
         {
@@ -163,12 +161,12 @@ namespace TGC.Tools.MeshCreator.Primitives
                     Control.CreatingPrimitive = new TGCPlaneXYPrimitive(Control);
 
                     //Agregar plano a la lista de modelos
-                    Control.addMesh(this);
+                    Control.AddMesh(this);
 
                     //Seleccionar plano
                     Control.SelectionRectangle.clearSelection();
                     Control.SelectionRectangle.selectObject(this);
-                    Control.updateModifyPanel();
+                    Control.UpdateModifyPanel();
                 }
                 //Sino, descartar
                 else
@@ -206,6 +204,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             var m = mesh.toMesh(Name);
             m.UserProperties = UserProperties;
             m.Layer = Layer;
+            m.AutoTransform = true;
             return m;
         }
 

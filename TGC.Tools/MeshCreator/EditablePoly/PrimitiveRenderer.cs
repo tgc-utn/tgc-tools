@@ -5,7 +5,7 @@ using TGC.Core.Mathematica;
 namespace TGC.Tools.MeshCreator.EditablePoly
 {
     /// <summary>
-    ///     Herramienta para renderizar las primitivas de Editable Poly
+    /// Herramienta para renderizar las primitivas de Editable Poly
     /// </summary>
     public class PrimitiveRenderer
     {
@@ -21,12 +21,14 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             this.editablePoly = editablePoly;
             batchRenderer = new TrianglesBatchRenderer();
 
-            vertexBox = TGCBox.fromSize(new TGCVector3(1, 1, 1), Color.Blue);
-            selectedVertexBox = TGCBox.fromSize(new TGCVector3(1, 1, 1), Color.Red);
+            vertexBox = TGCBox.fromSize(TGCVector3.One, Color.Blue);
+            vertexBox.AutoTransform = true;
+            selectedVertexBox = TGCBox.fromSize(TGCVector3.One, Color.Red);
+            selectedVertexBox.AutoTransform = true;
         }
 
         /// <summary>
-        ///     Dibujar primitivas
+        /// Dibujar primitivas
         /// </summary>
         /// <param name="transform">Transform TGCMatrix del mesh</param>
         public void render(TGCMatrix transform)
@@ -48,7 +50,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         }
 
         /// <summary>
-        ///     Dibujar vertices
+        /// Dibujar vertices
         /// </summary>
         private void renderVertices(TGCMatrix transform)
         {
@@ -62,7 +64,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         }
 
         /// <summary>
-        ///     Dibujar poligonos
+        /// Dibujar poligonos
         /// </summary>
         private void renderPolygons(TGCMatrix transform)
         {
@@ -119,7 +121,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         }
 
         /// <summary>
-        ///     Dibujar aristas
+        /// Dibujar aristas
         /// </summary>
         private void renderEdges(TGCMatrix transform)
         {

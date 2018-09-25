@@ -9,7 +9,7 @@ using TGC.Tools.UserControls;
 namespace TGC.Tools.MeshCreator.Primitives
 {
     /// <summary>
-    ///     Primitiva de plano en el eje XZ
+    /// Primitiva de plano en el eje XZ
     /// </summary>
     public class TGCPlaneXZPrimitive : EditorPrimitive
     {
@@ -100,15 +100,15 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Iniciar la creacion
+        /// Iniciar la creacion
         /// </summary>
         public override void initCreation(TGCVector3 gridPoint)
         {
             initSelectionPoint = gridPoint;
 
             //Crear plano inicial
-            var TGCPlaneTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
-            mesh = new TgcPlane(initSelectionPoint, new TGCVector3(0, 0, 0), TgcPlane.Orientations.XZplane,
+            var TGCPlaneTexture = TgcTexture.createTexture(Control.CreationTexturePath());
+            mesh = new TgcPlane(initSelectionPoint, TGCVector3.Empty, TgcPlane.Orientations.XZplane,
                 TGCPlaneTexture);
             mesh.AutoAdjustUv = false;
             mesh.UTile = 1;
@@ -118,7 +118,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         }
 
         /// <summary>
-        ///     Construir plano
+        /// Construir plano
         /// </summary>
         public override void doCreation()
         {
@@ -155,12 +155,12 @@ namespace TGC.Tools.MeshCreator.Primitives
                     Control.CreatingPrimitive = new TGCPlaneXZPrimitive(Control);
 
                     //Agregar plano a la lista de modelos
-                    Control.addMesh(this);
+                    Control.AddMesh(this);
 
                     //Seleccionar plano
                     Control.SelectionRectangle.clearSelection();
                     Control.SelectionRectangle.selectObject(this);
-                    Control.updateModifyPanel();
+                    Control.UpdateModifyPanel();
                 }
                 //Sino, descartar
                 else
@@ -198,6 +198,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             var m = mesh.toMesh(Name);
             m.UserProperties = UserProperties;
             m.Layer = Layer;
+            m.AutoTransform = true;
             return m;
         }
 

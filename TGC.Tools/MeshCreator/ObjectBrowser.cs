@@ -175,7 +175,7 @@ namespace TGC.Tools.MeshCreator
             }
 
             //Actualizar paneles
-            control.updateModifyPanel();
+            control.UpdateModifyPanel();
 
             //Quitar gizmo actual
             control.CurrentGizmo = null;
@@ -217,7 +217,7 @@ namespace TGC.Tools.MeshCreator
                     }
                 }
             }
-            control.showHideObjects(objectsToShowHide, show);
+            control.ShowHideObjects(objectsToShowHide, show);
             updateSelection();
         }
 
@@ -284,7 +284,7 @@ namespace TGC.Tools.MeshCreator
                         "Delete objects", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     //Borrar meshes
-                    control.deleteObjects(objectsToDelete);
+                    control.DeleteObjects(objectsToDelete);
 
                     //Borrar layers y objetos seleccionados del tree
                     for (var i = 0; i < treeViewObjects.Nodes.Count; i++)

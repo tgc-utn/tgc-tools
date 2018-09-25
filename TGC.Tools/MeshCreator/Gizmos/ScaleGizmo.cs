@@ -11,7 +11,7 @@ using TGC.Tools.UserControls;
 namespace TGC.Tools.MeshCreator.Gizmos
 {
     /// <summary>
-    ///     Gizmo para escalar objetos
+    /// Gizmo para escalar objetos
     /// </summary>
     public class ScaleGizmo : EditorGizmo
     {
@@ -26,18 +26,17 @@ namespace TGC.Tools.MeshCreator.Gizmos
         private TGCVector2 initMouseP;
         private Axis selectedAxis;
 
-        public ScaleGizmo(MeshCreatorModifier control)
-            : base(control)
+        public ScaleGizmo(MeshCreatorModifier control) : base(control)
         {
             selectedAxis = Axis.None;
             currentState = State.Init;
 
-            boxX = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(200, 50, 50));
-            boxY = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(50, 200, 50));
-            boxZ = TGCBox.fromExtremes(new TGCVector3(0, 0, 0),
-                new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.FromArgb(50, 50, 200));
+            boxX = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(200, 50, 50));
+            boxX.AutoTransform = true;
+            boxY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(50, 200, 50));
+            boxY.AutoTransform = true;
+            boxZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.FromArgb(50, 50, 200));
+            boxZ.AutoTransform = true;
         }
 
         public override void setEnabled(bool enabled)
@@ -56,7 +55,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
         }
 
         /// <summary>
-        ///     Configurar posicion y tamaño de ejes segun la distancia a la camara
+        /// Configurar posicion y tamaño de ejes segun la distancia a la camara
         /// </summary>
         private void setAxisPositionAndSize()
         {
@@ -169,9 +168,8 @@ namespace TGC.Tools.MeshCreator.Gizmos
 
                         //Hacer DOT product entre ambos vectores para obtener la contribucion del mouse en esa direccion
                         var scaling = TGCVector2.Dot(axisScreenVec, mouseScreenVec);
-                        scaling = MeshCreatorUtils.getMouseScaleIncrementSpeed(Control.Camera,
-                            currentAxisBox.BoundingBox, scaling);
-                        var currentScale = new TGCVector3(0, 0, 0);
+                        scaling = MeshCreatorUtils.getMouseScaleIncrementSpeed(Control.Camera, currentAxisBox.BoundingBox, scaling);
+                        var currentScale = TGCVector3.Empty;
 
                         //Escala en eje X
                         if (selectedAxis == Axis.X)
@@ -213,7 +211,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         //TODO: Hay que ir estirando los ejes a medida que se agranda la escala
 
                         //Actualizar datos de modify
-                        Control.updateModifyPanel();
+                        Control.UpdateModifyPanel();
                     }
 
                     //Soltar movimiento

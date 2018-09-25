@@ -114,7 +114,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         var endMouseP3d = initMouseP3d;
 
                         //Solo se mueve un eje
-                        var currentMove = new TGCVector3(0, 0, 0);
+                        var currentMove = TGCVector3.Empty;
                         if (gizmoMesh.isSingleAxis(gizmoMesh.SelectedAxis))
                         {
                             //Desplazamiento en eje X
@@ -194,7 +194,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         gizmoMesh.moveGizmo(currentMove);
 
                         //Actualizar datos de modify
-                        Control.updateModifyPanel();
+                        Control.UpdateModifyPanel();
                     }
 
                     //Soltar movimiento

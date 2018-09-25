@@ -73,8 +73,7 @@ namespace TGC.Tools.RoomsEditor
         /// <summary>
         ///     Actualizar datos de una pared
         /// </summary>
-        private void updateWallData(RoomsEditorWall wall, PictureBox image, CheckBox autoUv, NumericUpDown uTile,
-            NumericUpDown vTile)
+        private void updateWallData(RoomsEditorWall wall, PictureBox image, CheckBox autoUv, NumericUpDown uTile, NumericUpDown vTile)
         {
             if (wall.Texture != null)
             {
@@ -89,8 +88,7 @@ namespace TGC.Tools.RoomsEditor
         /// <summary>
         ///     Actualiza datos de la UI en base a una pared
         /// </summary>
-        private void updateUiData(RoomsEditorWall wall, PictureBox image, CheckBox autoUv, NumericUpDown uTile,
-            NumericUpDown vTile)
+        private void updateUiData(RoomsEditorWall wall, PictureBox image, CheckBox autoUv, NumericUpDown uTile, NumericUpDown vTile)
         {
             image.ImageLocation = wall.Texture.FilePath;
             autoUv.Checked = wall.AutoAdjustUv;
@@ -120,10 +118,8 @@ namespace TGC.Tools.RoomsEditor
             updateWallData(mapView.selectedRoom.Walls[1], floorImage, floorAutoUv, floorUTile, floorVTile);
             updateWallData(mapView.selectedRoom.Walls[2], eastWallImage, eastWallAutoUv, eastWallUTile, eastWallVTile);
             updateWallData(mapView.selectedRoom.Walls[3], westWallImage, westWallAutoUv, westWallUTile, westWallVTile);
-            updateWallData(mapView.selectedRoom.Walls[4], northWallImage, northWallAutoUv, northWallUTile,
-                northWallVTile);
-            updateWallData(mapView.selectedRoom.Walls[5], southWallImage, southWallAutoUv, southWallUTile,
-                southWallVTile);
+            updateWallData(mapView.selectedRoom.Walls[4], northWallImage, northWallAutoUv, northWallUTile, northWallVTile);
+            updateWallData(mapView.selectedRoom.Walls[5], southWallImage, southWallAutoUv, southWallUTile, southWallVTile);
         }
 
         /// <summary>

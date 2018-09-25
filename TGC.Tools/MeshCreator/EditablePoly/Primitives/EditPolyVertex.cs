@@ -14,7 +14,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
         /// <summary>
         ///     Sphere for ray-collisions
         /// </summary>
-        private static readonly TgcBoundingSphere COLLISION_SPHERE = new TgcBoundingSphere(new TGCVector3(0, 0, 0), 2);
+        private static readonly TgcBoundingSphere COLLISION_SPHERE = new TgcBoundingSphere(TGCVector3.Empty, 2);
 
         /*public TGCVector3 normal;
         public TGCVector2 texCoords;
@@ -28,7 +28,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
 
         public EditPolyVertex()
         {
-            movement = new TGCVector3(0, 0, 0);
+            movement = TGCVector3.Empty;
         }
 
         public override EditablePoly.PrimitiveType Type
