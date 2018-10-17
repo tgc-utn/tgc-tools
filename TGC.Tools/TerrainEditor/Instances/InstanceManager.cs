@@ -35,7 +35,8 @@ namespace TGC.Tools.TerrainEditor.Instances
 
         public static void Clear()
         {
-            foreach (var m in Instance.meshes.Values) m.Dispose();
+            foreach (var m in Instance.meshes.Values)
+                m.Dispose();
             Instance.meshes.Clear();
         }
 
@@ -52,8 +53,10 @@ namespace TGC.Tools.TerrainEditor.Instances
                 var path = Location + name + "\\" + name + "-TgcScene.xml";
                 var loader = new TgcSceneLoader();
                 var scene = loader.loadSceneFromFile(path);
-                scene.Meshes[0].Name = name;
-                meshes.Add(name, scene.Meshes[0]);
+                var mesh = scene.Meshes[0];
+                mesh.Name = name;
+                mesh.AutoTransform = true;
+                meshes.Add(name, mesh);
             }
 
             return instanceOf(meshes[name]);
@@ -63,6 +66,7 @@ namespace TGC.Tools.TerrainEditor.Instances
         {
             var i = m.createMeshInstance(m.Name + m.MeshInstances.Count);
             i.AlphaBlendEnable = m.AlphaBlendEnable;
+            i.AutoTransform = true;
             return i;
         }
 
@@ -93,10 +97,13 @@ namespace TGC.Tools.TerrainEditor.Instances
             var instances = new List<TgcMesh>();
             foreach (var m in scene.Meshes)
             {
+                m.AutoTransform = true;
+
                 if (m.ParentInstance == null) //Si es un mesh original
                 {
                     //Lo agrego al diccionario
-                    if (!meshes.ContainsKey(m.Name)) meshes.Add(m.Name, m);
+                    if (!meshes.ContainsKey(m.Name))
+                        meshes.Add(m.Name, m);
                     else
                     {
                         //Por ahora no se puede cargar mas de un mesh original con el mismo nombre.

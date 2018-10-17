@@ -24,8 +24,7 @@ namespace TGC.Tools.TerrainEditor
         private readonly TGCVector3 CAMERA_ACCELERATION = new TGCVector3(400f, 400f, 400f);
         private readonly TGCVector3 CAMERA_POS = new TGCVector3(0.0f, 1.0f, 0.0f);
 
-        private readonly TGCVector3 CAMERA_VELOCITY = new TGCVector3(DEFAULT_MOVEMENT_SPEED, DEFAULT_JUMP_SPEED,
-            DEFAULT_MOVEMENT_SPEED);
+        private readonly TGCVector3 CAMERA_VELOCITY = new TGCVector3(DEFAULT_MOVEMENT_SPEED, DEFAULT_JUMP_SPEED, DEFAULT_MOVEMENT_SPEED);
 
         private readonly TGCVector3 DEFAULT_UP_VECTOR = new TGCVector3(0.0f, 1.0f, 0.0f);
 
