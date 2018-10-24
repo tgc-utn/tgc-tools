@@ -2,11 +2,9 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
-using System.Diagnostics;
 using TGC.Core.Camara;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
-using TGC.Core.Utils;
 
 namespace TGC.Tools.TerrainEditor
 {
@@ -26,13 +24,8 @@ namespace TGC.Tools.TerrainEditor
 
         private readonly TGCVector3 CAMERA_VELOCITY = new TGCVector3(DEFAULT_MOVEMENT_SPEED, DEFAULT_JUMP_SPEED, DEFAULT_MOVEMENT_SPEED);
 
-        private readonly TGCVector3 DEFAULT_UP_VECTOR = new TGCVector3(0.0f, 1.0f, 0.0f);
-
         //Ejes para ViewTGCMatrix
-        private readonly TGCVector3 WORLD_XAXIS = new TGCVector3(1.0f, 0.0f, 0.0f);
-
-        private readonly TGCVector3 WORLD_YAXIS = new TGCVector3(0.0f, 1.0f, 0.0f);
-        private readonly TGCVector3 WORLD_ZAXIS = new TGCVector3(0.0f, 0.0f, 1.0f);
+        private readonly TGCVector3 WORLD_YAXIS = TGCVector3.Up;
 
         private float accumPitchDegrees;
         private TGCVector3 eye;
@@ -56,16 +49,6 @@ namespace TGC.Tools.TerrainEditor
         ///     Crea la cámara con valores iniciales.
         ///     Aceleración desactivada por Default
         /// </summary>
-        public TerrainFpsCamera(SmartTerrain terrain)
-        {
-            Terrain = terrain;
-            resetValues();
-        }
-
-        /// <summary>
-        ///     Crea la cámara con valores iniciales.
-        ///     Aceleración desactivada por Default
-        /// </summary>
         public TerrainFpsCamera(TgcD3dInput input)
         {
             Input = input;
@@ -77,13 +60,6 @@ namespace TGC.Tools.TerrainEditor
         /// </summary>
         public override void UpdateCamera(float elapsedTime)
         {
-            //Imprimir por consola la posicion actual de la camara
-            if ((Input.keyDown(Key.LeftShift) || Input.keyDown(Key.RightShift)) && Input.keyPressed(Key.P))
-            {
-                Debug.Write(TGCVector3.PrintVector3(getPosition()));
-                return;
-            }
-
             var heading = 0.0f;
             var pitch = 0.0f;
 
@@ -100,11 +76,8 @@ namespace TGC.Tools.TerrainEditor
             }
 
             updatePosition(direction, elapsedTime);
-        }
 
-        public TGCVector3 getPosition()
-        {
-            return eye;
+            base.SetCamera(eye, direction);
         }
 
         /// <summary>
@@ -610,21 +583,6 @@ namespace TGC.Tools.TerrainEditor
             return direction;
         }
 
-        /// <summary>
-        ///     String de codigo para setear la camara desde ToolsModel, con la posicion actual y direccion de la camara
-        /// </summary>
-        internal string getPositionCode()
-        {
-            //TODO ver de donde carajo sacar el LookAt de esta camara
-            var lookAt = LookAt;
-
-            return "ToolsModel.Instance.setCamera(new TGCVector3(" +
-                   TgcParserUtils.printFloat(eye.X) + "f, " + TgcParserUtils.printFloat(eye.Y) + "f, " +
-                   TgcParserUtils.printFloat(eye.Z) + "f), new TGCVector3(" +
-                   TgcParserUtils.printFloat(lookAt.X) + "f, " + TgcParserUtils.printFloat(lookAt.Y) + "f, " +
-                   TgcParserUtils.printFloat(lookAt.Z) + "f));";
-        }
-
         #region Getters y Setters
 
         private bool fpsModeEnable;
@@ -721,19 +679,6 @@ namespace TGC.Tools.TerrainEditor
         {
             get { return viewTGCMatrix; }
         }
-
-        /// <summary>
-        ///     Posicion actual de la camara
-        /// </summary>
-        public TGCVector3 Position
-        {
-            get { return eye; }
-        }
-
-        /// <summary>
-        ///     Punto hacia donde mira la cámara
-        /// </summary>
-        public TGCVector3 LookAt { get; private set; }
 
         /// <summary>
         ///     Boton del mouse que debe ser presionado para rotar la camara.
