@@ -776,7 +776,7 @@
             this.meshRemove.TabIndex = 30;
             this.meshRemove.Text = "Remove";
             this.meshRemove.UseVisualStyleBackColor = true;
-            this.meshRemove.Click += new System.EventHandler(this.meshCreate_Click);
+            this.meshRemove.Click += new System.EventHandler(this.meshRemove_Click);
             // 
             // tabPageTerrain
             // 
@@ -970,12 +970,12 @@
             this.openHeightmap.UseVisualStyleBackColor = true;
             this.openHeightmap.Click += new System.EventHandler(this.openHeightmap_Click);
             // 
-            // SceneEditorControl
+            // SceneEditorModifier
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl);
-            this.Name = "SceneEditorControl";
+            this.Name = "SceneEditorModifier";
             this.Size = new System.Drawing.Size(200, 800);
             this.tabControl.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
