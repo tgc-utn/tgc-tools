@@ -1,8 +1,8 @@
 using System;
 using System.Windows.Forms;
-using TGC.Tools.Model;
-using TGC.Tools.Utils.Modifiers;
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
+using TGC.Core.Textures;
+using TGC.Tools.Forms;
 
 namespace TGC.Tools.RoomsEditor
 {
@@ -14,12 +14,12 @@ namespace TGC.Tools.RoomsEditor
         private readonly RoomsEditorMapView mapView;
         private readonly TgcTextureBrowser textureBrowser;
 
-        public RoomsEditorTexturesEdit(RoomsEditorMapView mapView)
+        public RoomsEditorTexturesEdit(RoomsEditorMapView mapView, string mediaDir)
         {
             InitializeComponent();
 
             this.mapView = mapView;
-            textureBrowser = new TgcTextureBrowser();
+            textureBrowser = new TgcTextureBrowser(mediaDir);
             textureBrowser.CurrentDir = mapView.defaultTextureDir;
 
             //Cargar imagenes default
@@ -73,14 +73,13 @@ namespace TGC.Tools.RoomsEditor
         /// <summary>
         ///     Actualizar datos de una pared
         /// </summary>
-        private void updateWallData(RoomsEditorWall wall, PictureBox image, CheckBox autoUv, NumericUpDown uTile,
-            NumericUpDown vTile)
+        private void updateWallData(RoomsEditorWall wall, PictureBox image, CheckBox autoUv, NumericUpDown uTile, NumericUpDown vTile)
         {
             if (wall.Texture != null)
             {
                 wall.Texture.dispose();
             }
-            wall.Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice, image.ImageLocation);
+            wall.Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, image.ImageLocation);
             wall.AutoAdjustUv = autoUv.Checked;
             wall.UTile = (float)uTile.Value;
             wall.VTile = (float)vTile.Value;
@@ -89,8 +88,7 @@ namespace TGC.Tools.RoomsEditor
         /// <summary>
         ///     Actualiza datos de la UI en base a una pared
         /// </summary>
-        private void updateUiData(RoomsEditorWall wall, PictureBox image, CheckBox autoUv, NumericUpDown uTile,
-            NumericUpDown vTile)
+        private void updateUiData(RoomsEditorWall wall, PictureBox image, CheckBox autoUv, NumericUpDown uTile, NumericUpDown vTile)
         {
             image.ImageLocation = wall.Texture.FilePath;
             autoUv.Checked = wall.AutoAdjustUv;
@@ -120,10 +118,8 @@ namespace TGC.Tools.RoomsEditor
             updateWallData(mapView.selectedRoom.Walls[1], floorImage, floorAutoUv, floorUTile, floorVTile);
             updateWallData(mapView.selectedRoom.Walls[2], eastWallImage, eastWallAutoUv, eastWallUTile, eastWallVTile);
             updateWallData(mapView.selectedRoom.Walls[3], westWallImage, westWallAutoUv, westWallUTile, westWallVTile);
-            updateWallData(mapView.selectedRoom.Walls[4], northWallImage, northWallAutoUv, northWallUTile,
-                northWallVTile);
-            updateWallData(mapView.selectedRoom.Walls[5], southWallImage, southWallAutoUv, southWallUTile,
-                southWallVTile);
+            updateWallData(mapView.selectedRoom.Walls[4], northWallImage, northWallAutoUv, northWallUTile, northWallVTile);
+            updateWallData(mapView.selectedRoom.Walls[5], southWallImage, southWallAutoUv, southWallUTile, southWallVTile);
         }
 
         /// <summary>

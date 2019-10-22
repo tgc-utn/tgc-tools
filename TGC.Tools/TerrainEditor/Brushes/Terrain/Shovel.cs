@@ -7,7 +7,7 @@ namespace TGC.Tools.TerrainEditor.Brushes.Terrain
     /// </summary>
     public class Shovel : TerrainBrush
     {
-        public Shovel()
+        public Shovel(TgcTerrainEditor editor) : base(editor)
         {
             Color1 = Color.Aqua;
             Color2 = Color.Red;

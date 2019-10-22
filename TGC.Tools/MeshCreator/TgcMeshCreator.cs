@@ -1,6 +1,9 @@
+using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using System.Windows.Forms;
+using TGC.Core.Direct3D;
 using TGC.Tools.Example;
-using TGC.Tools.Model;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator
 {
@@ -14,53 +17,47 @@ namespace TGC.Tools.MeshCreator
     ///     El ejemplo crea su propio Modifier con todos los controles visuales de .NET que necesita.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class TgcMeshCreator : TgcExample
+    public class TgcMeshCreator : TGCExampleTools
     {
-        private MeshCreatorModifier modifier;
+        private MeshCreatorModifier Modifier { get; set; }
 
-        public override string getCategory()
+        public TgcMeshCreator(string mediaDir, string shadersDir, Panel modifiersPanel) : base(mediaDir, shadersDir, modifiersPanel)
         {
-            return "Utils";
+            Category = "Utils";
+            Name = "MeshCreator";
+            Description = "Creador de objetos 3D a paritir de primitivas simples. " +
+                          "Luego se puede exportar a un archivo XML de formato TgcScene para su posterior uso.";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "MeshCreator";
+            //Crear Modifier especial para este editor
+            Modifier = AddMeshCreatorModifier(this);
         }
 
-        public override string getDescription()
+        public override void Update()
         {
-            return "Creador de objetos 3D a paritir de primitivas simples." +
-                   "Luego se puede exportar a un archivo XML de formato TgcScee para su posterior uso.";
+            PreUpdate();
+            PostUpdate();
         }
 
-        public override void init()
+        public override void Render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            PreRender();
 
-            //Configurar camara FPS
-            GuiController.Instance.RotCamera.Enable = false;
+            //Color de fondo, TGCExample deberia aceptar un BackgroundColor para evitar esto en cada Render, ya que en BeginRenderScene tambien se hace.
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(38, 38, 38), 1.0f, 0);
 
-            //Color de fondo
-            GuiController.Instance.BackgroundColor = Color.FromArgb(38, 38, 38);
+            //Delegar Render al control
+            Modifier.Render();
 
-            //Crear modifier especial para este editor
-            modifier = new MeshCreatorModifier("TgcMeshCreator", this);
-            GuiController.Instance.Modifiers.add(modifier);
+            PostRender();
         }
 
-        public override void render(float elapsedTime)
-        {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            //Delegar render al control
-            modifier.Control.render();
-        }
-
-        public override void close()
+        public override void Dispose()
         {
             //Delegar al control
-            modifier.dispose();
+            Modifier.DisposeElements();
         }
     }
 }

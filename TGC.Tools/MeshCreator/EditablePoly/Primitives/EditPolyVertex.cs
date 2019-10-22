@@ -1,8 +1,8 @@
-﻿using Microsoft.DirectX;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using TGC.Tools.Utils.TgcGeometry;
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
+using TGC.Core.Mathematica;
 
 namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
 {
@@ -14,21 +14,21 @@ namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
         /// <summary>
         ///     Sphere for ray-collisions
         /// </summary>
-        private static readonly TgcBoundingSphere COLLISION_SPHERE = new TgcBoundingSphere(new Vector3(0, 0, 0), 2);
+        private static readonly TgcBoundingSphere COLLISION_SPHERE = new TgcBoundingSphere(TGCVector3.Empty, 2);
 
-        /*public Vector3 normal;
-        public Vector2 texCoords;
-        public Vector2 texCoords2;
+        /*public TGCVector3 normal;
+        public TGCVector2 texCoords;
+        public TGCVector2 texCoords2;
         public int color;*/
         public List<EditPolyEdge> edges;
-        public Vector3 movement;
+        public TGCVector3 movement;
 
-        public Vector3 position;
+        public TGCVector3 position;
         public int vbIndex;
 
         public EditPolyVertex()
         {
-            movement = new Vector3(0, 0, 0);
+            movement = TGCVector3.Empty;
         }
 
         public override EditablePoly.PrimitiveType Type
@@ -38,27 +38,27 @@ namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
 
         public override string ToString()
         {
-            return "Index: " + vbIndex + ", Pos: " + TgcParserUtils.printVector3(position);
+            return "Index: " + vbIndex + ", Pos: " + TGCVector3.PrintVector3(position);
         }
 
-        public override bool projectToScreen(Matrix transform, out Rectangle box2D)
+        public override bool projectToScreen(TGCMatrix transform, out Rectangle box2D)
         {
-            return MeshCreatorUtils.projectPoint(Vector3.TransformCoordinate(position, transform), out box2D);
+            return MeshCreatorUtils.projectPoint(TGCVector3.TransformCoordinate(position, transform), out box2D);
         }
 
-        public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
+        public override bool intersectRay(TgcRay ray, TGCMatrix transform, out TGCVector3 q)
         {
-            COLLISION_SPHERE.setCenter(Vector3.TransformCoordinate(position, transform));
+            COLLISION_SPHERE.setCenter(TGCVector3.TransformCoordinate(position, transform));
             float t;
             return TgcCollisionUtils.intersectRaySphere(ray, COLLISION_SPHERE, out t, out q);
         }
 
-        public override Vector3 computeCenter()
+        public override TGCVector3 computeCenter()
         {
             return position;
         }
 
-        public override void move(Vector3 movement)
+        public override void move(TGCVector3 movement)
         {
             //position += movement;
             this.movement = movement;

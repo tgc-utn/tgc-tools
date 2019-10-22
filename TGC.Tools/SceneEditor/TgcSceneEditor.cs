@@ -1,7 +1,8 @@
+using System.Windows.Forms;
 using System.Xml;
+using TGC.Core.Mathematica;
 using TGC.Tools.Example;
-using TGC.Tools.Model;
-using TGC.Tools.Utils.TgcSceneLoader;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.SceneEditor
 {
@@ -20,48 +21,44 @@ namespace TGC.Tools.SceneEditor
     ///     Las instrucciones se muestran al hacer clic en el botón "Help" de este Modifier.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class TgcSceneEditor : TgcExample
+    public class TgcSceneEditor : TGCExampleTools
     {
-        private SceneEditorModifier modifier;
+        private SceneEditorModifier Modifier { get; set; }
 
-        public override string getCategory()
+        public TgcSceneEditor(string mediaDir, string shadersDir, Panel modifiersPanel) : base(mediaDir, shadersDir, modifiersPanel)
         {
-            return "Utils";
+            Category = "Utils";
+            Name = "SceneEditor";
+            Description = "Editor de escena. Permite abrir modelos en formato TGC y posicionarlos dentro de un escenario." +
+                          "Luego esa información se puede exportar a un archivo XML para su posterior uso.";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "SceneEditor";
+            //Crear Modifier especial para este editor
+            Modifier = AddSceneEditorModifier(this);
         }
 
-        public override string getDescription()
+        public override void Update()
         {
-            return "Editor de escena. Permite abrir modelos en formato TGC y posicionarlos dentro de un escenario." +
-                   "Luego esa información se puede exportar a un archivo XML para su posterior uso.";
+            PreUpdate();
+            PostUpdate();
         }
 
-        public override void init()
+        public override void Render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            PreRender();
 
-            modifier = new SceneEditorModifier("SceneEditor", this);
-            GuiController.Instance.Modifiers.add(modifier);
+            //Delegar RenderModifier al control
+            Modifier.Render();
 
-            GuiController.Instance.RotCamera.Enable = false;
+            PostRender();
         }
 
-        public override void render(float elapsedTime)
-        {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            //Delegar render al control
-            modifier.EditorControl.render();
-        }
-
-        public override void close()
+        public override void Dispose()
         {
             //Delegar al control
-            modifier.EditorControl.close();
+            Modifier.DisposeElements();
         }
 
         /// <summary>
@@ -76,18 +73,18 @@ namespace TGC.Tools.SceneEditor
 
             //Guardar info del terreno
             var terrainNode = doc.CreateElement("Terrain");
-            var terrain = modifier.EditorControl.TgcTerrain;
+            var terrain = Modifier.TgcTerrain;
             if (terrain != null)
             {
                 terrainNode.SetAttribute("enable", true.ToString());
-                terrainNode.SetAttribute("heightmap", modifier.EditorControl.heighmap.Text);
-                terrainNode.SetAttribute("texture", modifier.EditorControl.terrainTexture.Text);
-                terrainNode.SetAttribute("xzScale", modifier.EditorControl.terrainXZscale.Value.ToString());
-                terrainNode.SetAttribute("yScale", modifier.EditorControl.terrainYscale.Value.ToString());
-                terrainNode.SetAttribute("center", TgcParserUtils.printVector3FromString(
-                    modifier.EditorControl.terrainCenterX.Text,
-                    modifier.EditorControl.terrainCenterY.Text,
-                    modifier.EditorControl.terrainCenterZ.Text));
+                terrainNode.SetAttribute("heightmap", Modifier.heighmap.Text);
+                terrainNode.SetAttribute("texture", Modifier.terrainTexture.Text);
+                terrainNode.SetAttribute("xzScale", Modifier.terrainXZscale.Value.ToString());
+                terrainNode.SetAttribute("yScale", Modifier.terrainYscale.Value.ToString());
+                terrainNode.SetAttribute("center", TGCVector3.PrintVector3FromString(
+                    Modifier.terrainCenterX.Text,
+                    Modifier.terrainCenterY.Text,
+                    Modifier.terrainCenterZ.Text));
             }
             else
             {
@@ -96,7 +93,7 @@ namespace TGC.Tools.SceneEditor
             root.AppendChild(terrainNode);
 
             //Recorrer Meshes del escenario, ordenadas por grupo
-            var meshObjects = modifier.EditorControl.getMeshObjectsOrderByGroup();
+            var meshObjects = Modifier.getMeshObjectsOrderByGroup();
             var meshesNode = doc.CreateElement("Meshes");
             var groupIndex = -1;
             XmlElement lastGroupNode = null;
@@ -118,9 +115,9 @@ namespace TGC.Tools.SceneEditor
                 meshNode.SetAttribute("index", meshObject.index.ToString());
                 meshNode.SetAttribute("file", meshObject.fileName);
                 meshNode.SetAttribute("folder", meshObject.folderName);
-                meshNode.SetAttribute("position", TgcParserUtils.printVector3(mesh.Position));
-                meshNode.SetAttribute("rotation", TgcParserUtils.printVector3(mesh.Rotation));
-                meshNode.SetAttribute("scale", TgcParserUtils.printVector3(mesh.Scale));
+                meshNode.SetAttribute("position", TGCVector3.PrintVector3(mesh.Position));
+                meshNode.SetAttribute("rotation", TGCVector3.PrintVector3(mesh.Rotation));
+                meshNode.SetAttribute("scale", TGCVector3.PrintVector3(mesh.Scale));
                 meshNode.SetAttribute("userInfo", meshObject.userInfo);
 
                 lastGroupNode.AppendChild(meshNode);

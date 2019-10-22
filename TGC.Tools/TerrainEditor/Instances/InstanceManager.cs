@@ -1,7 +1,8 @@
-﻿using Microsoft.DirectX;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Utils;
 using TGC.Tools.Properties;
-using TGC.Tools.Utils.TgcSceneLoader;
 
 namespace TGC.Tools.TerrainEditor.Instances
 {
@@ -34,7 +35,8 @@ namespace TGC.Tools.TerrainEditor.Instances
 
         public static void Clear()
         {
-            foreach (var m in Instance.meshes.Values) m.dispose();
+            foreach (var m in Instance.meshes.Values)
+                m.Dispose();
             Instance.meshes.Clear();
         }
 
@@ -51,8 +53,10 @@ namespace TGC.Tools.TerrainEditor.Instances
                 var path = Location + name + "\\" + name + "-TgcScene.xml";
                 var loader = new TgcSceneLoader();
                 var scene = loader.loadSceneFromFile(path);
-                scene.Meshes[0].Name = name;
-                meshes.Add(name, scene.Meshes[0]);
+                var mesh = scene.Meshes[0];
+                mesh.Name = name;
+                mesh.AutoTransform = true;
+                meshes.Add(name, mesh);
             }
 
             return instanceOf(meshes[name]);
@@ -62,6 +66,7 @@ namespace TGC.Tools.TerrainEditor.Instances
         {
             var i = m.createMeshInstance(m.Name + m.MeshInstances.Count);
             i.AlphaBlendEnable = m.AlphaBlendEnable;
+            i.AutoTransform = true;
             return i;
         }
 
@@ -92,16 +97,19 @@ namespace TGC.Tools.TerrainEditor.Instances
             var instances = new List<TgcMesh>();
             foreach (var m in scene.Meshes)
             {
+                m.AutoTransform = true;
+
                 if (m.ParentInstance == null) //Si es un mesh original
                 {
                     //Lo agrego al diccionario
-                    if (!meshes.ContainsKey(m.Name)) meshes.Add(m.Name, m);
+                    if (!meshes.ContainsKey(m.Name))
+                        meshes.Add(m.Name, m);
                     else
                     {
                         //Por ahora no se puede cargar mas de un mesh original con el mismo nombre.
                         //TODO: Ver de que otro modo indexarlas y como unificar instancias de un mismo mesh que se cargo dos veces.
 
-                        meshes[m.Name].dispose();
+                        meshes[m.Name].Dispose();
                         meshes.Remove(m.Name);
                     }
 
@@ -116,10 +124,10 @@ namespace TGC.Tools.TerrainEditor.Instances
             return instances;
         }
 
-        protected Vector3 parseVector3(string s)
+        protected TGCVector3 parseTGCVector3(string s)
         {
             var f3 = TgcParserUtils.parseFloat3Array(s);
-            return new Vector3(f3[0], f3[1], f3[2]);
+            return new TGCVector3(f3[0], f3[1], f3[2]);
         }
     }
 }

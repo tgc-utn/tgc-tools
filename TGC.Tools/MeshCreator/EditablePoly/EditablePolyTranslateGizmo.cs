@@ -1,9 +1,7 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Gizmos;
-using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcGeometry;
 
 namespace TGC.Tools.MeshCreator.EditablePoly
 {
@@ -12,12 +10,12 @@ namespace TGC.Tools.MeshCreator.EditablePoly
     /// </summary>
     public class EditablePolyTranslateGizmo
     {
-        private Vector3 acumMovement;
+        private TGCVector3 acumMovement;
         private State currentState;
 
         private readonly EditablePoly editablePoly;
         private readonly TranslateGizmoMesh gizmoMesh;
-        private Vector3 initMouseP3d;
+        private TGCVector3 initMouseP3d;
 
         public EditablePolyTranslateGizmo(EditablePoly editablePoly)
         {
@@ -39,7 +37,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
 
                 //Posicionar gizmo
                 var aabb = EditablePolyUtils.getSelectionBoundingBox(editablePoly.SelectionList);
-                var aabbCenter = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), editablePoly.Transform);
+                var aabbCenter = TGCVector3.TransformCoordinate(aabb.calculateBoxCenter(), editablePoly.Transform);
                 gizmoMesh.setCenter(aabbCenter, editablePoly.Control.Camera);
             }
         }
@@ -49,14 +47,14 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         /// </summary>
         public void update()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = editablePoly.Control.creator.Input;
             var pickingRay = editablePoly.Control.PickingRay;
 
             switch (currentState)
             {
                 case State.Init:
 
-                    acumMovement = Vector3.Empty;
+                    acumMovement = TGCVector3.Empty;
                     gizmoMesh.unSelect();
 
                     //Iniciar seleccion de eje
@@ -124,7 +122,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                         var endMouseP3d = initMouseP3d;
 
                         //Solo se mueve un eje
-                        var currentMove = new Vector3(0, 0, 0);
+                        var currentMove = TGCVector3.Empty;
                         if (gizmoMesh.isSingleAxis(gizmoMesh.SelectedAxis))
                         {
                             //Desplazamiento en eje X
@@ -184,12 +182,20 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                         //Ajustar currentMove con Snap to grid
                         if (editablePoly.Control.SnapToGridEnabled)
                         {
-                            snapMovementToGrid(ref currentMove.X, ref acumMovement.X,
-                                editablePoly.Control.SnapToGridCellSize);
-                            snapMovementToGrid(ref currentMove.Y, ref acumMovement.Y,
-                                editablePoly.Control.SnapToGridCellSize);
-                            snapMovementToGrid(ref currentMove.Z, ref acumMovement.Z,
-                                editablePoly.Control.SnapToGridCellSize);
+                            var currentMoveX = currentMove.X;
+                            var currentMoveY = currentMove.Y;
+                            var currentMoveZ = currentMove.Z;
+
+                            var acumMovementX = acumMovement.X;
+                            var acumMovementY = acumMovement.Y;
+                            var acumMovementZ = acumMovement.Z;
+
+                            snapMovementToGrid(ref currentMoveX, ref acumMovementX, editablePoly.Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMoveY, ref acumMovementY, editablePoly.Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMoveZ, ref acumMovementZ, editablePoly.Control.SnapToGridCellSize);
+
+                            currentMove = new TGCVector3(currentMoveX, currentMoveY, currentMoveZ);
+                            acumMovement = new TGCVector3(acumMovementX, acumMovementY, acumMovementZ);
                         }
                         if (currentMove.LengthSq() > 0.1f)
                         {
@@ -206,7 +212,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
                             editablePoly.setDirtyValues(false);
 
                             //Actualizar datos de modify
-                            //Control.updateModifyPanel();
+                            //Control.UpdateModifyPanel();
                         }
                     }
 

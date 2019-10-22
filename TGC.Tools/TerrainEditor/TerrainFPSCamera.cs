@@ -2,11 +2,9 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
-using System.Diagnostics;
-using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcSceneLoader;
-using Device = Microsoft.DirectX.Direct3D.Device;
+using TGC.Core.Camara;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
 
 namespace TGC.Tools.TerrainEditor
 {
@@ -21,22 +19,16 @@ namespace TGC.Tools.TerrainEditor
         private const float DEFAULT_MOVEMENT_SPEED = 100f;
         private const float HEAD_POSITION = 50f;
         private const float DEFAULT_JUMP_SPEED = 100f;
-        private readonly Vector3 CAMERA_ACCELERATION = new Vector3(400f, 400f, 400f);
-        private readonly Vector3 CAMERA_POS = new Vector3(0.0f, 1.0f, 0.0f);
+        private readonly TGCVector3 CAMERA_ACCELERATION = new TGCVector3(400f, 400f, 400f);
+        private readonly TGCVector3 CAMERA_POS = new TGCVector3(0.0f, 1.0f, 0.0f);
 
-        private readonly Vector3 CAMERA_VELOCITY = new Vector3(DEFAULT_MOVEMENT_SPEED, DEFAULT_JUMP_SPEED,
-            DEFAULT_MOVEMENT_SPEED);
+        private readonly TGCVector3 CAMERA_VELOCITY = new TGCVector3(DEFAULT_MOVEMENT_SPEED, DEFAULT_JUMP_SPEED, DEFAULT_MOVEMENT_SPEED);
 
-        private readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
-
-        //Ejes para ViewMatrix
-        private readonly Vector3 WORLD_XAXIS = new Vector3(1.0f, 0.0f, 0.0f);
-
-        private readonly Vector3 WORLD_YAXIS = new Vector3(0.0f, 1.0f, 0.0f);
-        private readonly Vector3 WORLD_ZAXIS = new Vector3(0.0f, 0.0f, 1.0f);
+        //Ejes para ViewTGCMatrix
+        private readonly TGCVector3 WORLD_YAXIS = TGCVector3.Up;
 
         private float accumPitchDegrees;
-        private Vector3 eye;
+        private TGCVector3 eye;
         private bool moveBackwardsPressed;
         private bool moveDownPressed;
 
@@ -46,90 +38,46 @@ namespace TGC.Tools.TerrainEditor
         private bool moveLeftPressed;
         private bool moveRightPressed;
         private bool moveUpPressed;
-        private Vector3 viewDir;
-        private Vector3 xAxis;
-        private Vector3 yAxis;
-        private Vector3 zAxis;
+        private TGCVector3 viewDir;
+        private TGCVector3 xAxis;
+        private TGCVector3 yAxis;
+        private TGCVector3 zAxis;
+
+        private TgcD3dInput Input { get; }
 
         /// <summary>
         ///     Crea la cámara con valores iniciales.
         ///     Aceleración desactivada por Default
         /// </summary>
-        public TerrainFpsCamera(SmartTerrain terrain)
+        public TerrainFpsCamera(TgcD3dInput input)
         {
-            Terrain = terrain;
-            resetValues();
-        }
-
-        /// <summary>
-        ///     Crea la cámara con valores iniciales.
-        ///     Aceleración desactivada por Default
-        /// </summary>
-        public TerrainFpsCamera()
-        {
+            Input = input;
             resetValues();
         }
 
         /// <summary>
         ///     Actualiza los valores de la camara
         /// </summary>
-        public void updateCamera()
+        public override void UpdateCamera(float elapsedTime)
         {
-            //Si la camara no está habilitada, no procesar el resto del input
-            if (!enable)
-            {
-                return;
-            }
-
-            var elapsedTimeSec = GuiController.Instance.ElapsedTime;
-            var d3dInput = GuiController.Instance.D3dInput;
-
-            //Imprimir por consola la posicion actual de la camara
-            if ((d3dInput.keyDown(Key.LeftShift) || d3dInput.keyDown(Key.RightShift)) && d3dInput.keyPressed(Key.P))
-            {
-                Debug.Write(TgcParserUtils.printVector3(getPosition()));
-                return;
-            }
-
             var heading = 0.0f;
             var pitch = 0.0f;
 
             //Obtener direccion segun entrada de teclado
-            var direction = getMovementDirection(d3dInput);
+            var direction = getMovementDirection(Input);
 
-            pitch = d3dInput.YposRelative * RotationSpeed;
-            heading = d3dInput.XposRelative * RotationSpeed;
+            pitch = Input.YposRelative * RotationSpeed;
+            heading = Input.XposRelative * RotationSpeed;
 
             //Solo rotar si se esta aprentando el boton del mouse configurado
-            if (d3dInput.buttonDown(RotateMouseButton))
+            if (Input.buttonDown(RotateMouseButton))
             {
                 rotate(heading, pitch, 0.0f);
             }
 
-            updatePosition(direction, elapsedTimeSec);
-        }
+            updatePosition(direction, elapsedTime);
 
-        /// <summary>
-        ///     Actualiza la ViewMatrix, si es que la camara esta activada
-        /// </summary>
-        public void updateViewMatrix(Device d3dDevice)
-        {
-            if (!enable)
-            {
-                return;
-            }
-
-            d3dDevice.Transform.View = viewMatrix;
-        }
-
-        public Vector3 getPosition()
-        {
-            return eye;
-        }
-
-        public Vector3 getLookAt()
-        {
-            return LookAt;
+            base.SetCamera(eye, direction);
         }
 
         /// <summary>
@@ -139,18 +87,18 @@ namespace TGC.Tools.TerrainEditor
         {
             accumPitchDegrees = 0.0f;
             RotationSpeed = DEFAULT_ROTATION_SPEED;
-            eye = new Vector3(0.0f, 0.0f, 0.0f);
-            xAxis = new Vector3(1.0f, 0.0f, 0.0f);
-            yAxis = new Vector3(0.0f, 1.0f, 0.0f);
-            zAxis = new Vector3(0.0f, 0.0f, 1.0f);
-            viewDir = new Vector3(0.0f, 0.0f, 1.0f);
+            eye = new TGCVector3(0.0f, 0.0f, 0.0f);
+            xAxis = new TGCVector3(1.0f, 0.0f, 0.0f);
+            yAxis = new TGCVector3(0.0f, 1.0f, 0.0f);
+            zAxis = new TGCVector3(0.0f, 0.0f, 1.0f);
+            viewDir = new TGCVector3(0.0f, 0.0f, 1.0f);
             LookAt = eye + viewDir;
             HeadPosition = HEAD_POSITION;
             AccelerationEnable = false;
             Acceleration = CAMERA_ACCELERATION;
-            currentVelocity = new Vector3(0.0f, 0.0f, 0.0f);
+            currentVelocity = new TGCVector3(0.0f, 0.0f, 0.0f);
             velocity = CAMERA_VELOCITY;
-            viewMatrix = Matrix.Identity;
+            viewTGCMatrix = TGCMatrix.Identity;
             setPosition(CAMERA_POS + HeadPosition * WORLD_YAXIS);
 
             RotateMouseButton = TgcD3dInput.MouseButtons.BUTTON_LEFT;
@@ -159,7 +107,7 @@ namespace TGC.Tools.TerrainEditor
         /// <summary>
         ///     Configura la posicion de la cámara
         /// </summary>
-        private void setCamera(Vector3 eye, Vector3 target, Vector3 up)
+        private void setCamera(TGCVector3 eye, TGCVector3 target, TGCVector3 up)
         {
             this.eye = eye;
 
@@ -169,38 +117,38 @@ namespace TGC.Tools.TerrainEditor
             viewDir = zAxis;
             LookAt = eye + viewDir;
 
-            xAxis = Vector3.Cross(up, zAxis);
+            xAxis = TGCVector3.Cross(up, zAxis);
             xAxis.Normalize();
 
-            yAxis = Vector3.Cross(zAxis, xAxis);
+            yAxis = TGCVector3.Cross(zAxis, xAxis);
             yAxis.Normalize();
             //xAxis.Normalize();
 
-            viewMatrix = Matrix.Identity;
+            viewTGCMatrix = TGCMatrix.Identity;
 
-            viewMatrix.M11 = xAxis.X;
-            viewMatrix.M21 = xAxis.Y;
-            viewMatrix.M31 = xAxis.Z;
-            viewMatrix.M41 = -Vector3.Dot(xAxis, eye);
+            viewTGCMatrix.M11 = xAxis.X;
+            viewTGCMatrix.M21 = xAxis.Y;
+            viewTGCMatrix.M31 = xAxis.Z;
+            viewTGCMatrix.M41 = -TGCVector3.Dot(xAxis, eye);
 
-            viewMatrix.M12 = yAxis.X;
-            viewMatrix.M22 = yAxis.Y;
-            viewMatrix.M32 = yAxis.Z;
-            viewMatrix.M42 = -Vector3.Dot(yAxis, eye);
+            viewTGCMatrix.M12 = yAxis.X;
+            viewTGCMatrix.M22 = yAxis.Y;
+            viewTGCMatrix.M32 = yAxis.Z;
+            viewTGCMatrix.M42 = -TGCVector3.Dot(yAxis, eye);
 
-            viewMatrix.M13 = zAxis.X;
-            viewMatrix.M23 = zAxis.Y;
-            viewMatrix.M33 = zAxis.Z;
-            viewMatrix.M43 = -Vector3.Dot(zAxis, eye);
+            viewTGCMatrix.M13 = zAxis.X;
+            viewTGCMatrix.M23 = zAxis.Y;
+            viewTGCMatrix.M33 = zAxis.Z;
+            viewTGCMatrix.M43 = -TGCVector3.Dot(zAxis, eye);
 
-            // Extract the pitch angle from the view matrix.
-            accumPitchDegrees = Geometry.RadianToDegree((float)-Math.Asin(viewMatrix.M23));
+            // Extract the pitch angle from the view TGCMatrix.
+            accumPitchDegrees = Geometry.RadianToDegree((float)-Math.Asin(viewTGCMatrix.M23));
         }
 
         /// <summary>
         ///     Configura la posicion de la cámara
         /// </summary>
-        public void setCamera(Vector3 pos, Vector3 lookAt)
+        public void setCamera(TGCVector3 pos, TGCVector3 lookAt)
         {
             setCamera(pos, lookAt, DEFAULT_UP_VECTOR);
         }
@@ -213,12 +161,12 @@ namespace TGC.Tools.TerrainEditor
         private void move(float dx, float dy, float dz)
         {
             var auxEye = eye;
-            Vector3 forwards;
+            TGCVector3 forwards;
 
             // Calculate the forwards direction. Can't just use the camera's local
             // z axis as doing so will cause the camera to move more slowly as the
             // camera's view approaches 90 degrees straight up and down.
-            forwards = Vector3.Cross(xAxis, WORLD_YAXIS);
+            forwards = TGCVector3.Cross(xAxis, WORLD_YAXIS);
             forwards.Normalize();
 
             auxEye += xAxis * dx;
@@ -250,7 +198,7 @@ namespace TGC.Tools.TerrainEditor
         {
             rollDegrees = -rollDegrees;
             rotateFirstPerson(headingDegrees, pitchDegrees);
-            reconstructViewMatrix(true);
+            reconstructViewTGCMatrix(true);
         }
 
         /// <summary>
@@ -273,15 +221,15 @@ namespace TGC.Tools.TerrainEditor
         ///     assumed here to somewhat simplify the calculations. The direction vector
         ///     is in the range [-1,1].
         /// </summary>
-        private void updatePosition(Vector3 direction, float elapsedTimeSec)
+        private void updatePosition(TGCVector3 direction, float elapsedTimeSec)
         {
-            if (Vector3.LengthSq(currentVelocity) != 0.0f)
+            if (TGCVector3.LengthSq(currentVelocity) != 0.0f)
             {
                 // Only move the camera if the velocity vector is not of zero length.
                 // Doing this guards against the camera slowly creeping around due to
                 // floating point rounding errors.
 
-                Vector3 displacement;
+                TGCVector3 displacement;
                 if (AccelerationEnable)
                 {
                     displacement = currentVelocity * elapsedTimeSec +
@@ -326,11 +274,11 @@ namespace TGC.Tools.TerrainEditor
             }
         }
 
-        private void setPosition(Vector3 pos)
+        private void setPosition(TGCVector3 pos)
         {
             eye = pos;
 
-            reconstructViewMatrix(false);
+            reconstructViewTGCMatrix(false);
         }
 
         private void rotateFirstPerson(float headingDegrees, float pitchDegrees)
@@ -352,31 +300,31 @@ namespace TGC.Tools.TerrainEditor
             var heading = Geometry.DegreeToRadian(headingDegrees);
             var pitch = Geometry.DegreeToRadian(pitchDegrees);
 
-            Matrix rotMtx;
+            TGCMatrix rotMtx;
             Vector4 result;
 
             // Rotate camera's existing x and z axes about the world y axis.
             if (heading != 0.0f)
             {
-                rotMtx = Matrix.RotationY(heading);
+                rotMtx = TGCMatrix.RotationY(heading);
 
-                result = Vector3.Transform(xAxis, rotMtx);
-                xAxis = new Vector3(result.X, result.Y, result.Z);
+                result = TGCVector3.Transform(xAxis, rotMtx);
+                xAxis = new TGCVector3(result.X, result.Y, result.Z);
 
-                result = Vector3.Transform(zAxis, rotMtx);
-                zAxis = new Vector3(result.X, result.Y, result.Z);
+                result = TGCVector3.Transform(zAxis, rotMtx);
+                zAxis = new TGCVector3(result.X, result.Y, result.Z);
             }
 
             // Rotate camera's existing y and z axes about its existing x axis.
             if (pitch != 0.0f)
             {
-                rotMtx = Matrix.RotationAxis(xAxis, pitch);
+                rotMtx = TGCMatrix.RotationAxis(xAxis, pitch);
 
-                result = Vector3.Transform(yAxis, rotMtx);
-                yAxis = new Vector3(result.X, result.Y, result.Z);
+                result = TGCVector3.Transform(yAxis, rotMtx);
+                yAxis = new TGCVector3(result.X, result.Y, result.Z);
 
-                result = Vector3.Transform(zAxis, rotMtx);
-                zAxis = new Vector3(result.X, result.Y, result.Z);
+                result = TGCVector3.Transform(zAxis, rotMtx);
+                zAxis = new TGCVector3(result.X, result.Y, result.Z);
             }
         }
 
@@ -385,7 +333,7 @@ namespace TGC.Tools.TerrainEditor
         ///     and the elapsed time (since this method was last called). The movement
         ///     direction is the in the range [-1,1].
         /// </summary>
-        private void updateVelocity(Vector3 direction, float elapsedTimeSec)
+        private void updateVelocity(TGCVector3 direction, float elapsedTimeSec)
         {
             if (direction.X != 0.0f)
             {
@@ -478,7 +426,7 @@ namespace TGC.Tools.TerrainEditor
         /// <summary>
         ///     Actualizar currentVelocity sin aplicar aceleracion
         /// </summary>
-        private void updateVelocityNoAcceleration(Vector3 direction)
+        private void updateVelocityNoAcceleration(TGCVector3 direction)
         {
             currentVelocity.X = velocity.X * direction.X;
             currentVelocity.Y = velocity.Y * direction.Y;
@@ -486,9 +434,9 @@ namespace TGC.Tools.TerrainEditor
         }
 
         /// <summary>
-        ///     Reconstruct the view matrix.
+        ///     Reconstruct the view TGCMatrix.
         /// </summary>
-        private void reconstructViewMatrix(bool orthogonalizeAxes)
+        private void reconstructViewTGCMatrix(bool orthogonalizeAxes)
         {
             if (orthogonalizeAxes)
             {
@@ -496,45 +444,45 @@ namespace TGC.Tools.TerrainEditor
 
                 zAxis.Normalize();
 
-                yAxis = Vector3.Cross(zAxis, xAxis);
+                yAxis = TGCVector3.Cross(zAxis, xAxis);
                 yAxis.Normalize();
 
-                xAxis = Vector3.Cross(yAxis, zAxis);
+                xAxis = TGCVector3.Cross(yAxis, zAxis);
                 xAxis.Normalize();
 
                 viewDir = zAxis;
                 LookAt = eye + viewDir;
             }
 
-            // Reconstruct the view matrix.
+            // Reconstruct the view TGCMatrix.
 
-            viewMatrix.M11 = xAxis.X;
-            viewMatrix.M21 = xAxis.Y;
-            viewMatrix.M31 = xAxis.Z;
-            viewMatrix.M41 = -Vector3.Dot(xAxis, eye);
+            viewTGCMatrix.M11 = xAxis.X;
+            viewTGCMatrix.M21 = xAxis.Y;
+            viewTGCMatrix.M31 = xAxis.Z;
+            viewTGCMatrix.M41 = -TGCVector3.Dot(xAxis, eye);
 
-            viewMatrix.M12 = yAxis.X;
-            viewMatrix.M22 = yAxis.Y;
-            viewMatrix.M32 = yAxis.Z;
-            viewMatrix.M42 = -Vector3.Dot(yAxis, eye);
+            viewTGCMatrix.M12 = yAxis.X;
+            viewTGCMatrix.M22 = yAxis.Y;
+            viewTGCMatrix.M32 = yAxis.Z;
+            viewTGCMatrix.M42 = -TGCVector3.Dot(yAxis, eye);
 
-            viewMatrix.M13 = zAxis.X;
-            viewMatrix.M23 = zAxis.Y;
-            viewMatrix.M33 = zAxis.Z;
-            viewMatrix.M43 = -Vector3.Dot(zAxis, eye);
+            viewTGCMatrix.M13 = zAxis.X;
+            viewTGCMatrix.M23 = zAxis.Y;
+            viewTGCMatrix.M33 = zAxis.Z;
+            viewTGCMatrix.M43 = -TGCVector3.Dot(zAxis, eye);
 
-            viewMatrix.M14 = 0.0f;
-            viewMatrix.M24 = 0.0f;
-            viewMatrix.M34 = 0.0f;
-            viewMatrix.M44 = 1.0f;
+            viewTGCMatrix.M14 = 0.0f;
+            viewTGCMatrix.M24 = 0.0f;
+            viewTGCMatrix.M34 = 0.0f;
+            viewTGCMatrix.M44 = 1.0f;
         }
 
         /// <summary>
         ///     Obtiene la direccion a moverse por la camara en base a la entrada de teclado
         /// </summary>
-        private Vector3 getMovementDirection(TgcD3dInput d3dInput)
+        private TGCVector3 getMovementDirection(TgcD3dInput d3dInput)
         {
-            var direction = new Vector3(0.0f, 0.0f, 0.0f);
+            var direction = new TGCVector3(0.0f, 0.0f, 0.0f);
 
             //Forward
             if (d3dInput.keyDown(Key.W))
@@ -542,7 +490,7 @@ namespace TGC.Tools.TerrainEditor
                 if (!moveForwardsPressed)
                 {
                     moveForwardsPressed = true;
-                    currentVelocity = new Vector3(currentVelocity.X, currentVelocity.Y, 0.0f);
+                    currentVelocity = new TGCVector3(currentVelocity.X, currentVelocity.Y, 0.0f);
                 }
 
                 direction.Z += 1.0f;
@@ -558,7 +506,7 @@ namespace TGC.Tools.TerrainEditor
                 if (!moveBackwardsPressed)
                 {
                     moveBackwardsPressed = true;
-                    currentVelocity = new Vector3(currentVelocity.X, currentVelocity.Y, 0.0f);
+                    currentVelocity = new TGCVector3(currentVelocity.X, currentVelocity.Y, 0.0f);
                 }
 
                 direction.Z -= 1.0f;
@@ -574,7 +522,7 @@ namespace TGC.Tools.TerrainEditor
                 if (!moveRightPressed)
                 {
                     moveRightPressed = true;
-                    currentVelocity = new Vector3(0.0f, currentVelocity.Y, currentVelocity.Z);
+                    currentVelocity = new TGCVector3(0.0f, currentVelocity.Y, currentVelocity.Z);
                 }
 
                 direction.X += 1.0f;
@@ -590,7 +538,7 @@ namespace TGC.Tools.TerrainEditor
                 if (!moveLeftPressed)
                 {
                     moveLeftPressed = true;
-                    currentVelocity = new Vector3(0.0f, currentVelocity.Y, currentVelocity.Z);
+                    currentVelocity = new TGCVector3(0.0f, currentVelocity.Y, currentVelocity.Z);
                 }
 
                 direction.X -= 1.0f;
@@ -606,7 +554,7 @@ namespace TGC.Tools.TerrainEditor
                 if (!moveUpPressed)
                 {
                     moveUpPressed = true;
-                    currentVelocity = new Vector3(currentVelocity.X, 0.0f, currentVelocity.Z);
+                    currentVelocity = new TGCVector3(currentVelocity.X, 0.0f, currentVelocity.Z);
                 }
 
                 direction.Y += 1.0f;
@@ -622,7 +570,7 @@ namespace TGC.Tools.TerrainEditor
                 if (!moveDownPressed)
                 {
                     moveDownPressed = true;
-                    currentVelocity = new Vector3(currentVelocity.X, 0.0f, currentVelocity.Z);
+                    currentVelocity = new TGCVector3(currentVelocity.X, 0.0f, currentVelocity.Z);
                 }
 
                 direction.Y -= 1.0f;
@@ -633,21 +581,6 @@ namespace TGC.Tools.TerrainEditor
             }
 
             return direction;
-        }
-
-        /// <summary>
-        ///     String de codigo para setear la camara desde GuiController, con la posicion actual y direccion de la camara
-        /// </summary>
-        internal string getPositionCode()
-        {
-            //TODO ver de donde carajo sacar el LookAt de esta camara
-            var lookAt = LookAt;
-
-            return "GuiController.Instance.setCamera(new Vector3(" +
-                   TgcParserUtils.printFloat(eye.X) + "f, " + TgcParserUtils.printFloat(eye.Y) + "f, " +
-                   TgcParserUtils.printFloat(eye.Z) + "f), new Vector3(" +
-                   TgcParserUtils.printFloat(lookAt.X) + "f, " + TgcParserUtils.printFloat(lookAt.Y) + "f, " +
-                   TgcParserUtils.printFloat(lookAt.Z) + "f));";
         }
 
         #region Getters y Setters
@@ -679,52 +612,32 @@ namespace TGC.Tools.TerrainEditor
             }
         }
 
-        private bool enable;
-
-        /// <summary>
-        ///     Habilita o no el uso de la camara
-        /// </summary>
-        public bool Enable
-        {
-            get { return enable; }
-            set
-            {
-                enable = value;
-
-                //Si se habilito la camara, cargar como la cámara actual
-                if (value)
-                {
-                    GuiController.Instance.CurrentCamera = this;
-                }
-            }
-        }
-
         /// <summary>
         ///     Aceleracion de la camara en cada uno de sus ejes
         /// </summary>
-        public Vector3 Acceleration { get; set; }
+        public TGCVector3 Acceleration { get; set; }
 
         /// <summary>
         ///     Activa o desactiva el efecto de Aceleración/Desaceleración
         /// </summary>
         public bool AccelerationEnable { get; set; }
 
-        private Vector3 currentVelocity;
+        private TGCVector3 currentVelocity;
 
         /// <summary>
         ///     Velocidad de desplazamiento actual, teniendo en cuenta la aceleracion
         /// </summary>
-        public Vector3 CurrentVelocity
+        public TGCVector3 CurrentVelocity
         {
             get { return currentVelocity; }
         }
 
-        private Vector3 velocity;
+        private TGCVector3 velocity;
 
         /// <summary>
         ///     Velocidad de desplazamiento de la cámara en cada uno de sus ejes
         /// </summary>
-        public Vector3 Velocity
+        public TGCVector3 Velocity
         {
             get { return velocity; }
             set { velocity = value; }
@@ -757,28 +670,15 @@ namespace TGC.Tools.TerrainEditor
         /// </summary>
         public float RotationSpeed { get; set; }
 
-        private Matrix viewMatrix;
+        private TGCMatrix viewTGCMatrix;
 
         /// <summary>
-        ///     View Matrix resultante
+        ///     View TGCMatrix resultante
         /// </summary>
-        public Matrix ViewMatrix
+        public TGCMatrix ViewTGCMatrix
         {
-            get { return viewMatrix; }
+            get { return viewTGCMatrix; }
         }
-
-        /// <summary>
-        ///     Posicion actual de la camara
-        /// </summary>
-        public Vector3 Position
-        {
-            get { return eye; }
-        }
-
-        /// <summary>
-        ///     Punto hacia donde mira la cámara
-        /// </summary>
-        public Vector3 LookAt { get; private set; }
 
         /// <summary>
         ///     Boton del mouse que debe ser presionado para rotar la camara.

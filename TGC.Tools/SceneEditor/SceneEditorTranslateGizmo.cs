@@ -1,7 +1,8 @@
-using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Tools.Model;
-using TGC.Tools.Utils.TgcGeometry;
+using TGC.Core.Collision;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
 
 namespace TGC.Tools.SceneEditor
 {
@@ -20,21 +21,25 @@ namespace TGC.Tools.SceneEditor
         private const float SHORT_AXIS_SIZE = 2f;
         private const float MOVE_FACTOR = 4f;
 
-        private readonly TgcBox boxX;
-        private readonly TgcBox boxY;
-        private readonly TgcBox boxZ;
-        private Vector2 initMouseP;
+        private readonly TGCBox boxX;
+        private readonly TGCBox boxY;
+        private readonly TGCBox boxZ;
+        private TGCVector2 initMouseP;
 
-        private TgcBox selectedAxisBox;
+        private TGCBox selectedAxisBox;
 
-        public SceneEditorTranslateGizmo()
+        private TgcD3dInput input;
+
+        public SceneEditorTranslateGizmo(TgcD3dInput input)
         {
-            boxX = TgcBox.fromExtremes(new Vector3(0, 0, 0),
-                new Vector3(LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
-            boxY = TgcBox.fromExtremes(new Vector3(0, 0, 0),
-                new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE), Color.Green);
-            boxZ = TgcBox.fromExtremes(new Vector3(0, 0, 0),
-                new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE), Color.Blue);
+            boxX = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
+            boxX.AutoTransform = true;
+            boxY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE), Color.Green);
+            boxY.AutoTransform = true;
+            boxZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE), Color.Blue);
+            boxZ.AutoTransform = true;
+
+            this.input = input;
         }
 
         /// <summary>
@@ -60,14 +65,14 @@ namespace TGC.Tools.SceneEditor
             float largeSize = LARGE_AXIS_SIZE * aabbbR;
             float shortSize = SHORT_AXIS_SIZE;
 
-            boxX.Size = new Vector3(largeSize, shortSize, shortSize);
-            boxY.Size = new Vector3(shortSize, largeSize, shortSize);
-            boxZ.Size = new Vector3(shortSize, shortSize, largeSize);
+            boxX.Size = new TGCVector3(largeSize, shortSize, shortSize);
+            boxY.Size = new TGCVector3(shortSize, largeSize, shortSize);
+            boxZ.Size = new TGCVector3(shortSize, shortSize, largeSize);
 
-            Vector3 pos = meshObj.mesh.Position;
-            boxX.Position = pos + Vector3.Scale(boxX.Size, 0.5f);
-            boxY.Position = pos + Vector3.Scale(boxY.Size, 0.5f);
-            boxZ.Position = pos + Vector3.Scale(boxZ.Size, 0.5f);
+            TGCVector3 pos = meshObj.mesh.Position;
+            boxX.Position = pos + TGCVector3.Scale(boxX.Size, 0.5f);
+            boxY.Position = pos + TGCVector3.Scale(boxY.Size, 0.5f);
+            boxZ.Position = pos + TGCVector3.Scale(boxZ.Size, 0.5f);
             */
 
             var meshCenter = meshObj.mesh.BoundingBox.calculateBoxCenter();
@@ -77,13 +82,13 @@ namespace TGC.Tools.SceneEditor
             var largeY = axisRadius.Y + LARGE_AXIS_MIN_SIZE;
             var largeZ = axisRadius.Z + LARGE_AXIS_MIN_SIZE;
 
-            boxX.Size = new Vector3(largeX, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE);
-            boxY.Size = new Vector3(SHORT_AXIS_SIZE, largeY, SHORT_AXIS_SIZE);
-            boxZ.Size = new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, largeZ);
+            boxX.Size = new TGCVector3(largeX, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE);
+            boxY.Size = new TGCVector3(SHORT_AXIS_SIZE, largeY, SHORT_AXIS_SIZE);
+            boxZ.Size = new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, largeZ);
 
-            boxX.Position = meshCenter + Vector3.Multiply(boxX.Size, 0.5f);
-            boxY.Position = meshCenter + Vector3.Multiply(boxY.Size, 0.5f);
-            boxZ.Position = meshCenter + Vector3.Multiply(boxZ.Size, 0.5f);
+            boxX.Position = meshCenter + TGCVector3.Multiply(boxX.Size, 0.5f);
+            boxY.Position = meshCenter + TGCVector3.Multiply(boxY.Size, 0.5f);
+            boxZ.Position = meshCenter + TGCVector3.Multiply(boxZ.Size, 0.5f);
 
             boxX.updateValues();
             boxY.updateValues();
@@ -96,7 +101,7 @@ namespace TGC.Tools.SceneEditor
         public void detectSelectedAxis(TgcPickingRay pickingRay)
         {
             pickingRay.updateRay();
-            Vector3 collP;
+            TGCVector3 collP;
 
             //Buscar colision con eje con Picking
             if (TgcCollisionUtils.intersectRayAABB(pickingRay.Ray, boxX.BoundingBox, out collP))
@@ -123,8 +128,7 @@ namespace TGC.Tools.SceneEditor
             //Desplazamiento inicial
             if (SelectedAxis != Axis.None)
             {
-                var input = GuiController.Instance.D3dInput;
-                initMouseP = new Vector2(input.XposRelative, input.YposRelative);
+                initMouseP = new TGCVector2(input.XposRelative, input.YposRelative);
             }
         }
 
@@ -133,8 +137,7 @@ namespace TGC.Tools.SceneEditor
         /// </summary>
         public void updateMove()
         {
-            var input = GuiController.Instance.D3dInput;
-            var currentMove = new Vector3(0, 0, 0);
+            var currentMove = TGCVector3.Empty;
 
             //Desplazamiento segun el mouse en X
             if (SelectedAxis == Axis.X)
@@ -153,12 +156,12 @@ namespace TGC.Tools.SceneEditor
             }
 
             //Mover mesh
-            MeshObj.mesh.move(currentMove);
+            MeshObj.mesh.Move(currentMove);
 
             //Mover ejes
-            boxX.move(currentMove);
-            boxY.move(currentMove);
-            boxZ.move(currentMove);
+            boxX.Move(currentMove);
+            boxY.Move(currentMove);
+            boxZ.Move(currentMove);
         }
 
         /// <summary>
@@ -183,13 +186,13 @@ namespace TGC.Tools.SceneEditor
             if (MeshObj == null)
                 return;
 
-            boxX.render();
-            boxY.render();
-            boxZ.render();
+            boxX.Render();
+            boxY.Render();
+            boxZ.Render();
 
             if (SelectedAxis != Axis.None)
             {
-                selectedAxisBox.BoundingBox.render();
+                selectedAxisBox.BoundingBox.Render();
             }
         }
     }

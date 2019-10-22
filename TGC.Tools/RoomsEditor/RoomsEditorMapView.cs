@@ -1,11 +1,11 @@
-using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using TGC.Tools.Properties;
-using TGC.Tools.Utils.Ui;
+using TGC.Core.Mathematica;
+using TGC.Core.Utils;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.RoomsEditor
 {
@@ -30,14 +30,14 @@ namespace TGC.Tools.RoomsEditor
         internal string defaultTextureDir;
         internal string defaultTextureImage;
 
-        private RoomsEditorControl editorControl;
+        private RoomsEditorModifier editorControl;
 
         private int roomsNameCounter;
 
         internal RoomsEditorRoom selectedRoom;
         private readonly RoomsEditorTexturesEdit texturesEdit;
 
-        public RoomsEditorMapView(RoomsEditorControl editorControl)
+        public RoomsEditorMapView(RoomsEditorModifier editorControl, string mediaDir)
         {
             InitializeComponent();
 
@@ -45,9 +45,9 @@ namespace TGC.Tools.RoomsEditor
             roomsNameCounter = 0;
 
             //textura default para los rooms
-            defaultTextureDir = Settings.Default.MediaDirectory + "Texturas\\";
+            defaultTextureDir = mediaDir + "Texturas\\";
             defaultTextureImage = defaultTextureDir + "tierra.jpg";
-            texturesEdit = new RoomsEditorTexturesEdit(this);
+            texturesEdit = new RoomsEditorTexturesEdit(this, mediaDir);
 
             //Tamaño inicial del panel2
             panel2d.MinimumSize = new Size((int)numericUpDownMapWidth.Value, (int)numericUpDownMapHeight.Value);
@@ -66,7 +66,7 @@ namespace TGC.Tools.RoomsEditor
         /// <summary>
         ///     Escala del mapa
         /// </summary>
-        public Vector3 MapScale { get; private set; }
+        public TGCVector3 MapScale { get; private set; }
 
         /// <summary>
         ///     Tamaño del mapa 2D: Width y Length
@@ -91,7 +91,7 @@ namespace TGC.Tools.RoomsEditor
         /// <summary>
         ///     Configura los parametros generales del mapa
         /// </summary>
-        public void setMapSettings(Size mapSize, Vector3 mapScale)
+        public void setMapSettings(Size mapSize, TGCVector3 mapScale)
         {
             panel2d.MinimumSize = mapSize;
             numericUpDownMapWidth.Value = mapSize.Width;
@@ -315,7 +315,7 @@ namespace TGC.Tools.RoomsEditor
             }
 
             //Escala del mapa
-            MapScale = new Vector3((float)numericUpDownMapScaleX.Value, (float)numericUpDownMapScaleY.Value,
+            MapScale = new TGCVector3((float)numericUpDownMapScaleX.Value, (float)numericUpDownMapScaleY.Value,
                 (float)numericUpDownMapScaleZ.Value);
 
             //Construir rooms en 3D

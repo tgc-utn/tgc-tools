@@ -1,15 +1,12 @@
 using System;
-using System.Diagnostics;
-using System.Threading;
 using System.Windows.Forms;
-using Microsoft.DirectX.Direct3D;
+using TGC.Tools.Example;
 using TGC.Tools.MeshCreator;
 using TGC.Tools.Model;
+using TGC.Tools.Properties;
 using TGC.Tools.RoomsEditor;
 using TGC.Tools.SceneEditor;
 using TGC.Tools.TerrainEditor;
-using System.IO;
-using TGC.Tools.Properties;
 
 namespace TGC.Tools.Forms
 {
@@ -19,6 +16,14 @@ namespace TGC.Tools.Forms
     public partial class ToolsForm : Form
     {
         /// <summary>
+        /// Modelo del Viewer.
+        /// </summary>
+        private ToolsModel Model { get; set; }
+
+        //Archivo de configuracion
+        private Settings Settings { get; set; }
+
+        /// <summary>
         ///     Constructor principal de la aplicacion
         /// </summary>
         public ToolsForm()
@@ -27,70 +32,188 @@ namespace TGC.Tools.Forms
         }
 
         /// <summary>
-        ///     Obtener o parar el estado del RenderLoop.
+        /// Inicializacion de los componentes principales y carga de ejemplos.
         /// </summary>
-        public static bool ApplicationRunning { get; set; }
-
-        /// <summary>
-        ///     Mostrar posicion de camara
-        /// </summary>
-        internal bool MostrarPosicionDeCamaraEnable
+        private void InitAplication()
         {
-            get { return mostrarPosicionDeCamaraToolStripMenuItem.Checked; }
-            set { mostrarPosicionDeCamaraToolStripMenuItem.Checked = value; }
-        }
+            //Archivo de configuracion
+            Settings = Settings.Default;
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            CheckMediaFolder();
+            //Titulo de la ventana principal
+            Text = Settings.Title;
 
-            //Show the App before we init
-            Show();
-            this.splitContainerPrincipal.SplitterDistance = this.Size.Width - 300;
-            panel3d.Focus();
+            //Herramientas basicas.
+            fpsToolStripMenuItem.Checked = true;
+            axisToolStripMenuItem.Checked = true;
 
-            ApplicationRunning = true;
-            GuiController.newInstance();
-            var guiController = GuiController.Instance;
-            guiController.initGraphics(this, panel3d);
+            //Modelo de la aplicacion
+            Model = ToolsModel.Instance;
 
-            while (ApplicationRunning)
+            //Verificamos la carpeta Media y la de TGC shaders basicos
+            if (Model.CheckFolder(Settings.MediaDirectory) || Model.CheckFolder(Settings.ShadersDirectory) || Model.CheckFolder(Settings.CommonShaders))
             {
-                //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
-                if (applicationActive())
+                if (OpenOption() == DialogResult.Cancel)
                 {
-                    guiController.render();
+                    //Fuerzo el cierre de la aplicacion.
+                    Environment.Exit(0);
                 }
-                else
-                {
-                    //Si no tenemos el foco, dormir cada tanto para no consumir gran cantida de CPU
-                    Thread.Sleep(100);
-                }
-
-                // Process application messages
-                Application.DoEvents();
             }
+
+            //Iniciar graficos
+            Model.InitGraphics(this, panel3D, Settings.CommonShaders);
+
+            try
+            {
+                //Cargar ejemplo default
+                Model.ExecuteExample(new TgcMeshCreator(Settings.MediaDirectory, Settings.ShadersDirectory, splitContainerPrincipal.Panel2));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "No se pudo cargar el MeshCreator.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                Model.InitRenderLoop();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error en RenderLoop de la herramienta.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            panel3D.Focus();
         }
 
         /// <summary>
-        ///     Finalizar aplicacion
+        /// Indica si la aplicacion esta activa.
+        /// Busca si la ventana principal tiene foco o si alguna de sus hijas tiene.
         /// </summary>
-        private void shutDown()
+        public bool ApplicationActive()
         {
-            ApplicationRunning = false;
-            GuiController.Instance.shutDown();
+            if (ContainsFocus)
+            {
+                return true;
+            }
 
-            //Matar proceso principal a la fuerza
-            var currentProcess = Process.GetCurrentProcess();
-            currentProcess.Kill();
+            foreach (var form in OwnedForms)
+            {
+                if (form.ContainsFocus)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
-        ///     Cerrando el formulario
+        /// Dialogo de confirmacion para cerrar la aplicacion.
         /// </summary>
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        /// <returns> Si hay o no la aplicacion.</returns>
+        public bool CloseAplication()
         {
-            e.Cancel = CloseAplication();
+            var result = MessageBox.Show("¿Esta seguro que desea cerrar la aplicación?", Text, MessageBoxButtons.YesNo);
+
+            if (result == DialogResult.Yes)
+            {
+                if (Model.ApplicationRunning)
+                {
+                    Model.Dispose();
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Vuelve al estado inicial los valores del menu.
+        /// </summary>
+        private void ResetMenuValues()
+        {
+            wireframeToolStripMenuItem.Checked = false;
+            fpsToolStripMenuItem.Checked = true;
+            axisToolStripMenuItem.Checked = true;
+            //fullExampleToolStripMenuItem.Checked = false;
+            //splitContainerIzquierda.Visible = true;
+            //splitContainerDerecha.Visible = true;
+            statusStrip.Visible = true;
+
+            Model.UpdateAspectRatio(panel3D);
+            Model.Wireframe(wireframeToolStripMenuItem.Checked);
+            Model.ContadorFPS(fpsToolStripMenuItem.Checked);
+            Model.AxisLines(axisToolStripMenuItem.Checked);
+        }
+
+        /// <summary>
+        /// Abre un dialogo con informacion de la aplicacion.
+        /// </summary>
+        private void OpenAbout()
+        {
+            new AboutForm().ShowDialog(this);
+        }
+
+        /// <summary>
+        /// Abre las opciones de la aplicacion.
+        /// </summary>
+        private DialogResult OpenOption()
+        {
+            return new OptionForm().ShowDialog(this);
+        }
+
+        /// <summary>
+        /// Activa o desactiva la opcion de wireframe en el ejemplo.
+        /// </summary>
+        private void Wireframe()
+        {
+            Model.Wireframe(wireframeToolStripMenuItem.Checked);
+        }
+
+        /// <summary>
+        /// Activa o desactiva la opcion del contador de fps.
+        /// </summary>
+        private void ContadorFPS()
+        {
+            Model.ContadorFPS(fpsToolStripMenuItem.Checked);
+        }
+
+        /// <summary>
+        /// Activa o desactiva la opcion de los ejes cartesianos.
+        /// </summary>
+        private void AxisLines()
+        {
+            Model.AxisLines(axisToolStripMenuItem.Checked);
+        }
+
+        /// <summary>
+        /// Ejecuta un ejemplo particular.
+        /// </summary>
+        /// <param name="example">Ejemplo a ejecutar.</param>
+        private void ExcecuteExample(TGCExampleTools example)
+        {
+            var result = MessageBox.Show("¿Seguro que desea cambiar de herramienta?", "Confirmación", MessageBoxButtons.YesNo);
+
+            if (result.Equals(DialogResult.Yes))
+            {
+                try
+                {
+                    Model.ExecuteExample(example);
+                    ContadorFPS();
+                    AxisLines();
+                    Wireframe();
+
+                    toolStripStatusCurrentExample.Text = "Ejemplo actual: " + example.Name;
+                    panel3D.Focus();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + example.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    Model.ClearCurrentExample();
+                }
+            }
         }
 
         /// <summary>
@@ -101,54 +224,76 @@ namespace TGC.Tools.Forms
             toolStripStatusPosition.Text = text;
         }
 
-        /// <summary>
-        ///     Texto de ToolStripStatusCurrentExample
-        /// </summary>
-        /// <param name="text"></param>
-        public void setCurrentExampleStatus(string text)
+        #region Eventos del form
+
+        private void ToolsForm_Load(object sender, EventArgs e)
         {
-            toolStripStatusCurrentExample.Text = text;
+            InitAplication();
         }
 
-        /// <summary>
-        ///     Panel de Modifiers
-        /// </summary>
-        /// <returns></returns>
-        internal Panel getModifiersPanel()
+        private void ToolsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            return splitContainerPrincipal.Panel2;
+            e.Cancel = CloseAplication();
+        }
+
+        private void fpsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ContadorFPS();
+        }
+
+        private void axisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AxisLines();
         }
 
         private void wireframeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (wireframeToolStripMenuItem.Checked)
-            {
-                GuiController.Instance.D3dDevice.RenderState.FillMode = FillMode.WireFrame;
-            }
-            else
-            {
-                GuiController.Instance.D3dDevice.RenderState.FillMode = FillMode.Solid;
-            }
+            Wireframe();
         }
 
-        private void contadorFPSToolStripMenuItem_Click(object sender, EventArgs e)
+        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GuiController.Instance.FpsCounterEnable = contadorFPSToolStripMenuItem.Checked;
+            Close();
         }
 
-        private void ejesCartesianosToolStripMenuItem_Click(object sender, EventArgs e)
+        private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GuiController.Instance.AxisLines.Enable = ejesCartesianosToolStripMenuItem.Checked;
+            OpenAbout();
         }
 
-        /// <summary>
-        ///     Setea los valores default de las opciones del menu
-        /// </summary>
-        internal void resetMenuOptions()
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            wireframeToolStripMenuItem.Checked = false;
-            contadorFPSToolStripMenuItem.Checked = true;
-            ejesCartesianosToolStripMenuItem.Checked = true;
+            ResetMenuValues();
+        }
+
+        private void opcionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenOption();
+        }
+
+        private void meshCreatorToolStripButton_Click(object sender, EventArgs e)
+        {
+            ExcecuteExample(new TgcMeshCreator(Settings.MediaDirectory, Settings.ShadersDirectory, splitContainerPrincipal.Panel2));
+        }
+
+        private void roomEditorToolStripButton_Click(object sender, EventArgs e)
+        {
+            ExcecuteExample(new TgcRoomsEditor(Settings.MediaDirectory, Settings.ShadersDirectory, splitContainerPrincipal.Panel2));
+        }
+
+        private void sceneEditorToolStripButton_Click(object sender, EventArgs e)
+        {
+            ExcecuteExample(new TgcSceneEditor(Settings.MediaDirectory, Settings.ShadersDirectory, splitContainerPrincipal.Panel2));
+        }
+
+        private void terrainEditorSoolStripButton_Click(object sender, EventArgs e)
+        {
+            ExcecuteExample(new TgcTerrainEditor(Settings.MediaDirectory, Settings.ShadersDirectory, splitContainerPrincipal.Panel2));
+        }
+
+        private void toolStripButtonSceneLoader_Click(object sender, EventArgs e)
+        {
+            ExcecuteExample(new SceneLoader.SceneLoader(Settings.MediaDirectory, Settings.ShadersDirectory, splitContainerPrincipal.Panel2));
         }
 
         private void mostrarPosiciónDeCámaraToolStripMenuItem_Click(object sender, EventArgs e)
@@ -159,140 +304,6 @@ namespace TGC.Tools.Forms
             }
         }
 
-        /// <summary>
-        ///     Indica si la aplicacion esta activa.
-        ///     Busca si la ventana principal tiene foco o si alguna de sus hijas tiene.
-        /// </summary>
-        private bool applicationActive()
-        {
-            if (ContainsFocus) return true;
-            foreach (var form in OwnedForms)
-            {
-                if (form.ContainsFocus) return true;
-            }
-            return false;
-        }
-
-        private void meshCreatorToolStripButton_Click(object sender, EventArgs e)
-        {
-            var result = MessageBox.Show("¿Seguro que desea cambiar de herramienta?", "Confirmación",
-                MessageBoxButtons.YesNo);
-
-            if (result.Equals(DialogResult.Yes))
-            {
-                try
-                {
-                    GuiController.Instance.executeSelectedExample(new TgcMeshCreator());
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error en init() de Mesh Creator \n" + ex.Message, ProductName,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void roomEditorToolStripButton_Click(object sender, EventArgs e)
-        {
-            var result = MessageBox.Show("¿Seguro que desea cambiar de herramienta?", "Confirmación",
-                MessageBoxButtons.YesNo);
-
-            if (result.Equals(DialogResult.Yes))
-            {
-                try
-                {
-                    GuiController.Instance.executeSelectedExample(new TgcRoomsEditor());
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error en init() de Room Editor \n" + ex.Message, ProductName,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void sceneEditorToolStripButton_Click(object sender, EventArgs e)
-        {
-            var result = MessageBox.Show("¿Seguro que desea cambiar de herramienta?", "Confirmación",
-                MessageBoxButtons.YesNo);
-
-            if (result.Equals(DialogResult.Yes))
-            {
-                try
-                {
-                    GuiController.Instance.executeSelectedExample(new TgcSceneEditor());
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error en init() de Scene Editor \n " + ex.Message, ProductName,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void terrainEditorSoolStripButton_Click(object sender, EventArgs e)
-        {
-            var result = MessageBox.Show("¿Seguro que desea cambiar de herramienta?", "Confirmación",
-                MessageBoxButtons.YesNo);
-
-            if (result.Equals(DialogResult.Yes))
-            {
-                try
-                {
-                    GuiController.Instance.executeSelectedExample(new TgcTerrainEditor());
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error en init() de Terrain Editor \n" + ex.Message, ProductName,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new AboutForm().ShowDialog();
-        }
-
-        private void CheckMediaFolder()
-        {
-            //Verificamos la carpeta Media
-            var pathMedia = Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory;
-
-            if (!Directory.Exists(pathMedia))
-            {
-                //modelo.DownloadMediaFolder();
-                Process.Start(Settings.Default.MediaLink);
-                Process.Start(Environment.CurrentDirectory);
-                MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine +
-                                Environment.NewLine +
-                                "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
-
-                //Fuerzo el cierre de la aplicacion.
-                Environment.Exit(0);
-            }
-        }
-
-        public bool CloseAplication()
-        {
-            var result = MessageBox.Show("¿Esta seguro que desea cerrar la aplicación?", Text, MessageBoxButtons.YesNo);
-
-            if (result == DialogResult.Yes)
-            {
-                if (ApplicationRunning)
-                {
-                    this.shutDown();
-                }
-
-                return false;
-            }
-
-            return true;
-        }
+        #endregion Eventos del form
     }
 }

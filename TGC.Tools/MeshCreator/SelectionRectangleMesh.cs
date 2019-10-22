@@ -1,8 +1,8 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Tools.Model;
-using TGC.Tools.Utils;
+using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
+using TGC.Core.Textures;
 
 namespace TGC.Tools.MeshCreator
 {
@@ -23,7 +23,7 @@ namespace TGC.Tools.MeshCreator
         /// <summary>
         ///     Actualizar mesh del recuadro de seleccion
         /// </summary>
-        public void updateMesh(Vector2 min, Vector2 max)
+        public void updateMesh(TGCVector2 min, TGCVector2 max)
         {
             //Horizontal arriba
             vertices[0] = new CustomVertex.TransformedColored(min.X, min.Y, 0, 1, RECT_COLOR);
@@ -47,13 +47,13 @@ namespace TGC.Tools.MeshCreator
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var texturesManager = GuiController.Instance.TexturesManager;
+            var d3dDevice = D3DDevice.Instance.Device;
+            var texturesManager = TexturesManager.Instance;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
-            d3dDevice.Material = TgcD3dDevice.DEFAULT_MATERIAL;
-            d3dDevice.Transform.World = Matrix.Identity;
+            d3dDevice.Material = D3DDevice.DEFAULT_MATERIAL;
+            d3dDevice.Transform.World = TGCMatrix.Identity;
 
             d3dDevice.VertexFormat = CustomVertex.TransformedColored.Format;
             d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, 4, vertices);

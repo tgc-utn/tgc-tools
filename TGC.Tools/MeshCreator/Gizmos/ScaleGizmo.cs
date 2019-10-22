@@ -1,41 +1,42 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Core.Collision;
+using TGC.Core.Direct3D;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
-using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Gizmos
 {
     /// <summary>
-    ///     Gizmo para escalar objetos
+    /// Gizmo para escalar objetos
     /// </summary>
     public class ScaleGizmo : EditorGizmo
     {
         private const float LARGE_AXIS_SIZE = 200f;
         private const float SHORT_AXIS_SIZE = 5f;
-        private readonly TgcBox boxX;
-        private readonly TgcBox boxY;
-        private readonly TgcBox boxZ;
+        private readonly TGCBox boxX;
+        private readonly TGCBox boxY;
+        private readonly TGCBox boxZ;
 
         private State currentState;
-        private Vector3 gizmoCenter;
-        private Vector2 initMouseP;
+        private TGCVector3 gizmoCenter;
+        private TGCVector2 initMouseP;
         private Axis selectedAxis;
 
-        public ScaleGizmo(MeshCreatorControl control)
-            : base(control)
+        public ScaleGizmo(MeshCreatorModifier control) : base(control)
         {
             selectedAxis = Axis.None;
             currentState = State.Init;
 
-            boxX = TgcBox.fromExtremes(new Vector3(0, 0, 0),
-                new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(200, 50, 50));
-            boxY = TgcBox.fromExtremes(new Vector3(0, 0, 0),
-                new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(50, 200, 50));
-            boxZ = TgcBox.fromExtremes(new Vector3(0, 0, 0),
-                new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.FromArgb(50, 50, 200));
+            boxX = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(200, 50, 50));
+            boxX.AutoTransform = true;
+            boxY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(50, 200, 50));
+            boxY.AutoTransform = true;
+            boxZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.FromArgb(50, 50, 200));
+            boxZ.AutoTransform = true;
         }
 
         public override void setEnabled(bool enabled)
@@ -43,7 +44,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
             //Activar
             if (enabled)
             {
-                Control.CurrentState = MeshCreatorControl.State.GizmoActivated;
+                Control.CurrentState = MeshCreatorModifier.State.GizmoActivated;
                 currentState = State.Init;
 
                 //Posicionar gizmo
@@ -54,19 +55,19 @@ namespace TGC.Tools.MeshCreator.Gizmos
         }
 
         /// <summary>
-        ///     Configurar posicion y tamaño de ejes segun la distancia a la camara
+        /// Configurar posicion y tamaño de ejes segun la distancia a la camara
         /// </summary>
         private void setAxisPositionAndSize()
         {
             var increment = MeshCreatorUtils.getTranslateGizmoSizeIncrement(Control.Camera, gizmoCenter);
 
-            boxX.Size = Vector3.Multiply(new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
-            boxY.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
-            boxZ.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), increment);
+            boxX.Size = TGCVector3.Multiply(new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
+            boxY.Size = TGCVector3.Multiply(new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
+            boxZ.Size = TGCVector3.Multiply(new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), increment);
 
-            boxX.Position = gizmoCenter + Vector3.Multiply(boxX.Size, 0.5f) + new Vector3(SHORT_AXIS_SIZE, 0, 0);
-            boxY.Position = gizmoCenter + Vector3.Multiply(boxY.Size, 0.5f) + new Vector3(0, SHORT_AXIS_SIZE, 0);
-            boxZ.Position = gizmoCenter + Vector3.Multiply(boxZ.Size, 0.5f) + new Vector3(0, 0, SHORT_AXIS_SIZE);
+            boxX.Position = gizmoCenter + TGCVector3.Multiply(boxX.Size, 0.5f) + new TGCVector3(SHORT_AXIS_SIZE, 0, 0);
+            boxY.Position = gizmoCenter + TGCVector3.Multiply(boxY.Size, 0.5f) + new TGCVector3(0, SHORT_AXIS_SIZE, 0);
+            boxZ.Position = gizmoCenter + TGCVector3.Multiply(boxZ.Size, 0.5f) + new TGCVector3(0, 0, SHORT_AXIS_SIZE);
 
             boxX.updateValues();
             boxY.updateValues();
@@ -75,7 +76,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
 
         public override void update()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = Control.creator.Input;
 
             switch (currentState)
             {
@@ -87,7 +88,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
                         Control.PickingRay.updateRay();
-                        Vector3 collP;
+                        TGCVector3 collP;
 
                         //Buscar colision con eje con Picking
                         if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxX.BoundingBox, out collP))
@@ -112,14 +113,14 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         if (selectedAxis != Axis.None)
                         {
                             currentState = State.Dragging;
-                            initMouseP = new Vector2(input.XposRelative, input.YposRelative);
+                            initMouseP = new TGCVector2(input.XposRelative, input.YposRelative);
                         }
                         else
                         {
                             if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                             {
                                 var additive = input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl);
-                                Control.CurrentState = MeshCreatorControl.State.SelectObject;
+                                Control.CurrentState = MeshCreatorModifier.State.SelectObject;
                                 Control.SelectionRectangle.doDirectSelection(additive);
                             }
                         }
@@ -128,7 +129,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                     else
                     {
                         Control.PickingRay.updateRay();
-                        Vector3 collP;
+                        TGCVector3 collP;
 
                         //Buscar colision con eje con Picking
                         if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxX.BoundingBox, out collP))
@@ -158,7 +159,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
                         //Obtener vector 2D de movimiento relativo del mouse
-                        var mouseScreenVec = new Vector2(input.XposRelative, input.YposRelative);
+                        var mouseScreenVec = new TGCVector2(input.XposRelative, input.YposRelative);
                         //mouseScreenVec.Normalize();
 
                         //Projectar vector 2D del eje elegido
@@ -166,10 +167,9 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         var axisScreenVec = MeshCreatorUtils.projectAABBScreenVec(currentAxisBox.BoundingBox);
 
                         //Hacer DOT product entre ambos vectores para obtener la contribucion del mouse en esa direccion
-                        var scaling = Vector2.Dot(axisScreenVec, mouseScreenVec);
-                        scaling = MeshCreatorUtils.getMouseScaleIncrementSpeed(Control.Camera,
-                            currentAxisBox.BoundingBox, scaling);
-                        var currentScale = new Vector3(0, 0, 0);
+                        var scaling = TGCVector2.Dot(axisScreenVec, mouseScreenVec);
+                        scaling = MeshCreatorUtils.getMouseScaleIncrementSpeed(Control.Camera, currentAxisBox.BoundingBox, scaling);
+                        var currentScale = TGCVector3.Empty;
 
                         //Escala en eje X
                         if (selectedAxis == Axis.X)
@@ -211,7 +211,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         //TODO: Hay que ir estirando los ejes a medida que se agranda la escala
 
                         //Actualizar datos de modify
-                        Control.updateModifyPanel();
+                        Control.UpdateModifyPanel();
                     }
 
                     //Soltar movimiento
@@ -231,23 +231,23 @@ namespace TGC.Tools.MeshCreator.Gizmos
         public override void render()
         {
             //Desactivar Z-Buffer para dibujar arriba de todo el escenario
-            GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = false;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = false;
 
             //Dibujar
-            boxX.render();
-            boxY.render();
-            boxZ.render();
+            boxX.Render();
+            boxY.Render();
+            boxZ.Render();
 
             var selectedBox = getAxisBox(selectedAxis);
             if (selectedBox != null)
             {
-                selectedBox.BoundingBox.render();
+                selectedBox.BoundingBox.Render();
             }
 
-            GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = true;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = true;
         }
 
-        private TgcBox getAxisBox(Axis axis)
+        private TGCBox getAxisBox(Axis axis)
         {
             switch (axis)
             {
@@ -266,27 +266,27 @@ namespace TGC.Tools.MeshCreator.Gizmos
         /// <summary>
         ///     Mover ejes del gizmo
         /// </summary>
-        private void moveGizmo(Vector3 movement)
+        private void moveGizmo(TGCVector3 movement)
         {
             gizmoCenter += movement;
-            boxX.move(movement);
-            boxY.move(movement);
-            boxZ.move(movement);
+            boxX.Move(movement);
+            boxY.Move(movement);
+            boxZ.Move(movement);
         }
 
         /// <summary>
         ///     Mover gizmo
         /// </summary>
-        public override void move(EditorPrimitive selectedPrimitive, Vector3 movement)
+        public override void move(EditorPrimitive selectedPrimitive, TGCVector3 movement)
         {
             moveGizmo(movement);
         }
 
         public override void dipose()
         {
-            boxX.dispose();
-            boxY.dispose();
-            boxZ.dispose();
+            boxX.Dispose();
+            boxY.Dispose();
+            boxZ.Dispose();
         }
 
         private enum Axis

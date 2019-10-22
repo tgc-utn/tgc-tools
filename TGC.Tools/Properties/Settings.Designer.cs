@@ -12,7 +12,7 @@ namespace TGC.Tools.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.3.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -20,18 +20,6 @@ namespace TGC.Tools.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Media\\")]
-        public string MediaDirectory {
-            get {
-                return ((string)(this["MediaDirectory"]));
-            }
-            set {
-                this["MediaDirectory"] = value;
             }
         }
         
@@ -49,7 +37,43 @@ namespace TGC.Tools.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://drive.google.com/open?id=0B8iAMXTVXrJeOGpIbWhUbjJPaE0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Media\\")]
+        public string MediaDirectory {
+            get {
+                return ((string)(this["MediaDirectory"]));
+            }
+            set {
+                this["MediaDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("TGC Tools - Técnicas de Gráficos por Computadora - UTN - FRBA")]
+        public string Title {
+            get {
+                return ((string)(this["Title"]));
+            }
+            set {
+                this["Title"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Shaders\\Common\\")]
+        public string CommonShaders {
+            get {
+                return ((string)(this["CommonShaders"]));
+            }
+            set {
+                this["CommonShaders"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://s3.amazonaws.com/tgcutn/tgc-media.zip")]
         public string MediaLink {
             get {
                 return ((string)(this["MediaLink"]));

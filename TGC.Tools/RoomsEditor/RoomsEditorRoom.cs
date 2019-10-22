@@ -1,7 +1,7 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Tools.Utils.TgcGeometry;
+using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 
 namespace TGC.Tools.RoomsEditor
 {
@@ -67,16 +67,16 @@ namespace TGC.Tools.RoomsEditor
         /// <summary>
         ///     Actualiza la información de las paredes
         /// </summary>
-        public void buildWalls(List<RoomsEditorRoom> rooms, Vector3 sceneScale)
+        public void buildWalls(List<RoomsEditorRoom> rooms, TGCVector3 sceneScale)
         {
             var bounds = RoomPanel.Label.Bounds;
 
             //roof
             var roof = Walls[0];
-            var roofWall3d = new TgcPlaneWall(
-                new Vector3(bounds.X * sceneScale.X, (FloorLevel + Height) * sceneScale.Y, bounds.Y * sceneScale.Z),
-                new Vector3(bounds.Width * sceneScale.X, 0, bounds.Height * sceneScale.Z),
-                TgcPlaneWall.Orientations.XZplane,
+            var roofWall3d = new TgcPlane(
+                new TGCVector3(bounds.X * sceneScale.X, (FloorLevel + Height) * sceneScale.Y, bounds.Y * sceneScale.Z),
+                new TGCVector3(bounds.Width * sceneScale.X, 0, bounds.Height * sceneScale.Z),
+                TgcPlane.Orientations.XZplane,
                 roof.Texture, roof.UTile, roof.VTile
                 );
             roof.WallSegments.Clear();
@@ -84,10 +84,10 @@ namespace TGC.Tools.RoomsEditor
 
             //floor
             var floor = Walls[1];
-            var floorWall3d = new TgcPlaneWall(
-                new Vector3(bounds.X * sceneScale.X, FloorLevel, bounds.Y * sceneScale.Z),
-                new Vector3(bounds.Width * sceneScale.X, 0, bounds.Height * sceneScale.Z),
-                TgcPlaneWall.Orientations.XZplane,
+            var floorWall3d = new TgcPlane(
+                new TGCVector3(bounds.X * sceneScale.X, FloorLevel, bounds.Y * sceneScale.Z),
+                new TGCVector3(bounds.Width * sceneScale.X, 0, bounds.Height * sceneScale.Z),
+                TgcPlane.Orientations.XZplane,
                 floor.Texture, floor.UTile, floor.VTile
                 );
             floor.WallSegments.Clear();
@@ -110,10 +110,10 @@ namespace TGC.Tools.RoomsEditor
             eastWall.WallSegments.Clear();
             foreach (var seg in finalWallSegments)
             {
-                var wall3d = new TgcPlaneWall(
-                    new Vector3((bounds.X + bounds.Width) * sceneScale.X, FloorLevel * sceneScale.Y, seg.X * sceneScale.Z),
-                    new Vector3(0, Height * sceneScale.Y, (seg.Y - seg.X) * sceneScale.Z),
-                    TgcPlaneWall.Orientations.YZplane,
+                var wall3d = new TgcPlane(
+                    new TGCVector3((bounds.X + bounds.Width) * sceneScale.X, FloorLevel * sceneScale.Y, seg.X * sceneScale.Z),
+                    new TGCVector3(0, Height * sceneScale.Y, (seg.Y - seg.X) * sceneScale.Z),
+                    TgcPlane.Orientations.YZplane,
                     eastWall.Texture, eastWall.UTile, eastWall.VTile
                     );
                 eastWall.WallSegments.Add(wall3d);
@@ -134,10 +134,10 @@ namespace TGC.Tools.RoomsEditor
             westWall.WallSegments.Clear();
             foreach (var seg in finalWallSegments)
             {
-                var wall3d = new TgcPlaneWall(
-                    new Vector3(bounds.X * sceneScale.X, FloorLevel * sceneScale.Y, seg.X * sceneScale.Z),
-                    new Vector3(0, Height * sceneScale.Y, (seg.Y - seg.X) * sceneScale.Z),
-                    TgcPlaneWall.Orientations.YZplane,
+                var wall3d = new TgcPlane(
+                    new TGCVector3(bounds.X * sceneScale.X, FloorLevel * sceneScale.Y, seg.X * sceneScale.Z),
+                    new TGCVector3(0, Height * sceneScale.Y, (seg.Y - seg.X) * sceneScale.Z),
+                    TgcPlane.Orientations.YZplane,
                     westWall.Texture, westWall.UTile, westWall.VTile
                     );
                 westWall.WallSegments.Add(wall3d);
@@ -157,10 +157,10 @@ namespace TGC.Tools.RoomsEditor
             northWall.WallSegments.Clear();
             foreach (var seg in finalWallSegments)
             {
-                var wall3d = new TgcPlaneWall(
-                    new Vector3(seg.X * sceneScale.X, FloorLevel * sceneScale.Y, bounds.Y * sceneScale.Z),
-                    new Vector3((seg.Y - seg.X) * sceneScale.X, Height * sceneScale.Y, 0),
-                    TgcPlaneWall.Orientations.XYplane,
+                var wall3d = new TgcPlane(
+                    new TGCVector3(seg.X * sceneScale.X, FloorLevel * sceneScale.Y, bounds.Y * sceneScale.Z),
+                    new TGCVector3((seg.Y - seg.X) * sceneScale.X, Height * sceneScale.Y, 0),
+                    TgcPlane.Orientations.XYplane,
                     northWall.Texture, northWall.UTile, northWall.VTile
                     );
                 northWall.WallSegments.Add(wall3d);
@@ -180,10 +180,10 @@ namespace TGC.Tools.RoomsEditor
             southWall.WallSegments.Clear();
             foreach (var seg in finalWallSegments)
             {
-                var wall3d = new TgcPlaneWall(
-                    new Vector3(seg.X * sceneScale.X, FloorLevel * sceneScale.Y, (bounds.Y + bounds.Height) * sceneScale.Z),
-                    new Vector3((seg.Y - seg.X) * sceneScale.X, Height * sceneScale.Y, 0),
-                    TgcPlaneWall.Orientations.XYplane,
+                var wall3d = new TgcPlane(
+                    new TGCVector3(seg.X * sceneScale.X, FloorLevel * sceneScale.Y, (bounds.Y + bounds.Height) * sceneScale.Z),
+                    new TGCVector3((seg.Y - seg.X) * sceneScale.X, Height * sceneScale.Y, 0),
+                    TgcPlane.Orientations.XYplane,
                     southWall.Texture, southWall.UTile, southWall.VTile
                     );
                 southWall.WallSegments.Add(wall3d);
@@ -196,7 +196,7 @@ namespace TGC.Tools.RoomsEditor
         ///     Crear paredes 3D para las diferencias de altura entre la pared East de este Room y el resto
         ///     de los Rooms contra los que colisiona
         /// </summary>
-        private void createEastWallSegmentsForHeightDiff(Vector3 sceneScale, List<Point> intersectingLines,
+        private void createEastWallSegmentsForHeightDiff(TGCVector3 sceneScale, List<Point> intersectingLines,
             List<RoomsEditorRoom> intersectingRooms, RoomsEditorWall wall)
         {
             var bounds = RoomPanel.Label.Bounds;
@@ -213,12 +213,12 @@ namespace TGC.Tools.RoomsEditor
                 var supSeg = supDiffSegments[i];
                 if (supSeg.X != 0 || supSeg.Y != 0)
                 {
-                    var wall3d = new TgcPlaneWall(
-                        new Vector3((bounds.X + bounds.Width) * sceneScale.X, supSeg.X * sceneScale.Y,
+                    var wall3d = new TgcPlane(
+                        new TGCVector3((bounds.X + bounds.Width) * sceneScale.X, supSeg.X * sceneScale.Y,
                             intersecLine.X * sceneScale.Z),
-                        new Vector3(0, (supSeg.Y - supSeg.X) * sceneScale.Y,
+                        new TGCVector3(0, (supSeg.Y - supSeg.X) * sceneScale.Y,
                             (intersecLine.Y - intersecLine.X) * sceneScale.Z),
-                        TgcPlaneWall.Orientations.YZplane,
+                        TgcPlane.Orientations.YZplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
                     wall.WallSegments.Add(wall3d);
@@ -228,12 +228,12 @@ namespace TGC.Tools.RoomsEditor
                 var infSeg = infDiffSegments[i];
                 if (infSeg.X != 0 || infSeg.Y != 0)
                 {
-                    var wall3d = new TgcPlaneWall(
-                        new Vector3((bounds.X + bounds.Width) * sceneScale.X, infSeg.X * sceneScale.Y,
+                    var wall3d = new TgcPlane(
+                        new TGCVector3((bounds.X + bounds.Width) * sceneScale.X, infSeg.X * sceneScale.Y,
                             intersecLine.X * sceneScale.Z),
-                        new Vector3(0, (infSeg.Y - infSeg.X) * sceneScale.Y,
+                        new TGCVector3(0, (infSeg.Y - infSeg.X) * sceneScale.Y,
                             (intersecLine.Y - intersecLine.X) * sceneScale.Z),
-                        TgcPlaneWall.Orientations.YZplane,
+                        TgcPlane.Orientations.YZplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
                     wall.WallSegments.Add(wall3d);
@@ -245,7 +245,7 @@ namespace TGC.Tools.RoomsEditor
         ///     Crear paredes 3D para las diferencias de altura entre la pared West de este Room y el resto
         ///     de los Rooms contra los que colisiona
         /// </summary>
-        private void createWestWallSegmentsForHeightDiff(Vector3 sceneScale, List<Point> intersectingLines,
+        private void createWestWallSegmentsForHeightDiff(TGCVector3 sceneScale, List<Point> intersectingLines,
             List<RoomsEditorRoom> intersectingRooms, RoomsEditorWall wall)
         {
             var bounds = RoomPanel.Label.Bounds;
@@ -262,11 +262,11 @@ namespace TGC.Tools.RoomsEditor
                 var supSeg = supDiffSegments[i];
                 if (supSeg.X != 0 || supSeg.Y != 0)
                 {
-                    var wall3d = new TgcPlaneWall(
-                        new Vector3(bounds.X * sceneScale.X, supSeg.X * sceneScale.Y, intersecLine.X * sceneScale.Z),
-                        new Vector3(0, (supSeg.Y - supSeg.X) * sceneScale.Y,
+                    var wall3d = new TgcPlane(
+                        new TGCVector3(bounds.X * sceneScale.X, supSeg.X * sceneScale.Y, intersecLine.X * sceneScale.Z),
+                        new TGCVector3(0, (supSeg.Y - supSeg.X) * sceneScale.Y,
                             (intersecLine.Y - intersecLine.X) * sceneScale.Z),
-                        TgcPlaneWall.Orientations.YZplane,
+                        TgcPlane.Orientations.YZplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
                     wall.WallSegments.Add(wall3d);
@@ -276,11 +276,11 @@ namespace TGC.Tools.RoomsEditor
                 var infSeg = infDiffSegments[i];
                 if (infSeg.X != 0 || infSeg.Y != 0)
                 {
-                    var wall3d = new TgcPlaneWall(
-                        new Vector3(bounds.X * sceneScale.X, infSeg.X * sceneScale.Y, intersecLine.X * sceneScale.Z),
-                        new Vector3(0, (infSeg.Y - infSeg.X) * sceneScale.Y,
+                    var wall3d = new TgcPlane(
+                        new TGCVector3(bounds.X * sceneScale.X, infSeg.X * sceneScale.Y, intersecLine.X * sceneScale.Z),
+                        new TGCVector3(0, (infSeg.Y - infSeg.X) * sceneScale.Y,
                             (intersecLine.Y - intersecLine.X) * sceneScale.Z),
-                        TgcPlaneWall.Orientations.YZplane,
+                        TgcPlane.Orientations.YZplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
                     wall.WallSegments.Add(wall3d);
@@ -292,7 +292,7 @@ namespace TGC.Tools.RoomsEditor
         ///     Crear paredes 3D para las diferencias de altura entre la pared North de este Room y el resto
         ///     de los Rooms contra los que colisiona
         /// </summary>
-        private void createNorthWallSegmentsForHeightDiff(Vector3 sceneScale, List<Point> intersectingLines,
+        private void createNorthWallSegmentsForHeightDiff(TGCVector3 sceneScale, List<Point> intersectingLines,
             List<RoomsEditorRoom> intersectingRooms, RoomsEditorWall wall)
         {
             var bounds = RoomPanel.Label.Bounds;
@@ -309,11 +309,11 @@ namespace TGC.Tools.RoomsEditor
                 var supSeg = supDiffSegments[i];
                 if (supSeg.X != 0 || supSeg.Y != 0)
                 {
-                    var wall3d = new TgcPlaneWall(
-                        new Vector3(intersecLine.X * sceneScale.X, supSeg.X * sceneScale.Y, bounds.Y * sceneScale.Z),
-                        new Vector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (supSeg.Y - supSeg.X) * sceneScale.Y,
+                    var wall3d = new TgcPlane(
+                        new TGCVector3(intersecLine.X * sceneScale.X, supSeg.X * sceneScale.Y, bounds.Y * sceneScale.Z),
+                        new TGCVector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (supSeg.Y - supSeg.X) * sceneScale.Y,
                             0),
-                        TgcPlaneWall.Orientations.XYplane,
+                        TgcPlane.Orientations.XYplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
                     wall.WallSegments.Add(wall3d);
@@ -323,11 +323,11 @@ namespace TGC.Tools.RoomsEditor
                 var infSeg = infDiffSegments[i];
                 if (infSeg.X != 0 || infSeg.Y != 0)
                 {
-                    var wall3d = new TgcPlaneWall(
-                        new Vector3(intersecLine.X * sceneScale.X, infSeg.X * sceneScale.Y, bounds.Y * sceneScale.Z),
-                        new Vector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (infSeg.Y - infSeg.X) * sceneScale.Y,
+                    var wall3d = new TgcPlane(
+                        new TGCVector3(intersecLine.X * sceneScale.X, infSeg.X * sceneScale.Y, bounds.Y * sceneScale.Z),
+                        new TGCVector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (infSeg.Y - infSeg.X) * sceneScale.Y,
                             0),
-                        TgcPlaneWall.Orientations.XYplane,
+                        TgcPlane.Orientations.XYplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
                     wall.WallSegments.Add(wall3d);
@@ -339,7 +339,7 @@ namespace TGC.Tools.RoomsEditor
         ///     Crear paredes 3D para las diferencias de altura entre la pared South de este Room y el resto
         ///     de los Rooms contra los que colisiona
         /// </summary>
-        private void createSouthWallSegmentsForHeightDiff(Vector3 sceneScale, List<Point> intersectingLines,
+        private void createSouthWallSegmentsForHeightDiff(TGCVector3 sceneScale, List<Point> intersectingLines,
             List<RoomsEditorRoom> intersectingRooms, RoomsEditorWall wall)
         {
             var bounds = RoomPanel.Label.Bounds;
@@ -356,12 +356,12 @@ namespace TGC.Tools.RoomsEditor
                 var supSeg = supDiffSegments[i];
                 if (supSeg.X != 0 || supSeg.Y != 0)
                 {
-                    var wall3d = new TgcPlaneWall(
-                        new Vector3(intersecLine.X * sceneScale.X, supSeg.X * sceneScale.Y,
+                    var wall3d = new TgcPlane(
+                        new TGCVector3(intersecLine.X * sceneScale.X, supSeg.X * sceneScale.Y,
                             (bounds.Y + bounds.Height) * sceneScale.Z),
-                        new Vector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (supSeg.Y - supSeg.X) * sceneScale.Y,
+                        new TGCVector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (supSeg.Y - supSeg.X) * sceneScale.Y,
                             0),
-                        TgcPlaneWall.Orientations.XYplane,
+                        TgcPlane.Orientations.XYplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
                     wall.WallSegments.Add(wall3d);
@@ -371,12 +371,12 @@ namespace TGC.Tools.RoomsEditor
                 var infSeg = infDiffSegments[i];
                 if (infSeg.X != 0 || infSeg.Y != 0)
                 {
-                    var wall3d = new TgcPlaneWall(
-                        new Vector3(intersecLine.X * sceneScale.X, infSeg.X * sceneScale.Y,
+                    var wall3d = new TgcPlane(
+                        new TGCVector3(intersecLine.X * sceneScale.X, infSeg.X * sceneScale.Y,
                             (bounds.Y + bounds.Height) * sceneScale.Z),
-                        new Vector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (infSeg.Y - infSeg.X) * sceneScale.Y,
+                        new TGCVector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (infSeg.Y - infSeg.X) * sceneScale.Y,
                             0),
-                        TgcPlaneWall.Orientations.XYplane,
+                        TgcPlane.Orientations.XYplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
                     wall.WallSegments.Add(wall3d);

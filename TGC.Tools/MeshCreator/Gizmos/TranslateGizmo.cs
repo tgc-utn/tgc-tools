@@ -1,9 +1,8 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
+using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Tools.MeshCreator.Primitives;
-using TGC.Tools.Model;
-using TGC.Tools.Utils.Input;
-using TGC.Tools.Utils.TgcGeometry;
+using TGC.Tools.UserControls;
 
 namespace TGC.Tools.MeshCreator.Gizmos
 {
@@ -12,13 +11,13 @@ namespace TGC.Tools.MeshCreator.Gizmos
     /// </summary>
     public class TranslateGizmo : EditorGizmo
     {
-        private Vector3 acumMovement;
+        private TGCVector3 acumMovement;
 
         private State currentState;
         private readonly TranslateGizmoMesh gizmoMesh;
-        private Vector3 initMouseP3d;
+        private TGCVector3 initMouseP3d;
 
-        public TranslateGizmo(MeshCreatorControl control)
+        public TranslateGizmo(MeshCreatorModifier control)
             : base(control)
         {
             gizmoMesh = new TranslateGizmoMesh();
@@ -30,7 +29,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
             //Activar
             if (enabled)
             {
-                Control.CurrentState = MeshCreatorControl.State.GizmoActivated;
+                Control.CurrentState = MeshCreatorModifier.State.GizmoActivated;
                 currentState = State.Init;
 
                 //Posicionar gizmo
@@ -41,13 +40,13 @@ namespace TGC.Tools.MeshCreator.Gizmos
 
         public override void update()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = Control.creator.Input;
 
             switch (currentState)
             {
                 case State.Init:
 
-                    acumMovement = Vector3.Empty;
+                    acumMovement = TGCVector3.Empty;
                     gizmoMesh.unSelect();
 
                     //Iniciar seleccion de eje
@@ -91,7 +90,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                             if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                             {
                                 var additive = input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl);
-                                Control.CurrentState = MeshCreatorControl.State.SelectObject;
+                                Control.CurrentState = MeshCreatorModifier.State.SelectObject;
                                 Control.SelectionRectangle.doDirectSelection(additive);
                             }
                         }
@@ -115,7 +114,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         var endMouseP3d = initMouseP3d;
 
                         //Solo se mueve un eje
-                        var currentMove = new Vector3(0, 0, 0);
+                        var currentMove = TGCVector3.Empty;
                         if (gizmoMesh.isSingleAxis(gizmoMesh.SelectedAxis))
                         {
                             //Desplazamiento en eje X
@@ -169,9 +168,20 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         //Ajustar currentMove con Snap to grid
                         if (Control.SnapToGridEnabled)
                         {
-                            snapMovementToGrid(ref currentMove.X, ref acumMovement.X, Control.SnapToGridCellSize);
-                            snapMovementToGrid(ref currentMove.Y, ref acumMovement.Y, Control.SnapToGridCellSize);
-                            snapMovementToGrid(ref currentMove.Z, ref acumMovement.Z, Control.SnapToGridCellSize);
+                            var currentMoveX = currentMove.X;
+                            var currentMoveY = currentMove.Y;
+                            var currentMoveZ = currentMove.Z;
+
+                            var acumMovementX = acumMovement.X;
+                            var acumMovementY = acumMovement.Y;
+                            var acumMovementZ = acumMovement.Z;
+
+                            snapMovementToGrid(ref currentMoveX, ref acumMovementX, Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMoveY, ref acumMovementY, Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMoveZ, ref acumMovementZ, Control.SnapToGridCellSize);
+
+                            currentMove = new TGCVector3(currentMoveX, currentMoveY, currentMoveZ);
+                            acumMovement = new TGCVector3(acumMovementX, acumMovementY, acumMovementZ);
                         }
 
                         //Mover objetos
@@ -184,7 +194,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
                         gizmoMesh.moveGizmo(currentMove);
 
                         //Actualizar datos de modify
-                        Control.updateModifyPanel();
+                        Control.UpdateModifyPanel();
                     }
 
                     //Soltar movimiento
@@ -209,7 +219,7 @@ namespace TGC.Tools.MeshCreator.Gizmos
         /// <summary>
         ///     Mover gizmo
         /// </summary>
-        public override void move(EditorPrimitive selectedPrimitive, Vector3 movement)
+        public override void move(EditorPrimitive selectedPrimitive, TGCVector3 movement)
         {
             gizmoMesh.moveGizmo(movement);
         }
