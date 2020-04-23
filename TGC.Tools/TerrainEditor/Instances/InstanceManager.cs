@@ -55,7 +55,7 @@ namespace TGC.Tools.TerrainEditor.Instances
                 var scene = loader.loadSceneFromFile(path);
                 var mesh = scene.Meshes[0];
                 mesh.Name = name;
-                mesh.AutoTransform = true;
+                mesh.AutoTransformEnable = true;
                 meshes.Add(name, mesh);
             }
 
@@ -66,7 +66,7 @@ namespace TGC.Tools.TerrainEditor.Instances
         {
             var i = m.createMeshInstance(m.Name + m.MeshInstances.Count);
             i.AlphaBlendEnable = m.AlphaBlendEnable;
-            i.AutoTransform = true;
+            i.AutoTransformEnable = true;
             return i;
         }
 
@@ -97,7 +97,7 @@ namespace TGC.Tools.TerrainEditor.Instances
             var instances = new List<TgcMesh>();
             foreach (var m in scene.Meshes)
             {
-                m.AutoTransform = true;
+                m.AutoTransformEnable = true;
 
                 if (m.ParentInstance == null) //Si es un mesh original
                 {

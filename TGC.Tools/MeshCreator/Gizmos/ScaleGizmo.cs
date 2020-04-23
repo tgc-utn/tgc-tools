@@ -32,11 +32,11 @@ namespace TGC.Tools.MeshCreator.Gizmos
             currentState = State.Init;
 
             boxX = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(200, 50, 50));
-            boxX.AutoTransform = true;
+            boxX.AutoTransformEnable = true;
             boxY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.FromArgb(50, 200, 50));
-            boxY.AutoTransform = true;
+            boxY.AutoTransformEnable = true;
             boxZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.FromArgb(50, 50, 200));
-            boxZ.AutoTransform = true;
+            boxZ.AutoTransformEnable = true;
         }
 
         public override void setEnabled(bool enabled)

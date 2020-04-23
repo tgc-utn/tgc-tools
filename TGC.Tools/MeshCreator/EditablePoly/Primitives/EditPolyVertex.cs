@@ -38,7 +38,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly.Primitives
 
         public override string ToString()
         {
-            return "Index: " + vbIndex + ", Pos: " + TGCVector3.PrintVector3(position);
+            return "Index: " + vbIndex + ", Pos: " + TGCVector3.PrintTGCVector3(position);
         }
 
         public override bool projectToScreen(TGCMatrix transform, out Rectangle box2D)

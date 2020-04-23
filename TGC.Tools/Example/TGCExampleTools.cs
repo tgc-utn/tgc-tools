@@ -8,7 +8,7 @@ using TGC.Tools.UserControls;
 
 namespace TGC.Tools.Example
 {
-    public abstract class TGCExampleTools : TgcExample
+    public abstract class TGCExampleTools : TGCExample
     {
         private readonly Panel modifiersPanel;
 

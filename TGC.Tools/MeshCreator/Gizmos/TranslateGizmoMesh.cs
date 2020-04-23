@@ -38,17 +38,17 @@ namespace TGC.Tools.MeshCreator.Gizmos
             SelectedAxis = Axis.None;
 
             boxX = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
-            boxX.AutoTransform = true;
+            boxX.AutoTransformEnable = true;
             boxY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Green);
-            boxY.AutoTransform = true;
+            boxY.AutoTransformEnable = true;
             boxZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.Blue);
-            boxZ.AutoTransform = true;
+            boxZ.AutoTransformEnable = true;
             boxXZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
-            boxXZ.AutoTransform = true;
+            boxXZ.AutoTransformEnable = true;
             boxXY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Orange);
-            boxXY.AutoTransform = true;
+            boxXY.AutoTransformEnable = true;
             boxYZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
-            boxYZ.AutoTransform = true;
+            boxYZ.AutoTransformEnable = true;
         }
 
         /// <summary>

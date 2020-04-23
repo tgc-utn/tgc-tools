@@ -818,7 +818,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         {
             //Obtener vertices del mesh
             mesh = origMesh;
-            mesh.AutoTransform = true;
+            mesh.AutoTransformEnable = true;
             var origVertices = getMeshOriginalVertexData(origMesh);
             var origTriCount = origVertices.Count / 3;
 
@@ -1205,7 +1205,7 @@ namespace TGC.Tools.MeshCreator.EditablePoly
         public void updateValuesFromMesh(TgcMesh mesh)
         {
             this.mesh = mesh;
-            this.mesh.AutoTransform = true;
+            this.mesh.AutoTransformEnable = true;
             var origVertices = getMeshOriginalVertexData(mesh);
             for (var i = 0; i < origVertices.Count; i++)
             {

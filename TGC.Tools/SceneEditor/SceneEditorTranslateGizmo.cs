@@ -33,11 +33,11 @@ namespace TGC.Tools.SceneEditor
         public SceneEditorTranslateGizmo(TgcD3dInput input)
         {
             boxX = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
-            boxX.AutoTransform = true;
+            boxX.AutoTransformEnable = true;
             boxY = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE, SHORT_AXIS_SIZE), Color.Green);
-            boxY.AutoTransform = true;
+            boxY.AutoTransformEnable = true;
             boxZ = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_FACTOR_SIZE), Color.Blue);
-            boxZ.AutoTransform = true;
+            boxZ.AutoTransformEnable = true;
 
             this.input = input;
         }

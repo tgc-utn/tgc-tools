@@ -206,7 +206,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             var m = mesh.toMesh(Name);
             m.UserProperties = UserProperties;
             m.Layer = Layer;
-            m.AutoTransform = true;
+            m.AutoTransformEnable = true;
             return m;
         }
 

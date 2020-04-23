@@ -38,12 +38,12 @@ namespace TGC.Tools.SceneLoader
 
             MeshDelObj = TgcObjLoader.LoadTgcMeshFromObj(CurrentPath, 0);
 
-            MeshDelObj.AutoTransform = true;
+            MeshDelObj.AutoTransformEnable = true;
             MeshDelObj.Scale = new TGCVector3(5f, 5f, 5f);
             MeshDelObj.Position = new TGCVector3(-25, 0, 0);
             MeshDelObj.BoundingBox.move(new TGCVector3(25, 0, 0));
 
-            Camara = new TgcRotationalCamera(MeshDelObj.BoundingBox.calculateBoxCenter(), MeshDelObj.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camera = new TgcRotationalCamera(MeshDelObj.BoundingBox.calculateBoxCenter(), MeshDelObj.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()

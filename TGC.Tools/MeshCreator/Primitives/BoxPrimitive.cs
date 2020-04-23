@@ -114,7 +114,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             var boxTexture = TgcTexture.createTexture(Control.CreationTexturePath());
             mesh = TGCBox.fromExtremes(initSelectionPoint, initSelectionPoint, boxTexture);
             mesh.BoundingBox.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
-            mesh.AutoTransform = true;
+            mesh.AutoTransformEnable = true;
             Layer = Control.CurrentLayer;
         }
 
@@ -236,7 +236,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             var m = mesh.ToMesh(Name);
             m.UserProperties = UserProperties;
             m.Layer = Layer;
-            m.AutoTransform = true;
+            m.AutoTransformEnable = true;
             return m;
         }
 
@@ -244,7 +244,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         {
             var p = new BoxPrimitive(Control);
             p.mesh = mesh.clone();
-            p.mesh.AutoTransform = true;
+            p.mesh.AutoTransformEnable = true;
             p.originalSize = originalSize;
             p.UserProperties = UserProperties;
             p.Layer = Layer;

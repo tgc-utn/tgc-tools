@@ -45,6 +45,7 @@ namespace TGC.Tools.Forms
             //Herramientas basicas.
             fpsToolStripMenuItem.Checked = true;
             axisToolStripMenuItem.Checked = true;
+            tickConstanteToolStripMenuItem.Checked = true;
 
             //Modelo de la aplicacion
             Model = ToolsModel.Instance;
@@ -60,7 +61,16 @@ namespace TGC.Tools.Forms
             }
 
             //Iniciar graficos
-            Model.InitGraphics(this, panel3D, Settings.CommonShaders);
+            try
+            {
+                Model.InitGraphics(this, panel3D);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ocurrio un problema al inicializar DX", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            Model.InitShaders(Settings.CommonShaders);
 
             try
             {
@@ -180,6 +190,14 @@ namespace TGC.Tools.Forms
         }
 
         /// <summary>
+        /// Activa o desactiva la opcion de correr a update constante.
+        /// </summary>
+        private void FixedTick()
+        {
+            Model.FixedTick(tickConstanteToolStripMenuItem.Checked);
+        }
+
+        /// <summary>
         /// Activa o desactiva la opcion de los ejes cartesianos.
         /// </summary>
         private void AxisLines()
@@ -200,8 +218,9 @@ namespace TGC.Tools.Forms
                 try
                 {
                     Model.ExecuteExample(example);
-                    ContadorFPS();
                     AxisLines();
+                    ContadorFPS();
+                    FixedTick();
                     Wireframe();
 
                     toolStripStatusCurrentExample.Text = "Ejemplo actual: " + example.Name;
@@ -239,6 +258,11 @@ namespace TGC.Tools.Forms
         private void fpsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ContadorFPS();
+        }
+
+        private void tickConstanteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FixedTick();
         }
 
         private void axisToolStripMenuItem_Click(object sender, EventArgs e)

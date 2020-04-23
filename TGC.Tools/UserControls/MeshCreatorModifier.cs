@@ -103,7 +103,7 @@ namespace TGC.Tools.UserControls
             Camera.Enable = true;
             Camera.setCamera(TGCVector3.Empty, 500);
             Camera.BaseRotX = -FastMath.PI / 4f;
-            creator.Camara = Camera;
+            creator.Camera = Camera;
 
             //Gizmos
             translateGizmo = new TranslateGizmo(this);
@@ -216,7 +216,7 @@ namespace TGC.Tools.UserControls
         public Grid Grid { get; }
 
         /// <summary>
-        /// Camara
+        /// Camera
         /// </summary>
         public MeshCreatorCamera Camera { get; }
 
@@ -543,7 +543,7 @@ namespace TGC.Tools.UserControls
                 var text = SelectionList.Count > 1
                     ? SelectionList[0].Name + " + " + (SelectionList.Count - 1) + " others"
                     : SelectionList[0].Name;
-                text += ", Pos: " + TGCVector3.PrintVector3(SelectionList[0].Position);
+                text += ", Pos: " + TGCVector3.PrintTGCVector3(SelectionList[0].Position);
                 objectPositionText.Text = text;
                 objectPositionText.render();
             }
@@ -1202,21 +1202,21 @@ namespace TGC.Tools.UserControls
                 //Pasar a modo seleccion
                 CurrentState = State.SelectObject;
 
-                //Camara FPS
+                //Camera FPS
                 fpsCameraEnabled = true;
                 FPSCamera = new TgcFpsCamera(creator.Input);
                 FPSCamera.SetCamera(Camera.getPosition(), Camera.getLookAt());
-                creator.Camara = FPSCamera;
+                creator.Camera = FPSCamera;
             }
             else
             {
                 //Volver al modo normal
                 fpsCameraEnabled = false;
                 //Acomodar camara de editor para centrar donde quedo la camara FPS
-                Camera.CameraCenter = creator.Camara.Position;
+                Camera.CameraCenter = creator.Camera.Position;
                 //camera.CameraDistance = 10;
 
-                creator.Camara = Camera;
+                creator.Camera = Camera;
             }
         }
 

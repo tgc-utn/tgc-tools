@@ -74,10 +74,10 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            var effect = TgcShaders.Instance.VariosShader;
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
-            effect.Technique = TgcShaders.T_POSITION_COLORED;
+            var effect = TGCShaders.Instance.VariosShader;
+            TGCShaders.Instance.SetShaderMatrixIdentity(effect);
+            d3dDevice.VertexDeclaration = TGCShaders.Instance.VdecPositionColored;
+            effect.Technique = TGCShaders.T_POSITION_COLORED;
 
             //Alpha blend on
             d3dDevice.RenderState.AlphaTestEnable = true;

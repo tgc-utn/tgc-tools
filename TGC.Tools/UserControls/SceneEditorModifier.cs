@@ -113,7 +113,7 @@ namespace TGC.Tools.UserControls
             FPSCamera = new TgcFpsCamera(editor.Input);
             FPSCamera.SetCamera(pos, lookAt, upVector);
 
-            editor.Camara = FPSCamera;
+            editor.Camera = FPSCamera;
         }
 
         public TgcSimpleTerrain TgcTerrain
@@ -174,13 +174,13 @@ namespace TGC.Tools.UserControls
                 unselectAllModes(radioButtonCameraMode);
                 currentState = GuiState.CameraMode;
                 FPSCamera.SetCamera(BasicCamera.Position, BasicCamera.LookAt);
-                editor.Camara = FPSCamera;
+                editor.Camera = FPSCamera;
                 cameraSpeed.Enabled = true;
             }
             else
             {
                 BasicCamera.SetCamera(FPSCamera.Position, FPSCamera.LookAt);
-                editor.Camara = BasicCamera;
+                editor.Camera = BasicCamera;
                 cameraSpeed.Enabled = false;
             }
         }
@@ -387,7 +387,7 @@ namespace TGC.Tools.UserControls
                     {
                         var mo = new SceneEditorMeshObject();
                         mo.mesh = mesh;
-                        mo.mesh.AutoTransform = true;
+                        mo.mesh.AutoTransformEnable = true;
                         mo.name = mesh.Name + meshCounter++;
                         mo.userInfo = "";
                         mo.index = MeshObjects.Count;

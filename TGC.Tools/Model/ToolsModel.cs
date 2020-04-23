@@ -63,7 +63,7 @@ namespace TGC.Tools.Model
         /// <param name="form"> Ventana que contiene la aplicacion.</param>
         /// <param name="control"> Control donde van a correr los ejemplos.</param>
         /// <param name="pathCommonShaders"> Ruta con los shaders basicos.</param>
-        public void InitGraphics(ToolsForm form, Panel control, string pathCommonShaders)
+        public void InitGraphics(ToolsForm form, Panel control)
         {
             ApplicationRunning = true;
             Form = form;
@@ -79,10 +79,24 @@ namespace TGC.Tools.Model
 
             //Inicio sonido
             DirectSound = new TgcDirectSound();
-            DirectSound.InitializeD3DDevice(control);
+            try
+            {
+                DirectSound.InitializeD3DDevice(control);
+            }
+            catch (ApplicationException ex)
+            {
+                throw new Exception("No se pudo inicializar el sonido", ex);
+            }
+        }
 
+        /// <summary>
+        /// Carga los shaders basicos.
+        /// </summary>
+        /// <param name="pathCommonShaders"> Ruta con los shaders basicos.</param>
+        public void InitShaders(string pathCommonShaders)
+        {
             //Cargar shaders del framework
-            TgcShaders.Instance.loadCommonShaders(pathCommonShaders);
+            TGCShaders.Instance.LoadCommonShaders(pathCommonShaders, D3DDevice.Instance);
         }
 
         /// <summary>
@@ -108,8 +122,7 @@ namespace TGC.Tools.Model
                     //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
                     if (Form.ApplicationActive())
                     {
-                        CurrentExample.Update();
-                        CurrentExample.Render();
+                        CurrentExample.Tick();
                     }
                     else
                     {
@@ -153,7 +166,16 @@ namespace TGC.Tools.Model
         /// <param name="state"> Estado que se quiere de la herramienta.</param>
         public void ContadorFPS(bool state)
         {
-            CurrentExample.FPS = state;
+            CurrentExample.FPSText = state;
+        }
+
+        /// <summary>
+        /// Le activa o desactiva al ejemplo que corra a update constante.
+        /// </summary>
+        /// <param name="state">Estado que se quiere de la herramienta.</param>
+        public void FixedTick(bool state)
+        {
+            CurrentExample.FixedTickEnable = state;
         }
 
         /// <summary>
@@ -176,8 +198,6 @@ namespace TGC.Tools.Model
 
             //Ejecutar Init
             CurrentExample = example;
-            //TODO esto no me cierra mucho OnResetDevice
-            OnResetDevice(D3DDevice.Instance.Device, null);
             example.ResetDefaultConfig();
             example.DirectSound = DirectSound;
             example.Input = Input;
@@ -192,17 +212,6 @@ namespace TGC.Tools.Model
             CurrentExample = null;
         }
 
-        public void Dispose()
-        {
-            ApplicationRunning = false;
-
-            StopCurrentExample();
-
-            //Liberar Device al finalizar la aplicacion
-            D3DDevice.Instance.Dispose();
-            TexturesPool.Instance.clearAll();
-        }
-
         /// <summary>
         ///  Deja de ejecutar el ejemplo actual
         /// </summary>
@@ -215,26 +224,36 @@ namespace TGC.Tools.Model
             }
         }
 
+        public void Dispose()
+        {
+            ApplicationRunning = false;
+
+            StopCurrentExample();
+
+            //Liberar Device al finalizar la aplicacion
+            D3DDevice.Instance.Dispose();
+            TexturesPool.Instance.clearAll();
+        }
+
         /// <summary>
         /// This event-handler is a good place to create and initialize any Direct3D related objects, which may become invalid during a device reset.
         /// </summary>
         public void OnResetDevice(object sender, EventArgs e)
         {
-            //TODO antes hacia esto que no entiendo porque ToolsModel.Instance.onResetDevice();
-            //pero solo detenia el ejemplo ejecutaba doResetDevice y lo volvia a cargar...
-            DoResetDevice();
-        }
+            var exampleBackup = CurrentExample;
 
-        /// <summary>
-        /// Hace las operaciones de Reset del device.
-        /// </summary>
-        public void DoResetDevice()
-        {
-            //Default values para el device
-            CurrentExample.DeviceDefaultValues();
+            if (exampleBackup != null)
+            {
+                StopCurrentExample();
+            }
 
-            //Reset Timer
-            CurrentExample.ResetTimer();
+            //TODO no se si necesito hacer esto, ya que ExecuteExample lo vuelve a hacer, pero no valide si hay algun caso que no exista un ejemplo actual.
+            D3DDevice.Instance.DefaultValues();
+
+            if (exampleBackup != null)
+            {
+                ExecuteExample(exampleBackup);
+            }
         }
 
         #endregion Internal Methods

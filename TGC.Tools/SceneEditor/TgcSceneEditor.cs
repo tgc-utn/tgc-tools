@@ -81,7 +81,7 @@ namespace TGC.Tools.SceneEditor
                 terrainNode.SetAttribute("texture", Modifier.terrainTexture.Text);
                 terrainNode.SetAttribute("xzScale", Modifier.terrainXZscale.Value.ToString());
                 terrainNode.SetAttribute("yScale", Modifier.terrainYscale.Value.ToString());
-                terrainNode.SetAttribute("center", TGCVector3.PrintVector3FromString(
+                terrainNode.SetAttribute("center", TGCVector3.PrintTGCVector3FromString(
                     Modifier.terrainCenterX.Text,
                     Modifier.terrainCenterY.Text,
                     Modifier.terrainCenterZ.Text));
@@ -115,9 +115,9 @@ namespace TGC.Tools.SceneEditor
                 meshNode.SetAttribute("index", meshObject.index.ToString());
                 meshNode.SetAttribute("file", meshObject.fileName);
                 meshNode.SetAttribute("folder", meshObject.folderName);
-                meshNode.SetAttribute("position", TGCVector3.PrintVector3(mesh.Position));
-                meshNode.SetAttribute("rotation", TGCVector3.PrintVector3(mesh.Rotation));
-                meshNode.SetAttribute("scale", TGCVector3.PrintVector3(mesh.Scale));
+                meshNode.SetAttribute("position", TGCVector3.PrintTGCVector3(mesh.Position));
+                meshNode.SetAttribute("rotation", TGCVector3.PrintTGCVector3(mesh.Rotation));
+                meshNode.SetAttribute("scale", TGCVector3.PrintTGCVector3(mesh.Scale));
                 meshNode.SetAttribute("userInfo", meshObject.userInfo);
 
                 lastGroupNode.AppendChild(meshNode);

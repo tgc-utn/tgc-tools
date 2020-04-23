@@ -52,7 +52,7 @@ namespace TGC.Tools.TerrainEditor
             Camera = TerrainFpsCamera;
             Camera.RotateMouseButton = cameraRotationButton;
             Camera.setCamera(new TGCVector3(-722.6171f, 495.0046f, -31.2611f), new TGCVector3(164.9481f, 35.3185f, -61.5394f));
-            this.Camara = Camera;
+            this.Camera = Camera;
 
             Terrain = new SmartTerrain();
             brush = new DummyBrush();

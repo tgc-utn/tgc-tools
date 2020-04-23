@@ -423,7 +423,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             m.Scale = TGCVector3.One;
             m.Rotation = TGCVector3.Empty;
             m.Transform = TGCMatrix.Identity;
-            m.AutoTransform = true;
+            m.AutoTransformEnable = true;
 
             //Calcular nuevo bounding box
             m.createBoundingBox();

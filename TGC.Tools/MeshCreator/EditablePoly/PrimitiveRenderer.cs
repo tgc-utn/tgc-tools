@@ -22,9 +22,9 @@ namespace TGC.Tools.MeshCreator.EditablePoly
             batchRenderer = new TrianglesBatchRenderer();
 
             vertexBox = TGCBox.fromSize(TGCVector3.One, Color.Blue);
-            vertexBox.AutoTransform = true;
+            vertexBox.AutoTransformEnable = true;
             selectedVertexBox = TGCBox.fromSize(TGCVector3.One, Color.Red);
-            selectedVertexBox.AutoTransform = true;
+            selectedVertexBox.AutoTransformEnable = true;
         }
 
         /// <summary>

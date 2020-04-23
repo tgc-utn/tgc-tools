@@ -80,10 +80,10 @@ namespace TGC.Tools.MeshCreator
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            var effect = TgcShaders.Instance.VariosShader;
-            effect.Technique = TgcShaders.T_POSITION_COLORED;
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
+            var effect = TGCShaders.Instance.VariosShader;
+            effect.Technique = TGCShaders.T_POSITION_COLORED;
+            TGCShaders.Instance.SetShaderMatrixIdentity(effect);
+            d3dDevice.VertexDeclaration = TGCShaders.Instance.VdecPositionColored;
 
             //Render con shader
             effect.Begin(0);

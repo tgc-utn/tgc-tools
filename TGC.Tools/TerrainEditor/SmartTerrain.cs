@@ -18,7 +18,7 @@ namespace TGC.Tools.TerrainEditor
             AlphaBlendEnable = false;
 
             //Shader
-            Effect = TgcShaders.loadEffect("Shaders\\EditableTerrain.fx");
+            Effect = TGCShaders.Instance.LoadEffect("Shaders\\EditableTerrain.fx");
             Technique = "PositionColoredTextured";
 
             aabb = new TgcBoundingAxisAlignBox();
@@ -337,8 +337,8 @@ namespace TGC.Tools.TerrainEditor
 
             texturesManager.clear(1);
 
-            TgcShaders.Instance.setShaderMatrix(effect, transform);
-            d3dDevice.VertexDeclaration = TgcShaders.Instance.VdecPositionColoredTextured;
+            TGCShaders.Instance.SetShaderMatrix(effect, transform);
+            d3dDevice.VertexDeclaration = TGCShaders.Instance.VdecPositionColoredTextured;
             effect.Technique = technique;
             d3dDevice.SetStreamSource(0, vbTerrain, 0);
 

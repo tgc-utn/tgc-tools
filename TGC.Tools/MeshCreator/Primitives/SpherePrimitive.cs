@@ -129,7 +129,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             mesh = new TGCSphere();
             mesh.setTexture(sphereTexture);
             // mesh.BoundingSphere.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
-            mesh.AutoTransform = true;
+            mesh.AutoTransformEnable = true;
             bb.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
             Layer = Control.CurrentLayer;
         }
@@ -206,7 +206,7 @@ namespace TGC.Tools.MeshCreator.Primitives
             var m = mesh.toMesh(Name);
             m.UserProperties = UserProperties;
             m.Layer = Layer;
-            m.AutoTransform = true;
+            m.AutoTransformEnable = true;
             return m;
         }
 
@@ -214,7 +214,7 @@ namespace TGC.Tools.MeshCreator.Primitives
         {
             var p = new SpherePrimitive(Control);
             p.mesh = mesh.clone();
-            p.mesh.AutoTransform = true;
+            p.mesh.AutoTransformEnable = true;
             p.originalRadius = originalRadius;
             p.Scale = Scale;
             p.UserProperties = UserProperties;
